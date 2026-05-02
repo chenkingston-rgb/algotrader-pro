@@ -1,0 +1,77 @@
+name: AlgoTrader Pro — Hourly Signal Runner
+
+on:
+  schedule:
+    # Run every hour Mon–Fri, 10:00–16:00 ET (14:00–20:00 UTC)
+    - cron: '0 14,15,16,17,18,19,20 * * 1-5'
+  workflow_dispatch:   # Manual trigger for testing
+    inputs:
+      mode:
+        description: 'Trading mode (paper or live)'
+        required: false
+        default: 'paper'
+      strategy:
+        description: 'Run specific strategy only (leave blank for all)'
+        required: false
+        default: ''
+
+jobs:
+  run-strategies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install alpaca-py pandas numpy requests python-dateutil pytz
+
+      - name: Check market hours
+        id: market_check
+        run: |
+          python3 - <<'PYEOF'
+          from datetime import datetime
+          import pytz, sys, os
+          et = pytz.timezone('America/New_York')
+          now = datetime.now(et)
+          # Block weekends
+          if now.weekday() >= 5:
+              print("TRADEABLE=false")
+              open("market_open.txt", "w").write("false")
+              sys.exit(0)
+          # Trading window: 10:00–15:45 ET (avoid first 30 min and last 15 min)
+          open_time  = now.replace(hour=10, minute=0, second=0, microsecond=0)
+          close_time = now.replace(hour=15, minute=45, second=0, microsecond=0)
+          tradeable = open_time <= now <= close_time
+          open("market_open.txt", "w").write("true" if tradeable else "false")
+          print(f"Market tradeable: {tradeable} at {now.strftime('%H:%M %Z')}")
+          PYEOF
+          echo "TRADEABLE=$(cat market_open.txt)" >> $GITHUB_OUTPUT
+
+      - name: Run strategy signals
+        if: steps.market_check.outputs.TRADEABLE == 'true'
+        env:
+          # Paper trading keys
+          ALPACA_PAPER_KEY:    ${{ secrets.ALPACA_PAPER_KEY }}
+          ALPACA_PAPER_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
+          # Live cash account keys
+          ALPACA_LIVE_KEY:    ${{ secrets.ALPACA_LIVE_KEY }}
+          ALPACA_LIVE_SECRET: ${{ secrets.ALPACA_LIVE_SECRET }}
+          # Base44 API key for posting signals/state back to the app
+          BASE44_API_KEY:  ${{ secrets.BASE44_API_KEY }}
+          BASE44_APP_ID:   69f60c0cd56ea2902b494394
+          # Mode: paper or live (default paper for safety)
+          TRADING_MODE:    ${{ github.event.inputs.mode || 'paper' }}
+          STRATEGY_FILTER: ${{ github.event.inputs.strategy || '' }}
+        run: python3 scripts/run_strategies.py
+
+      - name: Skip — market closed
+        if: steps.market_check.outputs.TRADEABLE != 'true'
+        run: echo "Market closed or outside trading window. Skipping signal generation."
