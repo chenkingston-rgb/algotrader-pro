@@ -3,12 +3,12 @@ AlgoTrader Pro — Strategy Runner v5
 Fixes: daily bar start date, SPY realized-vol VIX proxy, Base44 best-effort logging.
 """
 import os, sys, json, traceback, math, requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 import pytz
 
 print("=== AlgoTrader Pro Starting ===")
-print(f"Python: {sys.version.split()[0]}  |  Time: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}")
+print(f"Python: {sys.version.split()[0]}  |  Time: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}")
 
 MODE            = os.getenv("TRADING_MODE", "paper").lower()
 BASE44_APP_ID   = os.getenv("BASE44_APP_ID", "69f60c0cd56ea2902b494394")
@@ -52,8 +52,8 @@ def get_bars(symbol, days=300):
     Always passes explicit start/end dates so Alpaca returns full history.
     """
     import pandas as pd
-    end   = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-    start = (datetime.utcnow() - timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    end   = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    start = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ")
     params = {
         "symbols":   symbol,
         "timeframe": "1Day",
@@ -418,3 +418,4 @@ if __name__ == "__main__":
         print(f"\n[UNHANDLED ERROR] {e}")
         traceback.print_exc()
         sys.exit(1)
+
