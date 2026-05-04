@@ -1,0 +1,36 @@
+name: AlgoTrader — Daily Strategies (9:45am + 3:30pm ET)
+
+on:
+  schedule:
+    - cron: '45 13 * * 1-5'   # 9:45 AM ET  (market open + 15min)
+    - cron: '30 19 * * 1-5'   # 3:30 PM ET  (30min before close)
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Trading mode (paper or live)'
+        required: false
+        default: 'paper'
+
+jobs:
+  run-daily-strategies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Python dependencies
+        run: pip3 install --quiet alpaca-py pandas numpy requests python-dateutil pytz
+
+      - name: Run daily trend strategies
+        env:
+          ALPACA_PAPER_KEY:    ${{ secrets.ALPACA_PAPER_KEY }}
+          ALPACA_PAPER_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
+          ALPACA_LIVE_KEY:     ${{ secrets.ALPACA_LIVE_KEY }}
+          ALPACA_LIVE_SECRET:  ${{ secrets.ALPACA_LIVE_SECRET }}
+          BASE44_API_KEY:      ${{ secrets.BASE44_API_KEY }}
+          BASE44_APP_ID:       69f60c0cd56ea2902b494394
+          TRADING_MODE:        ${{ github.event.inputs.mode || 'paper' }}
+          STRATEGY_MODE:       daily
+        run: python3 scripts/run_strategies.py
