@@ -1,0 +1,60 @@
+name: AlgoTrader — Intraday Strategies (every 15min)
+
+on:
+  schedule:
+    # Every 15 min, 10:00am–3:45pm ET (14:00–19:45 UTC), Mon–Fri
+    - cron: '0,15,30,45 14,15,16,17,18,19 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Trading mode (paper or live)'
+        required: false
+        default: 'paper'
+
+jobs:
+  run-intraday-strategies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Python dependencies
+        run: pip3 install --quiet alpaca-py pandas numpy requests python-dateutil pytz
+
+      - name: Check market hours
+        id: market_check
+        run: |
+          python3 - <<'PYEOF'
+          from datetime import datetime
+          import pytz, sys
+          et = pytz.timezone('America/New_York')
+          now = datetime.now(et)
+          if now.weekday() >= 5:
+              open("market_open.txt","w").write("false")
+              print("Weekend — skipping"); sys.exit(0)
+          open_t  = now.replace(hour=9, minute=45, second=0, microsecond=0)
+          close_t = now.replace(hour=15, minute=45, second=0, microsecond=0)
+          ok = open_t <= now <= close_t
+          open("market_open.txt","w").write("true" if ok else "false")
+          print(f"Intraday tradeable: {ok} at {now.strftime('%H:%M %Z')}")
+          PYEOF
+          echo "TRADEABLE=$(cat market_open.txt)" >> $GITHUB_OUTPUT
+
+      - name: Run intraday strategies
+        if: steps.market_check.outputs.TRADEABLE == 'true'
+        env:
+          ALPACA_PAPER_KEY:    ${{ secrets.ALPACA_PAPER_KEY }}
+          ALPACA_PAPER_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
+          ALPACA_LIVE_KEY:     ${{ secrets.ALPACA_LIVE_KEY }}
+          ALPACA_LIVE_SECRET:  ${{ secrets.ALPACA_LIVE_SECRET }}
+          BASE44_API_KEY:      ${{ secrets.BASE44_API_KEY }}
+          BASE44_APP_ID:       69f60c0cd56ea2902b494394
+          TRADING_MODE:        ${{ github.event.inputs.mode || 'paper' }}
+          STRATEGY_MODE:       intraday
+        run: python3 scripts/run_strategies.py
+
+      - name: Skip — outside trading window
+        if: steps.market_check.outputs.TRADEABLE != 'true'
+        run: echo "Outside 9:45am–3:45pm ET window. Skipping."
