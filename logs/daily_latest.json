@@ -1,0 +1,10 @@
+{
+  "run_timestamp": null,
+  "strategy_mode": null,
+  "trading_mode": "paper",
+  "equity": null,
+  "vix": null,
+  "signals": [],
+  "orders": [],
+  "note": "No runs yet — waiting for first GitHub Actions execution"
+}
