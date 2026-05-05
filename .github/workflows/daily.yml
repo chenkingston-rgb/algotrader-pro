@@ -2,8 +2,8 @@ name: AlgoTrader — Daily Strategies (9:45am + 3:30pm ET)
 
 on:
   schedule:
-    - cron: '45 13 * * 1-5'   # 9:45 AM ET  (market open + 15min)
-    - cron: '30 19 * * 1-5'   # 3:30 PM ET  (30min before close)
+    - cron: '45 13 * * 1-5'   # 9:45 AM ET
+    - cron: '30 19 * * 1-5'   # 3:30 PM ET
   workflow_dispatch:
     inputs:
       mode:
@@ -15,6 +15,8 @@ jobs:
   run-daily-strategies:
     runs-on: ubuntu-latest
     timeout-minutes: 8
+    permissions:
+      contents: write   # needed to commit log files back to repo
 
     steps:
       - name: Checkout repo
@@ -29,8 +31,9 @@ jobs:
           ALPACA_PAPER_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
           ALPACA_LIVE_KEY:     ${{ secrets.ALPACA_LIVE_KEY }}
           ALPACA_LIVE_SECRET:  ${{ secrets.ALPACA_LIVE_SECRET }}
-          BASE44_API_KEY:      ${{ secrets.BASE44_API_KEY }}
           BASE44_APP_ID:       69f60c0cd56ea2902b494394
           TRADING_MODE:        ${{ github.event.inputs.mode || 'paper' }}
           STRATEGY_MODE:       daily
+          GITHUB_TOKEN:        ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY:   ${{ github.repository }}
         run: python3 scripts/run_strategies.py
