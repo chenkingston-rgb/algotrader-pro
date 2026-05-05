@@ -127,28 +127,44 @@ def get_vix_estimate(spy_df):
     rv  = ret.std() * (252 ** 0.5) * 100
     return round(min(rv * 1.2, 80.0), 1)
 
-# ── Base44 (best-effort) ─────────────────────────────────────────
-B44_BASES = [
-    f"https://api.base44.com/api/apps/{BASE44_APP_ID}/entities",
-    f"https://app.base44.com/api/apps/{BASE44_APP_ID}/entities",
+# ── Base44 (best-effort, with auth format detection) ─────────────
+B44_ATTEMPTS = [
+    ("https://app.base44.com/api/apps/{APP}/entities/{ENT}",  {"Authorization": "Bearer {KEY}", "Content-Type": "application/json"}),
+    ("https://app.base44.com/api/apps/{APP}/entities/{ENT}",  {"x-api-key": "{KEY}", "Content-Type": "application/json"}),
+    ("https://api.base44.com/api/apps/{APP}/entities/{ENT}",  {"Authorization": "Bearer {KEY}", "Content-Type": "application/json"}),
+    ("https://api.base44.com/api/apps/{APP}/entities/{ENT}",  {"x-api-key": "{KEY}", "Content-Type": "application/json"}),
 ]
 
+def _b44_headers(template):
+    return {k: v.replace("{KEY}", BASE44_API_KEY) for k, v in template.items()}
+
+def _b44_url(url_template, entity):
+    return url_template.replace("{APP}", BASE44_APP_ID).replace("{ENT}", entity)
+
 def b44_post(entity, record):
-    if not BASE44_API_KEY: return
-    hdrs = {"Authorization": f"Bearer {BASE44_API_KEY}", "Content-Type": "application/json"}
-    for base in B44_BASES:
+    if not BASE44_API_KEY:
+        print(f"  [Base44] No API key — skipping {entity} post")
+        return
+    for url_tmpl, hdr_tmpl in B44_ATTEMPTS:
+        url = _b44_url(url_tmpl, entity)
+        hdrs = _b44_headers(hdr_tmpl)
         try:
-            r = requests.post(f"{base}/{entity}", headers=hdrs, json=record, timeout=8)
-            if r.ok: return
-        except Exception:
-            pass
+            r = requests.post(url, headers=hdrs, json=record, timeout=8)
+            if r.ok:
+                print(f"  [Base44] ✅ Posted to {entity} via {url_tmpl[:40]}")
+                return
+            print(f"  [Base44] {r.status_code} on {url_tmpl[:40]} — {r.text[:80]}")
+        except Exception as e:
+            print(f"  [Base44] Connection error: {e}")
 
 def b44_get(entity, params=None):
     if not BASE44_API_KEY: return []
-    hdrs = {"Authorization": f"Bearer {BASE44_API_KEY}"}
-    for base in B44_BASES:
+    for url_tmpl, hdr_tmpl in B44_ATTEMPTS:
+        url = _b44_url(url_tmpl, entity)
+        hdrs = {k: v.replace("{KEY}", BASE44_API_KEY) for k, v in hdr_tmpl.items()}
+        hdrs.pop("Content-Type", None)
         try:
-            r = requests.get(f"{base}/{entity}", headers=hdrs, params=params, timeout=8)
+            r = requests.get(url, headers=hdrs, params=params, timeout=8)
             if r.ok:
                 body = r.json()
                 return body.get("items", body) if isinstance(body, dict) else body
@@ -434,3 +450,4 @@ if __name__ == "__main__":
         print(f"\n[UNHANDLED ERROR] {e}")
         traceback.print_exc()
         sys.exit(1)
+
