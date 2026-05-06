@@ -526,4 +526,55 @@ def main():
                 "timestamp":        run_start.isoformat(),
                 "strategy":         strat_name,
                 "vix_type":         strat_cfg["vix_type"],
-                "sym
+                "symbol":           symbol,
+                "signal":           signal,
+                "price":            round(price, 2),
+                "atr":              round(atr, 4),
+                "qty":              qty,
+                "stop_price":       round(stop_price, 2) if stop_price else None,
+                "tp_price":         round(tp_price, 2)   if tp_price   else None,
+                "executed":         executed,
+                "skip_reason":      skip_reason,
+                "order_id":         order_id,
+                "vix":              vix,
+                "vix_reason":       vix_reason,
+                "indicators":       inds,
+            })
+
+    # 6. Build and write the run log
+    run_log = {
+        "run_timestamp":   run_start.isoformat(),
+        "mode":            MODE,
+        "strategy_mode":   STRATEGY_MODE,
+        "equity":          round(equity, 2),
+        "buying_power":    round(buying_power, 2),
+        "vix":             vix,
+        "drawdown_pct":    round(drawdown_pct, 2),
+        "positions":       list(positions.keys()),
+        "signals":         all_signals,
+        "orders_placed":   orders_placed,
+    }
+
+    print(f"\n{'='*60}")
+    print(f"Run complete — {len(all_signals)} signals, {len(orders_placed)} orders placed")
+    print(f"{'='*60}\n")
+
+    # Write logs to GitHub repo
+    write_github_log(LOG_FILE, run_log)
+
+    # Append compact entry to run history
+    run_summary = {
+        "timestamp":       run_start.isoformat(),
+        "mode":            MODE,
+        "strategy_mode":   STRATEGY_MODE,
+        "equity":          round(equity, 2),
+        "vix":             vix,
+        "signals_count":   len(all_signals),
+        "orders_count":    len(orders_placed),
+        "symbols_traded":  [o["symbol"] for o in orders_placed],
+    }
+    append_run_history(run_summary)
+
+
+if __name__ == "__main__":
+    main()
