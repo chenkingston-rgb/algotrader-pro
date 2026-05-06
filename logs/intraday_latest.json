@@ -1,10 +1,173 @@
 {
-  "run_timestamp": null,
-  "strategy_mode": null,
-  "trading_mode": "paper",
-  "equity": null,
-  "vix": null,
-  "signals": [],
-  "orders": [],
-  "note": "No runs yet — waiting for first GitHub Actions execution"
+  "run_timestamp": "2026-05-06T12:02:00.791252-04:00",
+  "mode": "paper",
+  "strategy_mode": "intraday",
+  "equity": 104739.24,
+  "buying_power": 397659.6,
+  "vix": 14.46,
+  "drawdown_pct": 0.0,
+  "positions": [
+    "XLK"
+  ],
+  "signals": [
+    {
+      "timestamp": "2026-05-06T12:02:00.791252-04:00",
+      "strategy": "bollinger_bands_15m",
+      "vix_type": "MEAN_REV",
+      "symbol": "SPY",
+      "signal": "sell",
+      "price": 731.72,
+      "atr": 0.9659,
+      "qty": 0,
+      "stop_price": null,
+      "tp_price": null,
+      "executed": false,
+      "skip_reason": "no_position_to_sell",
+      "order_id": null,
+      "vix": 14.46,
+      "vix_reason": "vix_clear",
+      "indicators": {
+        "price": 731.72,
+        "bb_lower": 723.1,
+        "bb_mid": 729.0,
+        "bb_upper": 734.9,
+        "ma_filter": 725.0
+      }
+    },
+    {
+      "timestamp": "2026-05-06T12:02:00.791252-04:00",
+      "strategy": "bollinger_bands_15m",
+      "vix_type": "MEAN_REV",
+      "symbol": "QQQ",
+      "signal": "sell",
+      "price": 692.02,
+      "atr": 1.235,
+      "qty": 0,
+      "stop_price": null,
+      "tp_price": null,
+      "executed": false,
+      "skip_reason": "no_position_to_sell",
+      "order_id": null,
+      "vix": 14.46,
+      "vix_reason": "vix_clear",
+      "indicators": {
+        "price": 692.02,
+        "bb_lower": 682.39,
+        "bb_mid": 688.88,
+        "bb_upper": 695.37,
+        "ma_filter": 684.13
+      }
+    },
+    {
+      "timestamp": "2026-05-06T12:02:00.791252-04:00",
+      "strategy": "momentum_roc_15m",
+      "vix_type": "MOMENTUM",
+      "symbol": "SPY",
+      "signal": "hold",
+      "price": 731.72,
+      "atr": 0.9659,
+      "qty": 0,
+      "stop_price": null,
+      "tp_price": null,
+      "executed": false,
+      "skip_reason": "no_signal",
+      "order_id": null,
+      "vix": 14.46,
+      "vix_reason": "vix_clear",
+      "indicators": {
+        "roc": 0.355,
+        "roc_prev": 0.418,
+        "threshold": 0.3
+      }
+    },
+    {
+      "timestamp": "2026-05-06T12:02:00.791252-04:00",
+      "strategy": "momentum_roc_15m",
+      "vix_type": "MOMENTUM",
+      "symbol": "QQQ",
+      "signal": "hold",
+      "price": 692.02,
+      "atr": 1.235,
+      "qty": 0,
+      "stop_price": null,
+      "tp_price": null,
+      "executed": false,
+      "skip_reason": "no_signal",
+      "order_id": null,
+      "vix": 14.46,
+      "vix_reason": "vix_clear",
+      "indicators": {
+        "roc": 0.306,
+        "roc_prev": 0.56,
+        "threshold": 0.3
+      }
+    },
+    {
+      "timestamp": "2026-05-06T12:02:00.791252-04:00",
+      "strategy": "momentum_roc_15m",
+      "vix_type": "MOMENTUM",
+      "symbol": "XLK",
+      "signal": "hold",
+      "price": 168.66,
+      "atr": 0.5377,
+      "qty": 0,
+      "stop_price": null,
+      "tp_price": null,
+      "executed": false,
+      "skip_reason": "no_signal",
+      "order_id": null,
+      "vix": 14.46,
+      "vix_reason": "vix_clear",
+      "indicators": {
+        "roc": 0.333,
+        "roc_prev": 1.812,
+        "threshold": 0.3
+      }
+    },
+    {
+      "timestamp": "2026-05-06T12:02:00.791252-04:00",
+      "strategy": "momentum_roc_15m",
+      "vix_type": "MOMENTUM",
+      "symbol": "XLE",
+      "signal": "hold",
+      "price": 56.9,
+      "atr": 0.2727,
+      "qty": 0,
+      "stop_price": null,
+      "tp_price": null,
+      "executed": false,
+      "skip_reason": "no_signal",
+      "order_id": null,
+      "vix": 14.46,
+      "vix_reason": "vix_clear",
+      "indicators": {
+        "roc": -1.207,
+        "roc_prev": -0.664,
+        "threshold": 0.3
+      }
+    },
+    {
+      "timestamp": "2026-05-06T12:02:00.791252-04:00",
+      "strategy": "momentum_roc_15m",
+      "vix_type": "MOMENTUM",
+      "symbol": "XLF",
+      "signal": "hold",
+      "price": 51.96,
+      "atr": 0.1101,
+      "qty": 0,
+      "stop_price": null,
+      "tp_price": null,
+      "executed": false,
+      "skip_reason": "no_signal",
+      "order_id": null,
+      "vix": 14.46,
+      "vix_reason": "vix_clear",
+      "indicators": {
+        "roc": -0.269,
+        "roc_prev": 0.785,
+        "threshold": 0.3
+      }
+    }
+  ],
+  "orders_placed": []
 }
