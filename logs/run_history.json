@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "timestamp": "2026-05-05T22:44:21.747946-04:00",
+    "mode": "paper",
+    "strategy_mode": "daily",
+    "equity": 104878.57,
+    "vix": 14.32,
+    "signals_count": 11,
+    "orders_count": 0,
+    "symbols_traded": []
+  }
+]
