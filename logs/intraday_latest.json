@@ -1,23 +1,24 @@
 {
-  "run_timestamp": "2026-05-07T10:15:39.596069-04:00",
+  "run_timestamp": "2026-05-07T10:30:42.945996-04:00",
   "mode": "paper",
   "strategy_mode": "intraday",
-  "equity": 104863.75,
-  "buying_power": 406246.8,
+  "equity": 104894.63,
+  "buying_power": 395762.7,
   "vix": 11.91,
   "drawdown_pct": 0.0,
   "positions": [
+    "QQQ",
     "XLK"
   ],
   "signals": [
     {
-      "timestamp": "2026-05-07T10:15:39.596069-04:00",
+      "timestamp": "2026-05-07T10:30:42.945996-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "SPY",
       "signal": "sell",
       "price": 734.52,
-      "atr": 0.6405,
+      "atr": 0.6765,
       "qty": 0,
       "stop_price": null,
       "tp_price": null,
@@ -28,44 +29,44 @@
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 734.52,
-        "bb_lower": 731.54,
-        "bb_mid": 733.68,
-        "bb_upper": 735.81,
-        "ma_filter": 730.5
+        "bb_lower": 731.86,
+        "bb_mid": 733.82,
+        "bb_upper": 735.77,
+        "ma_filter": 730.72
       }
     },
     {
-      "timestamp": "2026-05-07T10:15:39.596069-04:00",
+      "timestamp": "2026-05-07T10:30:42.945996-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "QQQ",
       "signal": "sell",
-      "price": 698.61,
-      "atr": 1.0697,
-      "qty": 0,
-      "stop_price": null,
-      "tp_price": null,
+      "price": 699.51,
+      "atr": 1.1377,
+      "qty": 14,
+      "stop_price": 701.22,
+      "tp_price": 696.1,
       "executed": false,
-      "skip_reason": "no_position_to_sell",
+      "skip_reason": "order_error: 422 Client Error: Unprocessable Entity for url: https://paper-api.alpaca.markets/v2/orders",
       "order_id": null,
       "vix": 11.91,
       "vix_reason": "vix_clear",
       "indicators": {
-        "price": 698.61,
-        "bb_lower": 692.5,
-        "bb_mid": 695.54,
-        "bb_upper": 698.58,
-        "ma_filter": 691.42
+        "price": 699.51,
+        "bb_lower": 692.63,
+        "bb_mid": 695.87,
+        "bb_upper": 699.12,
+        "ma_filter": 691.76
       }
     },
     {
-      "timestamp": "2026-05-07T10:15:39.596069-04:00",
+      "timestamp": "2026-05-07T10:30:42.945996-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "SPY",
       "signal": "hold",
       "price": 734.52,
-      "atr": 0.6405,
+      "atr": 0.6765,
       "qty": 0,
       "stop_price": null,
       "tp_price": null,
@@ -75,41 +76,41 @@
       "vix": 11.91,
       "vix_reason": "vix_clear",
       "indicators": {
-        "roc": 0.113,
-        "roc_prev": 0.009,
+        "roc": 0.103,
+        "roc_prev": 0.113,
         "threshold": 0.3
       }
     },
     {
-      "timestamp": "2026-05-07T10:15:39.596069-04:00",
+      "timestamp": "2026-05-07T10:30:42.945996-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "QQQ",
-      "signal": "buy",
-      "price": 698.61,
-      "atr": 1.0697,
-      "qty": 15,
-      "stop_price": 697.01,
-      "tp_price": 701.82,
-      "executed": true,
-      "skip_reason": null,
-      "order_id": "1a24b3e7-dc45-4eeb-8583-89b1918e8e35",
+      "signal": "hold",
+      "price": 699.51,
+      "atr": 1.1377,
+      "qty": 0,
+      "stop_price": null,
+      "tp_price": null,
+      "executed": false,
+      "skip_reason": "no_signal",
+      "order_id": null,
       "vix": 11.91,
       "vix_reason": "vix_clear",
       "indicators": {
-        "roc": 0.31,
-        "roc_prev": 0.239,
+        "roc": 0.311,
+        "roc_prev": 0.31,
         "threshold": 0.3
       }
     },
     {
-      "timestamp": "2026-05-07T10:15:39.596069-04:00",
+      "timestamp": "2026-05-07T10:30:42.945996-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "XLK",
       "signal": "hold",
-      "price": 171.05,
-      "atr": 0.5666,
+      "price": 171.73,
+      "atr": 0.5884,
       "qty": 0,
       "stop_price": null,
       "tp_price": null,
@@ -119,19 +120,19 @@
       "vix": 11.91,
       "vix_reason": "vix_clear",
       "indicators": {
-        "roc": 1.273,
-        "roc_prev": 0.83,
+        "roc": 1.525,
+        "roc_prev": 1.273,
         "threshold": 0.3
       }
     },
     {
-      "timestamp": "2026-05-07T10:15:39.596069-04:00",
+      "timestamp": "2026-05-07T10:30:42.945996-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "XLE",
       "signal": "hold",
-      "price": 55.31,
-      "atr": 0.2971,
+      "price": 55.2,
+      "atr": 0.3015,
       "qty": 0,
       "stop_price": null,
       "tp_price": null,
@@ -141,42 +142,33 @@
       "vix": 11.91,
       "vix_reason": "vix_clear",
       "indicators": {
-        "roc": -2.615,
-        "roc_prev": -2.407,
+        "roc": -2.962,
+        "roc_prev": -2.615,
         "threshold": 0.3
       }
     },
     {
-      "timestamp": "2026-05-07T10:15:39.596069-04:00",
+      "timestamp": "2026-05-07T10:30:42.945996-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "XLF",
-      "signal": "sell",
-      "price": 51.66,
-      "atr": 0.1397,
+      "signal": "hold",
+      "price": 51.47,
+      "atr": 0.1537,
       "qty": 0,
       "stop_price": null,
       "tp_price": null,
       "executed": false,
-      "skip_reason": "no_position_to_sell",
+      "skip_reason": "no_signal",
       "order_id": null,
       "vix": 11.91,
       "vix_reason": "vix_clear",
       "indicators": {
-        "roc": -0.414,
-        "roc_prev": -0.222,
+        "roc": -0.838,
+        "roc_prev": -0.414,
         "threshold": 0.3
       }
     }
   ],
-  "orders_placed": [
-    {
-      "symbol": "QQQ",
-      "strat": "momentum_roc_15m",
-      "signal": "buy",
-      "qty": 15,
-      "price": 698.61,
-      "order_id": "1a24b3e7-dc45-4eeb-8583-89b1918e8e35"
-    }
-  ]
+  "orders_placed": []
 }
