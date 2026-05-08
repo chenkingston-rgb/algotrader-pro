@@ -560,5 +560,15 @@
     "symbols_traded": [
       "QQQ"
     ]
+  },
+  {
+    "timestamp": "2026-05-08T14:15:31.672111-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 105077.26,
+    "vix": 12.34,
+    "signals_count": 7,
+    "orders_count": 0,
+    "symbols_traded": []
   }
 ]
