@@ -1,8 +1,8 @@
-name: AlgoTrader — Intraday Strategies (every 15min)
+name: AlgoTrader — Intraday Strategies (manual dispatch only — v4)
+# Schedule crons removed in v4; Render WebSocket engine handles continuous execution.
+# Retain workflow_dispatch so cron-job.org can still dispatch for fallback testing.
 
 on:
-  schedule:
-    - cron: '0,15,30,45 14,15,16,17,18,19 * * 1-5'
   workflow_dispatch:
     inputs:
       mode:
@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Python dependencies
-        run: pip3 install --quiet alpaca-py pandas numpy requests python-dateutil pytz
+        run: pip3 install --quiet alpaca-py>=0.30.0 pandas>=2.0.0 numpy>=1.24.0 requests python-dateutil pytz
 
       - name: Check market hours
         id: market_check
