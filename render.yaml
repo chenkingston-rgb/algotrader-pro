@@ -1,18 +1,19 @@
 services:
-  - type: worker
+  - type: web
     name: algotrader-pro
     runtime: python
     buildCommand: pip install -r requirements.txt
     startCommand: python scripts/run_engine.py
     envVars:
-      - key: ALPACA_API_KEY
+      - key: ALPACA_PAPER_KEY
         sync: false
-      - key: ALPACA_API_SECRET
+      - key: ALPACA_PAPER_SECRET
+        sync: false
+      - key: ALPACA_LIVE_KEY
+        sync: false
+      - key: ALPACA_LIVE_SECRET
         sync: false
       - key: ALPACA_IS_PAPER
         value: "true"
       - key: BASE44_API_KEY
         sync: false
-      - key: HEALTH_PORT
-        value: "8099"
-    healthCheckPath: /health
