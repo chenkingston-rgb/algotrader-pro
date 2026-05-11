@@ -1119,9 +1119,17 @@ def main():
                         print(f"  ✓ ORDER PLACED: {signal} {qty} {symbol} @ market | "
                               f"stop={stop_price:.2f} tp={tp_price:.2f} | id={order_id}")
                         orders_placed.append({
-                            "symbol": symbol, "strat": strat_name,
-                            "signal": signal,  "qty": qty,
-                            "price": round(price, 2), "order_id": order_id,
+                            "symbol":       symbol,
+                            "strat":        strat_name,
+                            "signal":       signal,
+                            "side":         signal,   # "buy" or "sell"
+                            "qty":          qty,
+                            "price":        round(price, 2),
+                            "est_value":    round(price * qty, 2),
+                            "stop_price":   round(stop_price, 2) if stop_price else None,
+                            "tp_price":     round(tp_price, 2)   if tp_price   else None,
+                            "order_id":     order_id,
+                            "timestamp":    run_start.isoformat(),
                         })
                     except Exception as e:
                         skip_reason = f"order_error: {e}"
@@ -1146,17 +1154,48 @@ def main():
                 "indicators":  inds,
             })
 
+    # Build enriched position details for dashboard
+    position_details = []
+    for sym, pos in positions.items():
+        try:
+            entry = float(pos.get("avg_entry_price", 0))
+            cur   = float(pos.get("current_price", 0))
+            qty_p = float(pos.get("qty", 0))
+            mval  = float(pos.get("market_value", 0))
+            upl   = float(pos.get("unrealized_pl", 0))
+            uplpc = float(pos.get("unrealized_plpc", 0)) * 100
+            # Find which strategies are watching this symbol (for exit criteria)
+            watching = []
+            for sn, sc in STRATEGIES.items():
+                if sym in sc.get("symbols", []):
+                    watching.append(sn)
+            position_details.append({
+                "symbol":          sym,
+                "qty":             qty_p,
+                "side":            pos.get("side", "long"),
+                "avg_entry_price": round(entry, 2),
+                "current_price":   round(cur, 2),
+                "market_value":    round(mval, 2),
+                "unrealized_pl":   round(upl, 2),
+                "unrealized_plpc": round(uplpc, 3),
+                "cost_basis":      round(float(pos.get("cost_basis", entry * qty_p)), 2),
+                "watching_strategies": watching,
+            })
+        except Exception as e:
+            position_details.append({"symbol": sym, "error": str(e)})
+
     run_log = {
-        "run_timestamp": run_start.isoformat(),
-        "mode":          MODE,
-        "strategy_mode": STRATEGY_MODE,
-        "equity":        round(equity, 2),
-        "buying_power":  round(buying_power, 2),
-        "vix":           vix,
-        "drawdown_pct":  round(drawdown_pct, 2),
-        "positions":     list(positions.keys()),
-        "signals":       all_signals,
-        "orders_placed": orders_placed,
+        "run_timestamp":    run_start.isoformat(),
+        "mode":             MODE,
+        "strategy_mode":    STRATEGY_MODE,
+        "equity":           round(equity, 2),
+        "buying_power":     round(buying_power, 2),
+        "vix":              vix,
+        "drawdown_pct":     round(drawdown_pct, 2),
+        "positions":        list(positions.keys()),
+        "position_details": position_details,
+        "signals":          all_signals,
+        "orders_placed":    orders_placed,
     }
 
     print(f"\n{'='*60}")
