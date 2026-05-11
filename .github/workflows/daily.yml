@@ -1,9 +1,8 @@
-name: AlgoTrader — Daily Strategies (9:45am + 3:30pm ET)
+name: AlgoTrader — Daily Strategies (manual dispatch only — v4)
+# Schedule crons removed in v4; Render WebSocket engine handles continuous execution.
+# Retain workflow_dispatch for manual paper/live test runs and diagnostics.
 
 on:
-  schedule:
-    - cron: '45 13 * * 1-5'   # 9:45 AM ET
-    - cron: '30 19 * * 1-5'   # 3:30 PM ET
   workflow_dispatch:
     inputs:
       mode:
@@ -23,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Python dependencies
-        run: pip3 install --quiet alpaca-py pandas numpy requests python-dateutil pytz
+        run: pip3 install --quiet alpaca-py>=0.30.0 pandas>=2.0.0 numpy>=1.24.0 requests python-dateutil pytz
 
       - name: Run daily trend strategies
         env:
