@@ -180,7 +180,7 @@ def main():
     # Import here so startup doesn't fail if alpaca-py not installed locally
     from alpaca.data.live import StockDataStream
 
-    stream = StockDataStream(API_KEY, API_SECRET, paper=IS_PAPER)
+    stream = StockDataStream(API_KEY, API_SECRET)  # paper= not accepted in alpaca-py >= 0.30.0
     stream.subscribe_bars(on_bar, *symbols)
 
     logger.info(f"[ENGINE] WebSocket connected — streaming {len(symbols)} symbols")
