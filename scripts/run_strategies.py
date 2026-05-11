@@ -1,7 +1,14 @@
 """
-AlgoTrader Pro — GitHub Actions Strategy Runner
+AlgoTrader Pro — GitHub Actions Strategy Runner  (v4)
 Dual-frequency: daily bars for trend strategies, 15-min bars for mean-rev/momentum.
 Writes JSON log files back to the repo so Base44 can read them via raw.githubusercontent.com.
+
+V4 additions:
+  - Section A: Engine exports (get_trading_symbols, is_market_hours, run_all_strategies)
+  - Section B: 7th strategy — VWAP Breakout
+  - Section C: VWAP-adjusted take-profit multiplier
+  - Section D: RSI(2) position-size multiplier
+  - Section E: ADX(14) regime size scaler
 
 Environment variables (GitHub Secrets):
   ALPACA_PAPER_KEY / ALPACA_PAPER_SECRET
@@ -14,12 +21,14 @@ Environment variables (GitHub Secrets):
   GITHUB_REPOSITORY (auto-injected by GitHub Actions)
 """
 
-import os, sys, json, math, base64, requests
+import os, sys, json, math, time, base64, logging, requests
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 import pandas as pd
 import numpy as np
 import pytz
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 # ─────────────────────────────────────────────
 # CONFIG
@@ -39,8 +48,8 @@ ALPACA_DATA   = "https://data.alpaca.markets"
 
 RISK_PCT         = 0.01    # Risk 1% of portfolio per trade
 MAX_POSITION_PCT = 0.10    # Cap any single position at 10% of portfolio
-ATR_STOP_MULT    = 1.5     # Stop loss = entry - 1.5 * ATR
-ATR_TP_MULT      = 3.0     # Take profit = entry + 3.0 * ATR
+ATR_STOP_MULT    = 1.5     # Stop loss = entry ± 1.5 × ATR
+ATR_TP_MULT      = 3.0     # Take profit default = entry ± 3.0 × ATR (overridden by VWAP tp_mult in v4)
 MAX_DRAWDOWN_PCT = 25.0    # Kill switch threshold
 
 ET = pytz.timezone("America/New_York")
@@ -270,7 +279,7 @@ def place_order(symbol: str, qty: int, side: str,
     return r.json()
 
 # ─────────────────────────────────────────────
-# INDICATORS
+# INDICATORS (pandas-based, for GitHub Actions main loop)
 # ─────────────────────────────────────────────
 def calc_rsi(close: pd.Series, period: int = 14) -> pd.Series:
     delta = close.diff()
@@ -323,7 +332,7 @@ def atr_position_size(equity: float, price: float, atr: float,
     return max(1, int(min(shares_by_risk, max_by_cap)))
 
 # ─────────────────────────────────────────────
-# STRATEGY SIGNAL FUNCTIONS
+# STRATEGY SIGNAL FUNCTIONS (DataFrame-based)
 # ─────────────────────────────────────────────
 def signal_rsi_macd_combo(df: pd.DataFrame, p: dict) -> tuple:
     rsi            = calc_rsi(df["close"], p["rsi_period"])
@@ -406,8 +415,492 @@ SIGNAL_FNS = {
     "momentum_roc_15m":    signal_momentum_roc_15m,
 }
 
+# ═════════════════════════════════════════════
+# V4 — SECTION C: VWAP TAKE-PROFIT MULTIPLIER
+# ═════════════════════════════════════════════
+
+def compute_vwap(candles: list) -> Optional[float]:
+    """Compute session VWAP from a list of candle dicts (each with high/low/close/volume)."""
+    cum_tpv = 0.0
+    cum_vol = 0.0
+    for c in candles:
+        if c.get("volume", 0) <= 0:
+            continue
+        typical = (c["high"] + c["low"] + c["close"]) / 3.0
+        cum_tpv += typical * c["volume"]
+        cum_vol  += c["volume"]
+    return None if cum_vol == 0 else round(cum_tpv / cum_vol, 4)
+
+
+def get_tp_multiplier(entry_price: float, vwap: Optional[float]) -> float:
+    """
+    VWAP-distance-adjusted take-profit multiplier.
+    dist = (entry_price - vwap) / vwap × 100  (positive = above VWAP)
+
+    dist >= +1.5%  →  tp_mult = 2.0  (already extended, tighter target)
+    dist  +0.5..+1.5%  →  tp_mult = 3.0  (normal)
+    dist  -0.5..+0.5%  →  tp_mult = 3.5  (near VWAP, room to run)
+    dist  < -0.5%  →  tp_mult = 2.0  (below VWAP, be cautious on buys)
+    floor: 0.8 (never tighter than 0.8× ATR take-profit)
+    """
+    if vwap is None or vwap == 0:
+        return ATR_TP_MULT
+    dist = ((entry_price - vwap) / vwap) * 100.0
+    if dist >= 1.5:
+        tp = 2.0
+    elif dist >= 0.5:
+        tp = 3.0
+    elif dist >= -0.5:
+        tp = 3.5
+    else:
+        tp = 2.0
+    return max(tp, 0.8)
+
+
+# ═════════════════════════════════════════════
+# V4 — SECTION D: RSI(2) POSITION-SIZE MULTIPLIER
+# ═════════════════════════════════════════════
+
+def compute_rsi_n(closes: list, period: int = 14) -> Optional[float]:
+    """
+    Compute RSI with Wilder smoothing using raw close list.
+    Handles both period=14 (regime) and period=2 (size modifier).
+    """
+    if len(closes) < period + 2:
+        return None
+    gains, losses = [], []
+    for i in range(1, len(closes)):
+        change = closes[i] - closes[i - 1]
+        gains.append(max(change, 0.0))
+        losses.append(max(-change, 0.0))
+    # Wilder's initial average
+    avg_gain = sum(gains[:period]) / period
+    avg_loss = sum(losses[:period]) / period
+    # Wilder's smoothing
+    for i in range(period, len(gains)):
+        avg_gain = (avg_gain * (period - 1) + gains[i]) / period
+        avg_loss = (avg_loss * (period - 1) + losses[i]) / period
+    if avg_loss == 0:
+        return 100.0
+    return round(100.0 - (100.0 / (1.0 + avg_gain / avg_loss)), 2)
+
+
+def get_rsi2_size_multiplier(rsi2: Optional[float]) -> float:
+    """
+    RSI(2) position-size modifier — rewards entries at extremes,
+    reduces size when price is overextended.
+
+    RSI2  56–72   → 1.20  (strong momentum, increase size)
+    RSI2  31–55   → 1.00  (neutral)
+    RSI2  73–85   → 1.00  (momentum stalling, hold size)
+    RSI2  >  85   → 0.85  (overbought, reduce)
+    RSI2  10–30   → 0.90  (oversold pullback risk)
+    RSI2  <  10   → 0.80  (extreme, smallest size)
+    """
+    if rsi2 is None:
+        return 1.0
+    if 56 <= rsi2 <= 72:
+        return 1.2
+    elif 31 <= rsi2 <= 55:
+        return 1.0
+    elif 73 <= rsi2 <= 85:
+        return 1.0
+    elif rsi2 > 85:
+        return 0.85
+    elif 10 <= rsi2 < 31:
+        return 0.9
+    else:
+        return 0.8
+
+
+# ═════════════════════════════════════════════
+# V4 — SECTION E: ADX(14) REGIME SIZE SCALER
+# ═════════════════════════════════════════════
+
+def compute_adx14_spy() -> float:
+    """
+    Compute ADX(14) on SPY 30-minute bars using Wilder's smoothing.
+    Returns 20.0 (neutral default) on any failure.
+    """
+    try:
+        df = get_bars("SPY", timeframe="30Min", bar_days=5)
+        if len(df) < 30:
+            return 20.0
+
+        high  = df["high"]
+        low   = df["low"]
+        close = df["close"]
+        period = 14
+
+        # True Range
+        tr = pd.concat([
+            high - low,
+            (high - close.shift(1)).abs(),
+            (low  - close.shift(1)).abs(),
+        ], axis=1).max(axis=1)
+
+        # Directional movement
+        up_move   = high.diff()
+        down_move = low.diff().mul(-1)
+        plus_dm   = np.where((up_move > down_move) & (up_move > 0),   up_move,   0.0)
+        minus_dm  = np.where((down_move > up_move) & (down_move > 0), down_move, 0.0)
+        plus_dm_s  = pd.Series(plus_dm,  index=df.index)
+        minus_dm_s = pd.Series(minus_dm, index=df.index)
+
+        # Wilder smoothing (com = period - 1)
+        atr_w    = tr.ewm(com=period - 1, adjust=False).mean()
+        plus_di  = 100.0 * plus_dm_s.ewm(com=period - 1,  adjust=False).mean() / atr_w.replace(0, np.nan)
+        minus_di = 100.0 * minus_dm_s.ewm(com=period - 1, adjust=False).mean() / atr_w.replace(0, np.nan)
+
+        denom = (plus_di + minus_di).replace(0, np.nan)
+        dx    = 100.0 * (plus_di - minus_di).abs() / denom
+        adx   = dx.ewm(com=period - 1, adjust=False).mean().iloc[-1]
+
+        return round(float(adx), 2) if not np.isnan(adx) else 20.0
+    except Exception as e:
+        logging.warning(f"[ADX] compute_adx14_spy failed: {e}")
+        return 20.0
+
+
+def compute_spy_slope() -> float:
+    """
+    Linear-regression slope of SPY 30-min closes over the last 20 bars,
+    normalised as % per bar of the last close price.
+    Positive = upward trend, negative = downward.
+    Returns 0.0 on failure.
+    """
+    try:
+        df = get_bars("SPY", timeframe="30Min", bar_days=3)
+        if len(df) < 20:
+            return 0.0
+        c = df["close"].values[-20:].astype(float)
+        x = np.arange(len(c), dtype=float)
+        slope = np.polyfit(x, c, 1)[0]
+        slope_pct = (slope / c[-1]) * 100.0
+        return round(float(slope_pct), 4)
+    except Exception as e:
+        logging.warning(f"[ADX] compute_spy_slope failed: {e}")
+        return 0.0
+
+
+# 30-minute ADX cache (refresh every 30 min)
+_adx_cache: dict = {"adx": 20.0, "slope": 0.0, "last_updated": 0.0}
+
+
+def get_cached_adx_slope() -> tuple:
+    """Return (adx, slope) for SPY, refreshing at most every 30 minutes."""
+    now = time.time()
+    if now - _adx_cache["last_updated"] > 1800:
+        try:
+            adx   = compute_adx14_spy()
+            slope = compute_spy_slope()
+            _adx_cache.update({"adx": adx, "slope": slope, "last_updated": now})
+        except Exception as e:
+            logging.warning(f"[REGIME] ADX/slope refresh failed: {e}")
+    return _adx_cache["adx"], _adx_cache["slope"]
+
+
+def get_regime_size_multiplier(adx: float, slope: float) -> tuple:
+    """
+    Map ADX + slope to a position-size multiplier and label.
+
+    TRENDING  (adx >= 23 AND slope > 0) → 1.00  (full size, trend is your friend)
+    NEUTRAL   (18 <= adx < 23)          → 0.75  (moderate size)
+    SIDEWAYS  (adx < 18)                → 0.50  (half size, chop risk)
+    """
+    if adx >= 23 and slope > 0:
+        regime, mult = "TRENDING", 1.0
+    elif adx < 18:
+        regime, mult = "SIDEWAYS", 0.5
+    else:
+        regime, mult = "NEUTRAL", 0.75
+    logging.info(f"[REGIME] adx={adx:.1f} slope={slope:+.3f}% → {regime} → size_mult={mult}")
+    return mult, regime
+
+
+# ═════════════════════════════════════════════
+# V4 — SECTION A: ENGINE EXPORTS & CACHES
+# ═════════════════════════════════════════════
+
+def get_trading_symbols() -> list:
+    """Symbols the WebSocket engine subscribes to."""
+    return [
+        "SPY", "QQQ", "AAPL", "MSFT", "NVDA", "TSLA",
+        "AMZN", "META", "GOOGL", "AMD", "PLTR", "COIN",
+        "SOFI", "RIVN", "HOOD",
+    ]
+
+
+def is_market_hours(now_et) -> bool:
+    """Return True if now_et falls within the tradeable window (9:35am–3:50pm ET, Mon–Fri)."""
+    if now_et.weekday() >= 5:
+        return False
+    hhmm = now_et.hour * 100 + now_et.minute
+    return 935 <= hhmm <= 1550
+
+
+def log_engine_status(status: str):
+    """Lightweight status logger for the persistent engine."""
+    logging.info(f"[ENGINE_STATUS] {status}")
+
+
+# 60-second account/position cache (avoids per-symbol REST calls in the streaming path)
+_account_cache: dict = {
+    "equity": 100000.0, "buying_power": 100000.0,
+    "positions": {}, "last_updated": 0.0,
+}
+
+# 30-minute VIX cache
+_vix_cache: dict = {"vix": None, "last_updated": 0.0}
+
+
+def _refresh_account_cache():
+    now = time.time()
+    if now - _account_cache["last_updated"] > 60:
+        try:
+            acct = get_account()
+            _account_cache["equity"]       = float(acct["equity"])
+            _account_cache["buying_power"] = float(acct["buying_power"])
+            _account_cache["positions"]    = get_positions()
+            _account_cache["last_updated"] = now
+        except Exception as e:
+            logging.warning(f"[CACHE] Account refresh failed: {e}")
+
+
+def _get_cached_vix() -> Optional[float]:
+    now = time.time()
+    if now - _vix_cache["last_updated"] > 1800:
+        _vix_cache["vix"]          = get_vix()
+        _vix_cache["last_updated"] = now
+    return _vix_cache["vix"]
+
+
+# ═════════════════════════════════════════════
+# V4 — SECTION B: VWAP BREAKOUT SIGNAL (7th strategy)
+# ═════════════════════════════════════════════
+
+def signal_vwap_breakout_list(
+    closes: list, highs: list, lows: list, volumes: list,
+    vwap: Optional[float], p: dict
+) -> tuple:
+    """
+    Buy : price crosses ABOVE vwap with a volume surge.
+    Sell: price crosses BELOW vwap.
+    p keys: vol_surge_mult (default 1.5), vol_lookback (default 20)
+    """
+    lookback = p.get("vol_lookback", 20)
+    if vwap is None or len(closes) < lookback + 2:
+        return "hold", {}
+
+    price      = closes[-1]
+    prev_price = closes[-2]
+
+    recent_vols = volumes[-(lookback + 1):-1]
+    avg_vol     = sum(recent_vols) / len(recent_vols) if recent_vols else 0
+    cur_vol     = volumes[-1]
+    vol_ratio   = round(cur_vol / avg_vol, 2) if avg_vol > 0 else None
+    vol_surge   = (vol_ratio is not None) and (vol_ratio >= p.get("vol_surge_mult", 1.5))
+
+    inds = {
+        "price":     round(price, 2),
+        "vwap":      round(vwap,  2),
+        "vol_ratio": vol_ratio,
+        "vol_surge": vol_surge,
+    }
+
+    if prev_price <= vwap < price and vol_surge:
+        return "buy", inds
+    if prev_price >= vwap > price:
+        return "sell", inds
+    return "hold", inds
+
+
+# ═════════════════════════════════════════════
+# V4 — STREAMING STRATEGY RUNNERS
+# (called by run_engine.py via run_all_strategies)
+# ═════════════════════════════════════════════
+
+def _run_streaming_strategy(
+    strategy_name: str,
+    symbol: str,
+    closes: list, highs: list, lows: list, volumes: list,
+    signal: str, inds: dict, shared: dict,
+    vix_block: float, vix_reduce: float, vix_reduce_pct: float,
+):
+    """
+    Core order-placement helper for the WebSocket streaming engine.
+    Applies VIX × regime × RSI2 combined size multiplier and VWAP TP multiplier.
+    """
+    if signal == "hold":
+        return
+
+    _refresh_account_cache()
+    equity       = _account_cache["equity"]
+    buying_power = _account_cache["buying_power"]
+    positions    = _account_cache["positions"]
+
+    if signal == "buy"  and symbol in positions:
+        return
+    if signal == "sell" and symbol not in positions:
+        return
+
+    vix     = _get_cached_vix()
+    strat_mock = {"vix_block": vix_block, "vix_reduce": vix_reduce, "vix_reduce_pct": vix_reduce_pct}
+    vix_mult, vix_reason = vix_size_multiplier(strat_mock, vix or 0.0)
+
+    if vix_mult == 0.0:
+        logging.info(f"[{strategy_name}] {symbol}: blocked — {vix_reason}")
+        return
+
+    df    = pd.DataFrame({"close": closes, "high": highs, "low": lows, "volume": volumes})
+    price = closes[-1]
+    atr   = calc_atr(df).iloc[-1]
+
+    # Combined multiplier: VIX × ADX-regime × RSI(2)
+    size_mult = vix_mult * shared["regime_mult"] * shared["rsi2_mult"]
+    qty = atr_position_size(equity, price, atr, size_mult)
+
+    if qty < 1:
+        return
+    if price * qty > buying_power * 0.95:
+        logging.info(f"[{strategy_name}] {symbol}: insufficient buying power for {qty} shares")
+        return
+
+    tp_mult    = shared["tp_mult"]   # VWAP-adjusted multiplier from Section C
+    stop_price = (price * (1.0 - ATR_STOP_MULT * atr / price) if signal == "buy"
+                  else price * (1.0 + ATR_STOP_MULT * atr / price))
+    tp_price   = (price * (1.0 + tp_mult * atr / price) if signal == "buy"
+                  else price * (1.0 - tp_mult * atr / price))
+
+    try:
+        order = place_order(symbol, qty, signal, stop_price, tp_price)
+        logging.info(
+            f"[{strategy_name}] ✓ ORDER: {signal} {qty}×{symbol} @ {price:.2f} | "
+            f"stop={stop_price:.2f} tp={tp_price:.2f} tp_mult={tp_mult:.1f} | "
+            f"regime={shared['regime_label']} rsi2_mult={shared['rsi2_mult']:.2f}"
+        )
+        _account_cache["last_updated"] = 0.0   # invalidate so next call refreshes
+    except Exception as e:
+        logging.error(f"[{strategy_name}] {symbol}: order failed — {e}")
+
+
+def run_rsi_macd_strategy(symbol, closes, highs, lows, volumes, shared):
+    if len(closes) < 60:
+        return
+    df     = pd.DataFrame({"close": closes, "high": highs, "low": lows, "volume": volumes})
+    cfg    = DAILY_STRATEGIES["rsi_macd_combo"]
+    signal, inds = signal_rsi_macd_combo(df, cfg["params"])
+    _run_streaming_strategy("rsi_macd_combo", symbol, closes, highs, lows, volumes,
+                            signal, inds, shared, cfg["vix_block"], cfg["vix_reduce"], cfg["vix_reduce_pct"])
+
+
+def run_bollinger_strategy(symbol, closes, highs, lows, volumes, shared):
+    if len(closes) < 30:
+        return
+    df     = pd.DataFrame({"close": closes, "high": highs, "low": lows, "volume": volumes})
+    cfg    = INTRADAY_STRATEGIES["bollinger_bands_15m"]
+    signal, inds = signal_bollinger_bands_15m(df, cfg["params"])
+    _run_streaming_strategy("bollinger_bands_15m", symbol, closes, highs, lows, volumes,
+                            signal, inds, shared, cfg["vix_block"], cfg["vix_reduce"], cfg["vix_reduce_pct"])
+
+
+def run_macd_crossover_strategy(symbol, closes, highs, lows, volumes, shared):
+    if len(closes) < 60:
+        return
+    df     = pd.DataFrame({"close": closes, "high": highs, "low": lows, "volume": volumes})
+    cfg    = DAILY_STRATEGIES["macd_crossover"]
+    signal, inds = signal_macd_crossover(df, cfg["params"])
+    _run_streaming_strategy("macd_crossover", symbol, closes, highs, lows, volumes,
+                            signal, inds, shared, cfg["vix_block"], cfg["vix_reduce"], cfg["vix_reduce_pct"])
+
+
+def run_triple_ema_strategy(symbol, closes, highs, lows, volumes, shared):
+    if len(closes) < 60:
+        return
+    df     = pd.DataFrame({"close": closes, "high": highs, "low": lows, "volume": volumes})
+    cfg    = DAILY_STRATEGIES["triple_ema"]
+    signal, inds = signal_triple_ema(df, cfg["params"])
+    _run_streaming_strategy("triple_ema", symbol, closes, highs, lows, volumes,
+                            signal, inds, shared, cfg["vix_block"], cfg["vix_reduce"], cfg["vix_reduce_pct"])
+
+
+def run_ema_crossover_strategy(symbol, closes, highs, lows, volumes, shared):
+    if len(closes) < 30:
+        return
+    df     = pd.DataFrame({"close": closes, "high": highs, "low": lows, "volume": volumes})
+    cfg    = DAILY_STRATEGIES["ema_crossover"]
+    signal, inds = signal_ema_crossover(df, cfg["params"])
+    _run_streaming_strategy("ema_crossover", symbol, closes, highs, lows, volumes,
+                            signal, inds, shared, cfg["vix_block"], cfg["vix_reduce"], cfg["vix_reduce_pct"])
+
+
+def run_momentum_roc_strategy(symbol, closes, highs, lows, volumes, shared):
+    if len(closes) < 15:
+        return
+    df     = pd.DataFrame({"close": closes, "high": highs, "low": lows, "volume": volumes})
+    cfg    = INTRADAY_STRATEGIES["momentum_roc_15m"]
+    signal, inds = signal_momentum_roc_15m(df, cfg["params"])
+    _run_streaming_strategy("momentum_roc_15m", symbol, closes, highs, lows, volumes,
+                            signal, inds, shared, cfg["vix_block"], cfg["vix_reduce"], cfg["vix_reduce_pct"])
+
+
+def run_vwap_breakout_strategy(symbol, closes, highs, lows, volumes, shared):
+    """VWAP Breakout — 7th strategy (v4). Uses volume surge + VWAP cross."""
+    if len(closes) < 25:
+        return
+    p = {"vol_surge_mult": 1.5, "vol_lookback": 20}
+    signal, inds = signal_vwap_breakout_list(closes, highs, lows, volumes, shared["vwap"], p)
+    # MOMENTUM risk params: vix_block=35, vix_reduce=25, vix_reduce_pct=0.50
+    _run_streaming_strategy("vwap_breakout", symbol, closes, highs, lows, volumes,
+                            signal, inds, shared, 35.0, 25.0, 0.50)
+
+
+# ═════════════════════════════════════════════
+# V4 — MASTER DISPATCHER (called by run_engine.py per-symbol per-candle)
+# ═════════════════════════════════════════════
+
+def run_all_strategies(symbol: str, candles: list) -> None:
+    """
+    Entry point for the persistent WebSocket engine.
+    Called each time a new 5-min candle completes for `symbol`.
+    `candles` is a list of dicts: [{timestamp, open, high, low, close, volume}, ...]
+    """
+    if len(candles) < 30:
+        return
+
+    closes  = [c["close"]  for c in candles]
+    highs   = [c["high"]   for c in candles]
+    lows    = [c["low"]    for c in candles]
+    volumes = [c["volume"] for c in candles]
+
+    # Compute shared context once per symbol per bar
+    vwap         = compute_vwap(candles)
+    rsi2_val     = compute_rsi_n(closes, period=2)
+    adx_val, slope = get_cached_adx_slope()
+    regime_mult, regime_label = get_regime_size_multiplier(adx_val, slope)
+    rsi2_mult    = get_rsi2_size_multiplier(rsi2_val)
+    tp_mult      = get_tp_multiplier(closes[-1], vwap)
+
+    shared = {
+        "vwap":         vwap,
+        "rsi2":         rsi2_val,
+        "regime_mult":  regime_mult,
+        "regime_label": regime_label,
+        "rsi2_mult":    rsi2_mult,
+        "tp_mult":      tp_mult,
+    }
+
+    run_rsi_macd_strategy(symbol,     closes, highs, lows, volumes, shared)
+    run_bollinger_strategy(symbol,    closes, highs, lows, volumes, shared)
+    run_macd_crossover_strategy(symbol, closes, highs, lows, volumes, shared)
+    run_triple_ema_strategy(symbol,   closes, highs, lows, volumes, shared)
+    run_ema_crossover_strategy(symbol, closes, highs, lows, volumes, shared)
+    run_momentum_roc_strategy(symbol, closes, highs, lows, volumes, shared)
+    run_vwap_breakout_strategy(symbol, closes, highs, lows, volumes, shared)
+
+
 # ─────────────────────────────────────────────
-# MAIN EXECUTION LOOP
+# MAIN EXECUTION LOOP (GitHub Actions / manual dispatch)
 # ─────────────────────────────────────────────
 def main():
     run_start = datetime.now(ET)
@@ -434,7 +927,7 @@ def main():
     print(f"Open positions: {list(positions.keys()) or 'none'}")
 
     # 4. Calculate peak equity / drawdown (best-effort from local state)
-    peak_equity  = equity   # We no longer have Base44 history, track conservatively
+    peak_equity  = equity
     drawdown_pct = 0.0
 
     # 5. Run each strategy
@@ -502,10 +995,10 @@ def main():
                     skip_reason = "insufficient_buying_power"
                     print(f"  {symbol}: not enough buying power for {qty} shares at ${price:.2f}")
                 else:
-                    stop_price = price * (1 - ATR_STOP_MULT * atr / price) if signal == "buy" \
-                                 else price * (1 + ATR_STOP_MULT * atr / price)
-                    tp_price   = price * (1 + ATR_TP_MULT * atr / price)   if signal == "buy" \
-                                 else price * (1 - ATR_TP_MULT * atr / price)
+                    stop_price = (price * (1 - ATR_STOP_MULT * atr / price) if signal == "buy"
+                                  else price * (1 + ATR_STOP_MULT * atr / price))
+                    tp_price   = (price * (1 + ATR_TP_MULT * atr / price)   if signal == "buy"
+                                  else price * (1 - ATR_TP_MULT * atr / price))
                     try:
                         order    = place_order(symbol, qty, signal, stop_price, tp_price)
                         order_id = order.get("id")
@@ -523,55 +1016,53 @@ def main():
 
             # Collect for log file
             all_signals.append({
-                "timestamp":        run_start.isoformat(),
-                "strategy":         strat_name,
-                "vix_type":         strat_cfg["vix_type"],
-                "symbol":           symbol,
-                "signal":           signal,
-                "price":            round(price, 2),
-                "atr":              round(atr, 4),
-                "qty":              qty,
-                "stop_price":       round(stop_price, 2) if stop_price else None,
-                "tp_price":         round(tp_price, 2)   if tp_price   else None,
-                "executed":         executed,
-                "skip_reason":      skip_reason,
-                "order_id":         order_id,
-                "vix":              vix,
-                "vix_reason":       vix_reason,
-                "indicators":       inds,
+                "timestamp":   run_start.isoformat(),
+                "strategy":    strat_name,
+                "vix_type":    strat_cfg["vix_type"],
+                "symbol":      symbol,
+                "signal":      signal,
+                "price":       round(price, 2),
+                "atr":         round(atr, 4),
+                "qty":         qty,
+                "stop_price":  round(stop_price, 2) if stop_price else None,
+                "tp_price":    round(tp_price, 2)   if tp_price   else None,
+                "executed":    executed,
+                "skip_reason": skip_reason,
+                "order_id":    order_id,
+                "vix":         vix,
+                "vix_reason":  vix_reason,
+                "indicators":  inds,
             })
 
     # 6. Build and write the run log
     run_log = {
-        "run_timestamp":   run_start.isoformat(),
-        "mode":            MODE,
-        "strategy_mode":   STRATEGY_MODE,
-        "equity":          round(equity, 2),
-        "buying_power":    round(buying_power, 2),
-        "vix":             vix,
-        "drawdown_pct":    round(drawdown_pct, 2),
-        "positions":       list(positions.keys()),
-        "signals":         all_signals,
-        "orders_placed":   orders_placed,
+        "run_timestamp": run_start.isoformat(),
+        "mode":          MODE,
+        "strategy_mode": STRATEGY_MODE,
+        "equity":        round(equity, 2),
+        "buying_power":  round(buying_power, 2),
+        "vix":           vix,
+        "drawdown_pct":  round(drawdown_pct, 2),
+        "positions":     list(positions.keys()),
+        "signals":       all_signals,
+        "orders_placed": orders_placed,
     }
 
     print(f"\n{'='*60}")
     print(f"Run complete — {len(all_signals)} signals, {len(orders_placed)} orders placed")
     print(f"{'='*60}\n")
 
-    # Write logs to GitHub repo
     write_github_log(LOG_FILE, run_log)
 
-    # Append compact entry to run history
     run_summary = {
-        "timestamp":       run_start.isoformat(),
-        "mode":            MODE,
-        "strategy_mode":   STRATEGY_MODE,
-        "equity":          round(equity, 2),
-        "vix":             vix,
-        "signals_count":   len(all_signals),
-        "orders_count":    len(orders_placed),
-        "symbols_traded":  [o["symbol"] for o in orders_placed],
+        "timestamp":      run_start.isoformat(),
+        "mode":           MODE,
+        "strategy_mode":  STRATEGY_MODE,
+        "equity":         round(equity, 2),
+        "vix":            vix,
+        "signals_count":  len(all_signals),
+        "orders_count":   len(orders_placed),
+        "symbols_traded": [o["symbol"] for o in orders_placed],
     }
     append_run_history(run_summary)
 
