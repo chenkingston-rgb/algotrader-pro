@@ -1,1 +1,1 @@
-worker: python scripts/run_engine.py
+web: python scripts/run_engine.py
