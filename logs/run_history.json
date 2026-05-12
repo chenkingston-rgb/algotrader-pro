@@ -976,5 +976,15 @@
     "symbols_traded": [
       "XLF"
     ]
+  },
+  {
+    "timestamp": "2026-05-12T12:00:47.426965-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 104918.88,
+    "vix": 13.06,
+    "signals_count": 7,
+    "orders_count": 0,
+    "symbols_traded": []
   }
 ]
