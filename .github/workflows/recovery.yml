@@ -23,5 +23,5 @@ jobs:
           ALPACA_PAPER_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
           ALPACA_LIVE_KEY:     ${{ secrets.ALPACA_LIVE_KEY }}
           ALPACA_LIVE_SECRET:  ${{ secrets.ALPACA_LIVE_SECRET }}
-          ALPACA_IS_PAPER:     ${{ secrets.ALPACA_IS_PAPER }}
+          ALPACA_IS_PAPER:     "true"
         run: python scripts/recovery_stop_loss.py
