@@ -258,6 +258,22 @@ def place_order(symbol: str, qty: int, side: str,
     r.raise_for_status()
     return r.json()
 
+
+def close_position_order(symbol: str, qty: int) -> dict:
+    """Plain market sell to close an existing long position.
+    Never uses order_class=bracket — Alpaca rejects bracket orders on closes."""
+    payload = {
+        "symbol":        symbol,
+        "qty":           str(qty),
+        "side":          "sell",
+        "type":          "market",
+        "time_in_force": "day",
+    }
+    r = requests.post(f"{ALPACA_BASE}/v2/orders",
+                      headers=alpaca_headers(), json=payload, timeout=10)
+    r.raise_for_status()
+    return r.json()
+
 # ─────────────────────────────────────────────
 # INDICATORS (pandas-based, for GitHub Actions main loop)
 # ─────────────────────────────────────────────
@@ -395,9 +411,9 @@ SIGNAL_FNS = {
     "momentum_roc_15m":    signal_momentum_roc_15m,
 }
 
-# ═════════════════════════════════════════════
+# ══════════════════════════════════════════════
 # V5 — SECTION C: VWAP TAKE-PROFIT MULTIPLIER
-# ═════════════════════════════════════════════
+# ══════════════════════════════════════════════
 
 def compute_vwap(candles: list) -> Optional[float]:
     """Intraday VWAP from candle list. Returns None if no valid volume."""
@@ -431,9 +447,9 @@ def get_tp_multiplier(entry_price: float, vwap: Optional[float]) -> float:
     return max(tp, 0.8)
 
 
-# ═════════════════════════════════════════════
+# ══════════════════════════════════════════════
 # V5 — SECTION D: RSI(2) POSITION-SIZE MULTIPLIER
-# ═════════════════════════════════════════════
+# ══════════════════════════════════════════════
 
 def compute_rsi_n(closes: list, period: int = 14) -> Optional[float]:
     """
@@ -478,10 +494,10 @@ def get_rsi2_size_multiplier(rsi2: Optional[float]) -> float:
         return 0.8
 
 
-# ═════════════════════════════════════════════
+# ══════════════════════════════════════════════
 # V5 — SECTION E: ADX(14) REGIME SIZE SCALER
 # Uses StockHistoricalDataClient from alpaca-py >= 0.30.0
-# ═════════════════════════════════════════════
+# ══════════════════════════════════════════════
 
 def compute_adx14_spy(rest_client) -> float:
     """
@@ -619,9 +635,9 @@ def get_regime_size_multiplier(adx: float, slope: float) -> tuple:
     return mult, regime
 
 
-# ═════════════════════════════════════════════
+# ══════════════════════════════════════════════
 # V5 — SECTION A: ENGINE EXPORTS
-# ═════════════════════════════════════════════
+# ══════════════════════════════════════════════
 
 def get_trading_symbols() -> list:
     """20 symbols the WebSocket engine subscribes to."""
@@ -746,11 +762,11 @@ def _get_cached_vix() -> Optional[float]:
     return _vix_cache["vix"]
 
 
-# ═════════════════════════════════════════════
+# ══════════════════════════════════════════════
 # V5 — SECTION B: VWAP BREAKOUT (7th strategy)
 # Academic basis: Zarattini, Aziz & Barbon (SFI, 2024)
 # 5-condition entry, 9:45–11:30 ET window only
-# ═════════════════════════════════════════════
+# ══════════════════════════════════════════════
 
 def run_vwap_breakout_strategy(
     symbol: str,
@@ -766,7 +782,7 @@ def run_vwap_breakout_strategy(
     """
     logger = logging.getLogger(__name__)
 
-    # ── Time gate: 9:45–11:30 ET only ───────────────────────────────────
+    # ── Time gate: 9:45–11:30 ET only ─────────────────────────────────────
     now_et = datetime.now(ET)
     hhmm   = now_et.hour * 100 + now_et.minute
     if not (945 <= hhmm <= 1130):
@@ -775,19 +791,19 @@ def run_vwap_breakout_strategy(
     if len(closes) < 20 or len(volumes) < 20:
         return
 
-    # ── VIX gate (> 35 blocks) ───────────────────────────────────────────
+    # ── VIX gate (> 35 blocks) ─────────────────────────────────────────────
     vix = get_current_vix()
     if vix is not None and vix > 35:
         return
 
-    # ── No existing position ─────────────────────────────────────────────
+    # ── No existing position ───────────────────────────────────────────────
     if has_open_position(symbol):
         return
 
     entry_price = closes[-1]
     vwap        = shared.get("vwap")
 
-    # ── Condition 1: price above VWAP ────────────────────────────────────
+    # ── Condition 1: price above VWAP ──────────────────────────────────────
     if vwap is None or entry_price <= vwap:
         return
 
@@ -795,24 +811,24 @@ def run_vwap_breakout_strategy(
     if len(closes) >= 2 and closes[-2] > vwap:
         return   # Already extended above VWAP — not a fresh cross
 
-    # ── Condition 3: volume spike (>= 1.6× 20-bar average) ──────────────
+    # ── Condition 3: volume spike (>= 1.6× 20-bar average) ────────────────
     avg_vol_20 = sum(volumes[-20:]) / 20
     if volumes[-1] < avg_vol_20 * 1.6:
         logger.info(f"[VWAP_BO] {symbol} — volume {volumes[-1]:.0f} < 1.6× avg ({avg_vol_20:.0f})")
         return
 
-    # ── Condition 4: RSI(14) in momentum zone (52–73) ────────────────────
+    # ── Condition 4: RSI(14) in momentum zone (52–73) ──────────────────────
     rsi14 = compute_rsi_n(closes, period=14)
     if rsi14 is None or not (52 <= rsi14 <= 73):
         logger.info(f"[VWAP_BO] {symbol} — RSI14={rsi14} outside 52–73 window")
         return
 
-    # ── Condition 5: ATR minimum (>= 0.25) ──────────────────────────────
+    # ── Condition 5: ATR minimum (>= 0.25) ────────────────────────────────
     atr = compute_atr(highs, lows, closes, period=14)
     if atr is None or atr < 0.25:
         return
 
-    # ── All 5 conditions passed — compute order ───────────────────────────
+    # ── All 5 conditions passed — compute order ────────────────────────────
     vwap_dist_pct = ((entry_price - vwap) / vwap) * 100.0
     tp_mult       = shared["tp_mult"]
     rsi2_mult     = shared["rsi2_mult"]
@@ -891,22 +907,33 @@ def _run_streaming_strategy(
         logging.info(f"[{strategy_name}] {symbol}: insufficient buying power for {qty} shares")
         return
 
-    tp_mult    = shared["tp_mult"]
-    stop_price = (price * (1.0 - ATR_STOP_MULT * atr / price) if signal == "buy"
-                  else price * (1.0 + ATR_STOP_MULT * atr / price))
-    tp_price   = (price * (1.0 + tp_mult * atr / price) if signal == "buy"
-                  else price * (1.0 - tp_mult * atr / price))
-
-    try:
-        place_order(symbol, qty, signal, stop_price, tp_price)
-        logging.info(
-            f"[{strategy_name}] ✓ {signal} {qty}×{symbol} @ {price:.2f} | "
-            f"stop={stop_price:.2f} tp={tp_price:.2f} tp_mult={tp_mult:.1f} | "
-            f"regime={shared['regime_label']} rsi2_mult={shared['rsi2_mult']:.2f}"
-        )
-        _account_cache["last_updated"] = 0.0   # force refresh after trade
-    except Exception as e:
-        logging.error(f"[{strategy_name}] {symbol}: order failed — {e}")
+    if signal == "buy":
+        tp_mult    = shared["tp_mult"]
+        stop_price = price * (1.0 - ATR_STOP_MULT * atr / price)
+        tp_price   = price * (1.0 + tp_mult * atr / price)
+        try:
+            place_order(symbol, qty, "buy", stop_price, tp_price)
+            logging.info(
+                f"[{strategy_name}] ✓ BUY {qty}×{symbol} @ {price:.2f} | "
+                f"stop={stop_price:.2f} tp={tp_price:.2f} tp_mult={tp_mult:.1f} | "
+                f"regime={shared['regime_label']} rsi2_mult={shared['rsi2_mult']:.2f}"
+            )
+            _account_cache["last_updated"] = 0.0   # force refresh after trade
+        except Exception as e:
+            logging.error(f"[{strategy_name}] {symbol}: buy order failed — {e}")
+    else:
+        # SELL: plain market close — bracket orders rejected on position closes
+        pos_qty = int(float(positions.get(symbol, {}).get("qty", 0)))
+        close_qty = pos_qty if pos_qty > 0 else qty
+        try:
+            close_position_order(symbol, close_qty)
+            logging.info(
+                f"[{strategy_name}] ✓ SELL {close_qty}×{symbol} @ {price:.2f} (close) | "
+                f"regime={shared['regime_label']}"
+            )
+            _account_cache["last_updated"] = 0.0   # force refresh after trade
+        except Exception as e:
+            logging.error(f"[{strategy_name}] {symbol}: sell order failed — {e}")
 
 
 def run_rsi_macd_strategy(symbol, closes, highs, lows, volumes, shared):
@@ -969,9 +996,9 @@ def run_momentum_roc_strategy(symbol, closes, highs, lows, volumes, shared):
                             signal, inds, shared, cfg["vix_block"], cfg["vix_reduce"], cfg["vix_reduce_pct"])
 
 
-# ═════════════════════════════════════════════
+# ══════════════════════════════════════════════
 # V5 — MASTER DISPATCHER (called by run_engine.py per-symbol per-5-min-candle)
-# ═════════════════════════════════════════════
+# ══════════════════════════════════════════════
 
 def run_all_strategies(symbol: str, candles: list) -> None:
     """
@@ -1099,7 +1126,8 @@ def main():
                 print(f"  {symbol}: already holding position, skipping buy")
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
-            else:
+            elif signal == "buy":
+                # BUY: bracket order with stop-loss + take-profit
                 qty = atr_position_size(equity, price, atr, vix_mult)
                 if qty < 1:
                     skip_reason = "qty_too_small"
@@ -1108,32 +1136,57 @@ def main():
                     skip_reason = "insufficient_buying_power"
                     print(f"  {symbol}: not enough buying power for {qty} shares at ${price:.2f}")
                 else:
-                    stop_price = (price * (1 - ATR_STOP_MULT * atr / price) if signal == "buy"
-                                  else price * (1 + ATR_STOP_MULT * atr / price))
-                    tp_price   = (price * (1 + ATR_TP_MULT * atr / price)   if signal == "buy"
-                                  else price * (1 - ATR_TP_MULT * atr / price))
+                    stop_price = price * (1 - ATR_STOP_MULT * atr / price)
+                    tp_price   = price * (1 + ATR_TP_MULT * atr / price)
                     try:
-                        order    = place_order(symbol, qty, signal, stop_price, tp_price)
+                        order    = place_order(symbol, qty, "buy", stop_price, tp_price)
                         order_id = order.get("id")
                         executed = True
-                        print(f"  ✓ ORDER PLACED: {signal} {qty} {symbol} @ market | "
+                        print(f"  ✓ BUY ORDER: {qty} {symbol} @ market | "
                               f"stop={stop_price:.2f} tp={tp_price:.2f} | id={order_id}")
                         orders_placed.append({
                             "symbol":       symbol,
                             "strat":        strat_name,
-                            "signal":       signal,
-                            "side":         signal,   # "buy" or "sell"
+                            "signal":       "buy",
+                            "side":         "buy",
                             "qty":          qty,
                             "price":        round(price, 2),
                             "est_value":    round(price * qty, 2),
-                            "stop_price":   round(stop_price, 2) if stop_price else None,
-                            "tp_price":     round(tp_price, 2)   if tp_price   else None,
+                            "stop_price":   round(stop_price, 2),
+                            "tp_price":     round(tp_price, 2),
                             "order_id":     order_id,
                             "timestamp":    run_start.isoformat(),
                         })
                     except Exception as e:
                         skip_reason = f"order_error: {e}"
-                        print(f"  {symbol}: order failed — {e}")
+                        print(f"  {symbol}: buy order failed — {e}")
+            else:
+                # SELL: plain market close — bracket orders are INVALID for closes
+                pos_qty = int(float(positions[symbol].get("qty", 0)))
+                qty = pos_qty if pos_qty > 0 else atr_position_size(equity, price, atr, vix_mult)
+                stop_price = None
+                tp_price   = None
+                try:
+                    order    = close_position_order(symbol, qty)
+                    order_id = order.get("id")
+                    executed = True
+                    print(f"  ✓ SELL ORDER: {qty} {symbol} @ market (close) | id={order_id}")
+                    orders_placed.append({
+                        "symbol":       symbol,
+                        "strat":        strat_name,
+                        "signal":       "sell",
+                        "side":         "sell",
+                        "qty":          qty,
+                        "price":        round(price, 2),
+                        "est_value":    round(price * qty, 2),
+                        "stop_price":   None,
+                        "tp_price":     None,
+                        "order_id":     order_id,
+                        "timestamp":    run_start.isoformat(),
+                    })
+                except Exception as e:
+                    skip_reason = f"order_error: {e}"
+                    print(f"  {symbol}: sell order failed — {e}")
 
             all_signals.append({
                 "timestamp":   run_start.isoformat(),
