@@ -1,0 +1,27 @@
+name: Emergency Stop-Loss Recovery
+
+on:
+  workflow_dispatch:
+
+jobs:
+  recovery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run stop-loss recovery
+        env:
+          ALPACA_PAPER_KEY:    ${{ secrets.ALPACA_PAPER_KEY }}
+          ALPACA_PAPER_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
+          ALPACA_LIVE_KEY:     ${{ secrets.ALPACA_LIVE_KEY }}
+          ALPACA_LIVE_SECRET:  ${{ secrets.ALPACA_LIVE_SECRET }}
+          ALPACA_IS_PAPER:     ${{ secrets.ALPACA_IS_PAPER }}
+        run: python scripts/recovery_stop_loss.py
