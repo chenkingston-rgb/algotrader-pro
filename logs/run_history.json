@@ -1396,5 +1396,15 @@
     "signals_count": 7,
     "orders_count": 0,
     "symbols_traded": []
+  },
+  {
+    "timestamp": "2026-05-14T10:30:36.076084-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 105852.82,
+    "vix": 11.41,
+    "signals_count": 7,
+    "orders_count": 0,
+    "symbols_traded": []
   }
 ]
