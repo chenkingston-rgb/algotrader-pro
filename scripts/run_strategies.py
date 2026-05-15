@@ -617,6 +617,24 @@ def compute_spy_slope(rest_client) -> float:
 # ADX cache — refresh every 30 minutes, uses StockHistoricalDataClient
 _adx_cache: dict = {"adx": 20.0, "slope": 0.0, "ts": 0.0}
 
+# Singleton StockHistoricalDataClient — created once, reused for ADX refreshes
+_hist_client = None
+
+def _get_hist_client():
+    """Return a cached StockHistoricalDataClient, creating it only once."""
+    global _hist_client
+    if _hist_client is None:
+        try:
+            from alpaca.data.historical import StockHistoricalDataClient
+            _is_paper = os.environ.get("ALPACA_IS_PAPER", "true").lower() == "true"
+            key    = os.environ["ALPACA_PAPER_KEY"]    if _is_paper else os.environ["ALPACA_LIVE_KEY"]
+            secret = os.environ["ALPACA_PAPER_SECRET"] if _is_paper else os.environ["ALPACA_LIVE_SECRET"]
+            _hist_client = StockHistoricalDataClient(key, secret)
+            logging.info("[REGIME] StockHistoricalDataClient created (singleton)")
+        except Exception as e:
+            logging.warning(f"[REGIME] Could not create hist client: {e}")
+    return _hist_client
+
 
 def get_cached_adx_slope() -> tuple:
     """
@@ -626,13 +644,10 @@ def get_cached_adx_slope() -> tuple:
     now = _time.time()
     if now - _adx_cache["ts"] > 1800:
         try:
-            from alpaca.data.historical import StockHistoricalDataClient
-            _is_paper = os.environ.get("ALPACA_IS_PAPER", "true").lower() == "true"
-            key    = os.environ["ALPACA_PAPER_KEY"]    if _is_paper else os.environ["ALPACA_LIVE_KEY"]
-            secret = os.environ["ALPACA_PAPER_SECRET"] if _is_paper else os.environ["ALPACA_LIVE_SECRET"]
-            client = StockHistoricalDataClient(key, secret)
-            adx    = compute_adx14_spy(client)
-            slope  = compute_spy_slope(client)
+            client = _get_hist_client()
+            if client is not None:
+                adx   = compute_adx14_spy(client)
+                slope = compute_spy_slope(client)
             _adx_cache.update({"adx": adx, "slope": slope, "ts": now})
         except Exception as e:
             logging.warning(f"[REGIME] ADX refresh failed: {e} — using cached")
@@ -659,12 +674,38 @@ def get_regime_size_multiplier(adx: float, slope: float) -> tuple:
 # ══════════════════════════════════════════════
 
 def get_trading_symbols() -> list:
-    """20 symbols the WebSocket engine subscribes to."""
-    return [
-        "SPY", "QQQ", "AAPL", "MSFT", "NVDA", "TSLA", "AMZN", "META",
-        "GOOGL", "AMD", "PLTR", "COIN", "SOFI", "RIVN", "HOOD",
-        "JPM", "BAC", "XOM", "CVX", "GLD",
+    """
+    Returns symbols for the WebSocket engine to subscribe to.
+    Reads from logs/watchlist_weekly.json via GitHub raw on startup
+    (populated by the weekly symbol scanner workflow).
+    Falls back to a curated core + static list if unavailable.
+    Core symbols (SPY, QQQ, IWM, GLD, XLK, XLE, XLF) are ALWAYS included —
+    IWM is required by the daily strategies (rsi_macd_combo, macd_crossover, ema_crossover).
+    """
+    CORE = ["SPY", "QQQ", "IWM", "GLD", "XLK", "XLE", "XLF"]
+    FALLBACK_EXTRAS = [
+        "AAPL", "MSFT", "NVDA", "TSLA", "AMZN", "META",
+        "GOOGL", "AMD", "PLTR", "JPM", "BAC", "XOM", "CVX",
     ]
+
+    # Try loading dynamic weekly watchlist from GitHub raw
+    try:
+        import requests as _req
+        repo = os.environ.get("GITHUB_REPOSITORY", "chenkingston-rgb/algotrader-pro")
+        url  = f"https://raw.githubusercontent.com/{repo}/main/logs/watchlist_weekly.json"
+        r = _req.get(url, timeout=5)
+        if r.ok:
+            symbols = r.json().get("symbols", [])
+            if len(symbols) >= 5:
+                combined = list(dict.fromkeys(CORE + symbols))
+                logging.info(f"[SYMBOLS] Loaded {len(combined)} symbols from weekly watchlist")
+                return combined
+    except Exception as e:
+        logging.warning(f"[SYMBOLS] Could not load weekly watchlist: {e} — using fallback")
+
+    fallback = list(dict.fromkeys(CORE + FALLBACK_EXTRAS))
+    logging.info(f"[SYMBOLS] Using fallback static list ({len(fallback)} symbols)")
+    return fallback
 
 
 def is_market_hours(now_et) -> bool:
@@ -912,9 +953,12 @@ def _run_streaming_strategy(
         logging.info(f"[{strategy_name}] {symbol}: blocked — {vix_reason}")
         return
 
-    df    = pd.DataFrame({"close": closes, "high": highs, "low": lows, "volume": volumes})
+    # Use list-based ATR to avoid creating a pandas DataFrame on every cycle
     price = closes[-1]
-    atr   = calc_atr(df).iloc[-1]
+    atr   = compute_atr(highs, lows, closes)
+    if atr is None:
+        logging.warning(f"[{strategy_name}] {symbol}: insufficient data for ATR, skipping")
+        return
 
     # Combined: VIX × regime × RSI(2)
     size_mult = vix_mult * shared["regime_mult"] * shared["rsi2_mult"]
@@ -1291,4 +1335,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
