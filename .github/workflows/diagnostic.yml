@@ -1,0 +1,47 @@
+name: Alpaca Account Diagnostic
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Alpaca account status
+        env:
+          ALPACA_PAPER_KEY:    ${{ secrets.ALPACA_PAPER_KEY }}
+          ALPACA_PAPER_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
+        run: |
+          python3 - <<'PYEOF'
+          import os, requests, json
+
+          key    = os.environ["ALPACA_PAPER_KEY"]
+          secret = os.environ["ALPACA_PAPER_SECRET"]
+          base   = "https://paper-api.alpaca.markets"
+          hdrs   = {"APCA-API-KEY-ID": key, "APCA-API-KEY-SECRET": secret}
+
+          print(f"Key prefix: {key[:6]}... (len={len(key)})")
+          print()
+
+          # Account status
+          r = requests.get(f"{base}/v2/account", headers=hdrs, timeout=10)
+          print(f"GET /v2/account -> HTTP {r.status_code}")
+          if r.ok:
+              a = r.json()
+              for f in ["status","account_blocked","trade_suspended_by_user",
+                        "trading_blocked","transfers_blocked","pattern_day_trader",
+                        "daytrade_count","equity","buying_power","shorting_enabled"]:
+                  print(f"  {f}: {a.get(f, N/A)}")
+          else:
+              print(f"  Error: {r.text[:300]}")
+
+          print()
+
+          # Try placing a test order (immediate cancel) to see exact error
+          print("POST /v2/orders (test market sell SPY qty=1) ->")
+          payload = {"symbol":"SPY","qty":"1","side":"sell","type":"market","time_in_force":"day"}
+          r2 = requests.post(f"{base}/v2/orders", headers=hdrs, json=payload, timeout=10)
+          print(f"  HTTP {r2.status_code}: {r2.text[:400]}")
+
+          PYEOF
+
