@@ -260,9 +260,28 @@ def place_order(symbol: str, qty: int, side: str,
 
 
 def close_position_order(symbol: str, qty: int) -> dict:
-    """Close an existing long position using DELETE /v2/positions/{symbol}.
-    This endpoint automatically cancels any conflicting open orders (e.g. GTC stops)
-    before closing, avoiding 403 errors caused by shares being held by stop orders."""
+    """Close an existing long position, cancelling any open stop/limit orders for
+    the symbol first so all shares are freed up before the market close is placed."""
+    # Step 1: cancel any open orders holding shares for this symbol
+    open_orders_r = requests.get(
+        f"{ALPACA_BASE}/v2/orders",
+        headers=alpaca_headers(),
+        params={"status": "open", "symbols": symbol, "limit": 50},
+        timeout=10,
+    )
+    if open_orders_r.ok:
+        for order in open_orders_r.json():
+            oid = order.get("id")
+            if oid:
+                requests.delete(
+                    f"{ALPACA_BASE}/v2/orders/{oid}",
+                    headers=alpaca_headers(),
+                    timeout=10,
+                )
+                print(f"  [CLOSE] Cancelled open order {oid} ({order.get('type','?')} {order.get('side','?')}) for {symbol}")
+    import time as _t; _t.sleep(0.5)   # brief pause so cancels settle
+
+    # Step 2: close the position
     r = requests.delete(
         f"{ALPACA_BASE}/v2/positions/{symbol}",
         headers=alpaca_headers(),
