@@ -553,9 +553,18 @@ def compute_adx14_spy(rest_client) -> float:
             minus_dm.append(down if down > up   and down > 0 else 0.0)
 
         def wilder_smooth(data, n=14):
+            """Sum-scale Wilder smoothing — correct for TR and DM components."""
             s = [sum(data[:n])]
             for v in data[n:]:
                 s.append(s[-1] - s[-1] / n + v)
+            return s
+
+        def wilder_avg(data, n=14):
+            """Average-scale Wilder smoothing — correct for DX → ADX final step.
+            ADX must remain in 0–100; sum-scale init inflates it to 200–900+."""
+            s = [sum(data[:n]) / n]
+            for v in data[n:]:
+                s.append((s[-1] * (n - 1) + v) / n)
             return s
 
         atr14  = wilder_smooth(tr_list)
@@ -571,7 +580,9 @@ def compute_adx14_spy(rest_client) -> float:
             denom = pd_ + md_
             dx.append(0.0 if denom == 0 else 100.0 * abs(pd_ - md_) / denom)
 
-        return round(wilder_smooth(dx)[-1], 2) if len(dx) >= 14 else 20.0
+        # wilder_avg (not wilder_smooth) for DX→ADX: DX is already 0–100,
+        # average-scale smoothing keeps ADX in 0–100.
+        return round(wilder_avg(dx)[-1], 2) if len(dx) >= 14 else 20.0
 
     except Exception as e:
         logging.warning(f"[REGIME] ADX failed: {e}")
