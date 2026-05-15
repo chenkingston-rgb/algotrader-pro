@@ -260,17 +260,17 @@ def place_order(symbol: str, qty: int, side: str,
 
 
 def close_position_order(symbol: str, qty: int) -> dict:
-    """Plain market sell to close an existing long position.
-    Never uses order_class=bracket — Alpaca rejects bracket orders on closes."""
-    payload = {
-        "symbol":        symbol,
-        "qty":           str(qty),
-        "side":          "sell",
-        "type":          "market",
-        "time_in_force": "day",
-    }
-    r = requests.post(f"{ALPACA_BASE}/v2/orders",
-                      headers=alpaca_headers(), json=payload, timeout=10)
+    """Close an existing long position using DELETE /v2/positions/{symbol}.
+    This endpoint automatically cancels any conflicting open orders (e.g. GTC stops)
+    before closing, avoiding 403 errors caused by shares being held by stop orders."""
+    r = requests.delete(
+        f"{ALPACA_BASE}/v2/positions/{symbol}",
+        headers=alpaca_headers(),
+        params={"percentage": "100"},
+        timeout=10,
+    )
+    if r.status_code == 404:
+        raise ValueError(f"No open position found for {symbol}")
     r.raise_for_status()
     return r.json()
 
@@ -1272,3 +1272,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
