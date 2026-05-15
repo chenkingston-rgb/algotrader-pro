@@ -143,9 +143,19 @@ def compute_adx14(bars: list) -> float:
             minus_dm.append(down if down > up   and down > 0 else 0.0)
 
         def wilder(data, n=14):
+            """Sum-scale Wilder smoothing — correct for TR and DM components."""
             s = [sum(data[:n])]
             for v in data[n:]:
                 s.append(s[-1] - s[-1] / n + v)
+            return s
+
+        def wilder_avg(data, n=14):
+            """Average-scale Wilder smoothing — correct for DX → ADX final step.
+            ADX must remain in 0–100 range; initialising with average (not sum)
+            is required to keep the output bounded."""
+            s = [sum(data[:n]) / n]
+            for v in data[n:]:
+                s.append((s[-1] * (n - 1) + v) / n)
             return s
 
         atr14   = wilder(tr_list)
@@ -161,7 +171,9 @@ def compute_adx14(bars: list) -> float:
             denom = pd_ + md_
             dx.append(0.0 if denom == 0 else 100.0 * abs(pd_ - md_) / denom)
 
-        return round(wilder(dx)[-1], 2) if len(dx) >= 14 else 20.0
+        # Use wilder_avg (not wilder) for the DX→ADX step — DX values are already
+        # 0–100, so we need average-scale smoothing to keep ADX in 0–100.
+        return round(wilder_avg(dx)[-1], 2) if len(dx) >= 14 else 20.0
     except Exception:
         return 20.0
 
