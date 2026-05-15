@@ -1,0 +1,302 @@
+{
+  "generated_at": "2026-05-15T14:42:56.224129+00:00",
+  "scan_type": "weekly",
+  "universe_size": 97,
+  "candidates_passed": 46,
+  "candidates_filtered": 44,
+  "symbols": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "GLD",
+    "XLK",
+    "XLE",
+    "XLF",
+    "INTC",
+    "AMD",
+    "MRVL",
+    "TXN",
+    "MU",
+    "QCOM",
+    "GOOGL",
+    "SMH",
+    "RKLB",
+    "ARM",
+    "IONQ",
+    "AMZN",
+    "PANW",
+    "MSTR",
+    "NVDA",
+    "ORCL",
+    "AAPL",
+    "AVGO",
+    "TSLA",
+    "SLB",
+    "PYPL",
+    "SMCI",
+    "LRCX",
+    "MRK",
+    "NFLX"
+  ],
+  "core_symbols": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "GLD",
+    "XLK",
+    "XLE",
+    "XLF"
+  ],
+  "ranked_picks": [
+    {
+      "symbol": "INTC",
+      "score": 250.339,
+      "price": 109.49,
+      "ret_4w_pct": 59.85,
+      "ret_12w_pct": 136.99,
+      "adx14": 858.01,
+      "avg_vol_30d": 3699238,
+      "pct_off_52w_high": -17.5
+    },
+    {
+      "symbol": "AMD",
+      "score": 216.2516,
+      "price": 434.39,
+      "ret_4w_pct": 56.09,
+      "ret_12w_pct": 113.91,
+      "adx14": 741.25,
+      "avg_vol_30d": 737133,
+      "pct_off_52w_high": -7.41
+    },
+    {
+      "symbol": "MRVL",
+      "score": 197.8529,
+      "price": 178.84,
+      "ret_4w_pct": 28.01,
+      "ret_12w_pct": 126.19,
+      "adx14": 680.87,
+      "avg_vol_30d": 797984,
+      "pct_off_52w_high": -6.85
+    },
+    {
+      "symbol": "TXN",
+      "score": 185.4793,
+      "price": 304.87,
+      "ret_4w_pct": 32.66,
+      "ret_12w_pct": 35.07,
+      "adx14": 791.93,
+      "avg_vol_30d": 331276,
+      "pct_off_52w_high": -1.72
+    },
+    {
+      "symbol": "MU",
+      "score": 176.2822,
+      "price": 738.65,
+      "ret_4w_pct": 62.32,
+      "ret_12w_pct": 84.72,
+      "adx14": 587.33,
+      "avg_vol_30d": 737506,
+      "pct_off_52w_high": -9.77
+    },
+    {
+      "symbol": "QCOM",
+      "score": 165.9247,
+      "price": 206.36,
+      "ret_4w_pct": 51.53,
+      "ret_12w_pct": 44.67,
+      "adx14": 637.21,
+      "avg_vol_30d": 620031,
+      "pct_off_52w_high": -16.76
+    },
+    {
+      "symbol": "GOOGL",
+      "score": 156.3088,
+      "price": 397.83,
+      "ret_4w_pct": 16.43,
+      "ret_12w_pct": 31.69,
+      "adx14": 685.31,
+      "avg_vol_30d": 864411,
+      "pct_off_52w_high": -1.45
+    },
+    {
+      "symbol": "SMH",
+      "score": 149.2613,
+      "price": 561.06,
+      "ret_4w_pct": 20.89,
+      "ret_12w_pct": 37.72,
+      "adx14": 629.09,
+      "avg_vol_30d": 337697,
+      "pct_off_52w_high": -3.45
+    },
+    {
+      "symbol": "RKLB",
+      "score": 140.3955,
+      "price": 126.05,
+      "ret_4w_pct": 48.63,
+      "ret_12w_pct": 80.28,
+      "adx14": 444.17,
+      "avg_vol_30d": 428399,
+      "pct_off_52w_high": -5.3
+    },
+    {
+      "symbol": "ARM",
+      "score": 132.7777,
+      "price": 212.92,
+      "ret_4w_pct": 27.7,
+      "ret_12w_pct": 67.86,
+      "adx14": 472.78,
+      "avg_vol_30d": 351638,
+      "pct_off_52w_high": -11.1
+    },
+    {
+      "symbol": "IONQ",
+      "score": 130.2548,
+      "price": 52.51,
+      "ret_4w_pct": 13.9,
+      "ret_12w_pct": 58.07,
+      "adx14": 507.33,
+      "avg_vol_30d": 905745,
+      "pct_off_52w_high": -11.18
+    },
+    {
+      "symbol": "AMZN",
+      "score": 122.3469,
+      "price": 262.99,
+      "ret_4w_pct": 4.99,
+      "ret_12w_pct": 30.68,
+      "adx14": 540.4,
+      "avg_vol_30d": 1815816,
+      "pct_off_52w_high": -5.58
+    },
+    {
+      "symbol": "PANW",
+      "score": 121.0276,
+      "price": 237.9,
+      "ret_4w_pct": 41.75,
+      "ret_12w_pct": 45.35,
+      "adx14": 430.93,
+      "avg_vol_30d": 301191,
+      "pct_off_52w_high": -0.52
+    },
+    {
+      "symbol": "MSTR",
+      "score": 101.779,
+      "price": 176.36,
+      "ret_4w_pct": 5.88,
+      "ret_12w_pct": 37.06,
+      "adx14": 423.0,
+      "avg_vol_30d": 323954,
+      "pct_off_52w_high": -10.46
+    },
+    {
+      "symbol": "NVDA",
+      "score": 100.2859,
+      "price": 227.69,
+      "ret_4w_pct": 12.9,
+      "ret_12w_pct": 23.0,
+      "adx14": 429.62,
+      "avg_vol_30d": 4140220,
+      "pct_off_52w_high": -3.74
+    },
+    {
+      "symbol": "ORCL",
+      "score": 98.3498,
+      "price": 194.74,
+      "ret_4w_pct": 11.25,
+      "ret_12w_pct": 26.45,
+      "adx14": 416.35,
+      "avg_vol_30d": 805726,
+      "pct_off_52w_high": -2.94
+    },
+    {
+      "symbol": "AAPL",
+      "score": 91.0365,
+      "price": 300.7,
+      "ret_4w_pct": 11.29,
+      "ret_12w_pct": 13.93,
+      "adx14": 404.74,
+      "avg_vol_30d": 1222040,
+      "pct_off_52w_high": -0.07
+    },
+    {
+      "symbol": "AVGO",
+      "score": 87.4705,
+      "price": 427.97,
+      "ret_4w_pct": 5.28,
+      "ret_12w_pct": 28.69,
+      "adx14": 369.41,
+      "avg_vol_30d": 609367,
+      "pct_off_52w_high": -3.24
+    },
+    {
+      "symbol": "TSLA",
+      "score": 78.7183,
+      "price": 428.05,
+      "ret_4w_pct": 6.84,
+      "ret_12w_pct": 4.22,
+      "adx14": 371.48,
+      "avg_vol_30d": 849639,
+      "pct_off_52w_high": -5.59
+    },
+    {
+      "symbol": "SLB",
+      "score": 76.8787,
+      "price": 55.3,
+      "ret_4w_pct": 5.0,
+      "ret_12w_pct": 10.89,
+      "adx14": 352.61,
+      "avg_vol_30d": 848863,
+      "pct_off_52w_high": -3.32
+    },
+    {
+      "symbol": "PYPL",
+      "score": 68.3966,
+      "price": 45.04,
+      "ret_4w_pct": -11.36,
+      "ret_12w_pct": 10.3,
+      "adx14": 344.1,
+      "avg_vol_30d": 649754,
+      "pct_off_52w_high": -21.13
+    },
+    {
+      "symbol": "SMCI",
+      "score": 65.7932,
+      "price": 31.38,
+      "ret_4w_pct": 9.86,
+      "ret_12w_pct": 4.17,
+      "adx14": 300.92,
+      "avg_vol_30d": 1371714,
+      "pct_off_52w_high": -13.69
+    },
+    {
+      "symbol": "LRCX",
+      "score": 63.5658,
+      "price": 284.72,
+      "ret_4w_pct": 6.37,
+      "ret_12w_pct": 20.84,
+      "adx14": 263.41,
+      "avg_vol_30d": 331913,
+      "pct_off_52w_high": -5.71
+    },
+    {
+      "symbol": "MRK",
+      "score": 60.0329,
+      "price": 112,
+      "ret_4w_pct": -5.94,
+      "ret_12w_pct": -7.93,
+      "adx14": 327.89,
+      "avg_vol_30d": 360153,
+      "pct_off_52w_high": -10.46
+    },
+    {
+      "symbol": "NFLX",
+      "score": 59.8108,
+      "price": 87.45,
+      "ret_4w_pct": -10.1,
+      "ret_12w_pct": 13.53,
+      "adx14": 292.2,
+      "avg_vol_30d": 2116607,
+      "pct_off_52w_high": -19.73
+    }
+  ]
+}
