@@ -1820,5 +1820,15 @@
     "symbols_traded": [
       "SPY"
     ]
+  },
+  {
+    "timestamp": "2026-05-15T14:45:28.235996-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 105730.8,
+    "vix": 12.64,
+    "signals_count": 7,
+    "orders_count": 0,
+    "symbols_traded": []
   }
 ]
