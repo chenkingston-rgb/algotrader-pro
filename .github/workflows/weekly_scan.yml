@@ -1,0 +1,33 @@
+name: AlgoTrader — Weekly Symbol Scan
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'   # Monday 00:00 UTC = Sunday 8:00 PM EDT
+  workflow_dispatch:        # also runnable manually from GitHub Actions UI
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write       # needed to commit watchlist_weekly.json back to repo
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run weekly symbol scanner
+        env:
+          ALPACA_PAPER_KEY:    ${{ secrets.ALPACA_PAPER_KEY }}
+          ALPACA_PAPER_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
+          ALPACA_IS_PAPER:     "true"
+          GITHUB_TOKEN:        ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY:   ${{ github.repository }}
+        run: python scripts/scan_symbols.py
