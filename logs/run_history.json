@@ -1710,5 +1710,17 @@
     "signals_count": 7,
     "orders_count": 0,
     "symbols_traded": []
+  },
+  {
+    "timestamp": "2026-05-15T12:15:30.195904-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 105598.28,
+    "vix": 12.85,
+    "signals_count": 7,
+    "orders_count": 1,
+    "symbols_traded": [
+      "XLK"
+    ]
   }
 ]
