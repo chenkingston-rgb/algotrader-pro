@@ -1722,5 +1722,15 @@
     "symbols_traded": [
       "XLK"
     ]
+  },
+  {
+    "timestamp": "2026-05-15T12:30:35.033426-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 105660.58,
+    "vix": 12.65,
+    "signals_count": 7,
+    "orders_count": 0,
+    "symbols_traded": []
   }
 ]
