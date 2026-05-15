@@ -63,7 +63,7 @@ else:
 HEALTH_PORT = int(os.environ.get("PORT", "10000"))
 
 BAR_INTERVAL_MINUTES = 5    # aggregate 1-min bars → 5-min candles
-MAX_CANDLES          = 200  # rolling window per symbol
+MAX_CANDLES          = 60   # reduced from 200 — strategies need 60 bars max, saves ~70% candle buffer RAM  # rolling window per symbol
 
 ET = pytz.timezone("America/New_York")
 
@@ -189,3 +189,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
