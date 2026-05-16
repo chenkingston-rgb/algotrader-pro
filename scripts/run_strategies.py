@@ -121,7 +121,8 @@ INTRADAY_STRATEGIES = {
 
 STRATEGIES   = DAILY_STRATEGIES if STRATEGY_MODE == "daily" else INTRADAY_STRATEGIES
 LOG_FILE     = f"logs/{STRATEGY_MODE}_latest.json"
-HISTORY_FILE = "logs/run_history.json"
+HISTORY_FILE         = "logs/run_history.json"
+SIGNALS_HISTORY_FILE = "logs/signals_history.json"
 
 # ─────────────────────────────────────────────
 # HELPERS: GITHUB LOGGING
@@ -188,6 +189,58 @@ def append_run_history(run_summary: dict):
         print(f"  [LOG] Appended to {HISTORY_FILE} ({len(history)} entries) ✓")
     else:
         print(f"  [WARN] Failed to append history: {put_r.status_code} {put_r.text[:200]}")
+
+
+def append_signals_history(all_signals: list, run_timestamp: str):
+    """
+    Appends buy/sell signals from this run to a rolling signals_history.json
+    (max 1000 entries). Skips pure hold/no_signal rows — those are noise.
+    Enables the Base44 dashboard Signal Monitor and Trade Log to show full
+    history rather than only the most recent workflow run.
+    """
+    if not GITHUB_TOKEN or not GITHUB_REPOSITORY:
+        return
+
+    # Only store signals where a strategy actually fired (buy or sell),
+    # regardless of whether the order was ultimately executed.
+    new_entries = [s for s in all_signals if s.get("signal") in ("buy", "sell")]
+    if not new_entries:
+        return  # all holds this run — nothing worth writing
+
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept":        "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    api_url = f"https://api.github.com/repos/{GITHUB_REPOSITORY}/contents/{SIGNALS_HISTORY_FILE}"
+
+    history = []
+    get_r = requests.get(api_url, headers=headers, timeout=10)
+    if get_r.ok:
+        try:
+            existing = json.loads(base64.b64decode(get_r.json()["content"]).decode())
+            history  = existing if isinstance(existing, list) else []
+        except Exception:
+            history = []
+    sha_h = get_r.json().get("sha") if get_r.ok else None
+
+    history.extend(new_entries)
+    history = history[-1000:]   # rolling cap — keeps file size bounded
+
+    content_b64 = base64.b64encode(
+        json.dumps(history, indent=2, default=str).encode()
+    ).decode()
+    payload = {"message": f"[bot] Append signals_history — {run_timestamp[:10]}", "content": content_b64}
+    if sha_h:
+        payload["sha"] = sha_h
+
+    put_r = requests.put(api_url, headers=headers, json=payload, timeout=15)
+    if put_r.ok:
+        print(f"  [LOG] Appended {len(new_entries)} signal(s) to {SIGNALS_HISTORY_FILE} "
+              f"({len(history)} total) ✓")
+    else:
+        print(f"  [WARN] Failed to write {SIGNALS_HISTORY_FILE}: "
+              f"{put_r.status_code} {put_r.text[:200]}")
 
 
 # ─────────────────────────────────────────────
@@ -1342,6 +1395,7 @@ def main():
         "symbols_traded": [o["symbol"] for o in orders_placed],
     }
     append_run_history(run_summary)
+    append_signals_history(all_signals, run_start.isoformat())
 
 
 if __name__ == "__main__":
