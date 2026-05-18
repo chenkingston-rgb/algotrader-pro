@@ -286,5 +286,27 @@
       "roc_prev": -0.078,
       "threshold": 0.3
     }
+  },
+  {
+    "timestamp": "2026-05-18T15:30:33.479621-04:00",
+    "strategy": "momentum_roc_15m",
+    "vix_type": "MOMENTUM",
+    "symbol": "XLK",
+    "signal": "sell",
+    "price": 172.76,
+    "atr": 0.806,
+    "qty": 0,
+    "stop_price": null,
+    "tp_price": null,
+    "executed": false,
+    "skip_reason": "no_position_to_sell",
+    "order_id": null,
+    "vix": 12.83,
+    "vix_reason": "vix_clear",
+    "indicators": {
+      "roc": -0.467,
+      "roc_prev": 0.127,
+      "threshold": 0.3
+    }
   }
 ]
