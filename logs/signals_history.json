@@ -264,5 +264,27 @@
       "roc_prev": -0.215,
       "threshold": 0.3
     }
+  },
+  {
+    "timestamp": "2026-05-18T15:15:40.785722-04:00",
+    "strategy": "momentum_roc_15m",
+    "vix_type": "MOMENTUM",
+    "symbol": "XLF",
+    "signal": "buy",
+    "price": 51.68,
+    "atr": 0.118,
+    "qty": 204,
+    "stop_price": 51.5,
+    "tp_price": 52.03,
+    "executed": true,
+    "skip_reason": null,
+    "order_id": "649312e8-ea77-4889-b069-22a3f27054b8",
+    "vix": 12.79,
+    "vix_reason": "vix_clear",
+    "indicators": {
+      "roc": 0.359,
+      "roc_prev": -0.078,
+      "threshold": 0.3
+    }
   }
 ]
