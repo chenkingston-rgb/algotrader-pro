@@ -242,5 +242,27 @@
       "roc_prev": -0.291,
       "threshold": 0.3
     }
+  },
+  {
+    "timestamp": "2026-05-18T14:45:34.564020-04:00",
+    "strategy": "momentum_roc_15m",
+    "vix_type": "MOMENTUM",
+    "symbol": "SPY",
+    "signal": "sell",
+    "price": 734.55,
+    "atr": 1.5349,
+    "qty": 0,
+    "stop_price": null,
+    "tp_price": null,
+    "executed": false,
+    "skip_reason": "no_position_to_sell",
+    "order_id": null,
+    "vix": 12.97,
+    "vix_reason": "vix_clear",
+    "indicators": {
+      "roc": -0.316,
+      "roc_prev": -0.215,
+      "threshold": 0.3
+    }
   }
 ]
