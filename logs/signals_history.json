@@ -1,0 +1,46 @@
+[
+  {
+    "timestamp": "2026-05-18T09:45:37.068004-04:00",
+    "strategy": "momentum_roc_15m",
+    "vix_type": "MOMENTUM",
+    "symbol": "SPY",
+    "signal": "sell",
+    "price": 738.06,
+    "atr": 1.3113,
+    "qty": 0,
+    "stop_price": null,
+    "tp_price": null,
+    "executed": false,
+    "skip_reason": "no_position_to_sell",
+    "order_id": null,
+    "vix": 12.59,
+    "vix_reason": "vix_clear",
+    "indicators": {
+      "roc": -0.342,
+      "roc_prev": -0.082,
+      "threshold": 0.3
+    }
+  },
+  {
+    "timestamp": "2026-05-18T09:45:37.068004-04:00",
+    "strategy": "momentum_roc_15m",
+    "vix_type": "MOMENTUM",
+    "symbol": "XLF",
+    "signal": "buy",
+    "price": 51.47,
+    "atr": 0.1301,
+    "qty": 205,
+    "stop_price": 51.27,
+    "tp_price": 51.86,
+    "executed": true,
+    "skip_reason": null,
+    "order_id": "20fb4699-a936-4fa6-8fba-2e79ec73f488",
+    "vix": 12.59,
+    "vix_reason": "vix_clear",
+    "indicators": {
+      "roc": 0.518,
+      "roc_prev": -0.059,
+      "threshold": 0.3
+    }
+  }
+]
