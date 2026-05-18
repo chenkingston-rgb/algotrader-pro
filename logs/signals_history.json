@@ -42,5 +42,51 @@
       "roc_prev": -0.059,
       "threshold": 0.3
     }
+  },
+  {
+    "timestamp": "2026-05-18T10:00:40.201454-04:00",
+    "strategy": "bollinger_bands_15m",
+    "vix_type": "MEAN_REV",
+    "symbol": "SPY",
+    "signal": "sell",
+    "price": 740.48,
+    "atr": 1.6431,
+    "qty": 0,
+    "stop_price": null,
+    "tp_price": null,
+    "executed": false,
+    "skip_reason": "no_position_to_sell",
+    "order_id": null,
+    "vix": 12.51,
+    "vix_reason": "vix_clear",
+    "indicators": {
+      "price": 740.48,
+      "bb_lower": 737.0,
+      "bb_mid": 740.46,
+      "bb_upper": 743.92,
+      "ma_filter": 742.13
+    }
+  },
+  {
+    "timestamp": "2026-05-18T10:00:40.201454-04:00",
+    "strategy": "momentum_roc_15m",
+    "vix_type": "MOMENTUM",
+    "symbol": "QQQ",
+    "signal": "buy",
+    "price": 709.29,
+    "atr": 2.0195,
+    "qty": 14,
+    "stop_price": 706.26,
+    "tp_price": 715.35,
+    "executed": true,
+    "skip_reason": null,
+    "order_id": "a3480c70-9a49-4145-b716-e0b94afc9689",
+    "vix": 12.51,
+    "vix_reason": "vix_clear",
+    "indicators": {
+      "roc": 0.335,
+      "roc_prev": -0.203,
+      "threshold": 0.3
+    }
   }
 ]
