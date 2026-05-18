@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T14:54:39.987904+00:00",
+  "generated_at": "2026-05-18T16:33:44.130543+00:00",
   "scan_type": "daily_premarket",
   "symbols": [
     "SPY",
@@ -10,17 +10,17 @@
     "XLE",
     "XLF",
     "MU",
-    "MSTR",
     "SMH",
-    "ARM",
-    "AMZN",
-    "QCOM",
-    "SCHW",
-    "PANW",
-    "LRCX",
-    "IONQ",
+    "GOOGL",
+    "TSLA",
+    "RKLB",
+    "MSTR",
+    "AVGO",
     "MRVL",
-    "RKLB"
+    "INTC",
+    "ARM",
+    "NVDA",
+    "AMZN"
   ],
   "core_symbols": [
     "SPY",
@@ -34,135 +34,135 @@
   "intraday_picks": [
     {
       "symbol": "MU",
-      "score": 28.5594,
-      "prior_close": 775.9,
-      "pm_last": 732.47,
-      "gap_pct": -5.6,
+      "score": 37.5467,
+      "prior_close": 724.09,
+      "pm_last": 684.66,
+      "gap_pct": -5.45,
       "gap_direction": "down",
-      "pm_volume": 465004,
-      "pm_vol_ratio": 0.63,
-      "avg_vol_30d": 738095
-    },
-    {
-      "symbol": "MSTR",
-      "score": 21.5489,
-      "prior_close": 187.0,
-      "pm_last": 175.03,
-      "gap_pct": -6.4,
-      "gap_direction": "down",
-      "pm_volume": 143633,
-      "pm_vol_ratio": 0.4427,
-      "avg_vol_30d": 324471
+      "pm_volume": 642088,
+      "pm_vol_ratio": 0.857,
+      "avg_vol_30d": 749240
     },
     {
       "symbol": "SMH",
-      "score": 21.1688,
-      "prior_close": 578.33,
-      "pm_last": 557.21,
-      "gap_pct": -3.65,
+      "score": 31.7643,
+      "prior_close": 556.85,
+      "pm_last": 540.38,
+      "gap_pct": -2.96,
       "gap_direction": "down",
-      "pm_volume": 160373,
-      "pm_vol_ratio": 0.4744,
-      "avg_vol_30d": 338025
+      "pm_volume": 267793,
+      "pm_vol_ratio": 0.7497,
+      "avg_vol_30d": 357179
     },
     {
-      "symbol": "ARM",
-      "score": 20.1951,
-      "prior_close": 228.55,
-      "pm_last": 211.79,
-      "gap_pct": -7.33,
-      "gap_direction": "down",
-      "pm_volume": 139004,
-      "pm_vol_ratio": 0.3949,
-      "avg_vol_30d": 351987
-    },
-    {
-      "symbol": "AMZN",
-      "score": 17.3639,
-      "prior_close": 267.21,
-      "pm_last": 262.56,
-      "gap_pct": -1.74,
-      "gap_direction": "down",
-      "pm_volume": 741645,
-      "pm_vol_ratio": 0.408,
-      "avg_vol_30d": 1817782
-    },
-    {
-      "symbol": "QCOM",
-      "score": 17.2076,
-      "prior_close": 199.99,
-      "pm_last": 204.95,
-      "gap_pct": 2.48,
+      "symbol": "GOOGL",
+      "score": 29.7228,
+      "prior_close": 396.75,
+      "pm_last": 400.98,
+      "gap_pct": 1.06,
       "gap_direction": "up",
-      "pm_volume": 243904,
-      "pm_vol_ratio": 0.393,
-      "avg_vol_30d": 620638
+      "pm_volume": 653409,
+      "pm_vol_ratio": 0.7271,
+      "avg_vol_30d": 898654
     },
     {
-      "symbol": "SCHW",
-      "score": 16.8339,
-      "prior_close": 89.45,
-      "pm_last": 91.88,
-      "gap_pct": 2.72,
-      "gap_direction": "up",
-      "pm_volume": 228144,
-      "pm_vol_ratio": 0.3801,
-      "avg_vol_30d": 600224
-    },
-    {
-      "symbol": "PANW",
-      "score": 16.693,
-      "prior_close": 238.22,
-      "pm_last": 238.12,
-      "gap_pct": -0.04,
+      "symbol": "TSLA",
+      "score": 28.634,
+      "prior_close": 422.27,
+      "pm_last": 410.37,
+      "gap_pct": -2.82,
       "gap_direction": "down",
-      "pm_volume": 125630,
-      "pm_vol_ratio": 0.4167,
-      "avg_vol_30d": 301513
-    },
-    {
-      "symbol": "LRCX",
-      "score": 16.3581,
-      "prior_close": 299.14,
-      "pm_last": 283.12,
-      "gap_pct": -5.36,
-      "gap_direction": "down",
-      "pm_volume": 109138,
-      "pm_vol_ratio": 0.3286,
-      "avg_vol_30d": 332107
-    },
-    {
-      "symbol": "IONQ",
-      "score": 15.2745,
-      "prior_close": 57.49,
-      "pm_last": 51.96,
-      "gap_pct": -9.62,
-      "gap_direction": "down",
-      "pm_volume": 215319,
-      "pm_vol_ratio": 0.2376,
-      "avg_vol_30d": 906314
-    },
-    {
-      "symbol": "MRVL",
-      "score": 14.6283,
-      "prior_close": 182.55,
-      "pm_last": 177.71,
-      "gap_pct": -2.65,
-      "gap_direction": "down",
-      "pm_volume": 260347,
-      "pm_vol_ratio": 0.3259,
-      "avg_vol_30d": 798764
+      "pm_volume": 548635,
+      "pm_vol_ratio": 0.6736,
+      "avg_vol_30d": 814508
     },
     {
       "symbol": "RKLB",
-      "score": 13.8572,
-      "prior_close": 132.56,
-      "pm_last": 124.73,
-      "gap_pct": -5.91,
+      "score": 28.3305,
+      "prior_close": 124.68,
+      "pm_last": 127.09,
+      "gap_pct": 1.93,
+      "gap_direction": "up",
+      "pm_volume": 294318,
+      "pm_vol_ratio": 0.6793,
+      "avg_vol_30d": 433286
+    },
+    {
+      "symbol": "MSTR",
+      "score": 27.3838,
+      "prior_close": 177.34,
+      "pm_last": 162.94,
+      "gap_pct": -8.12,
       "gap_direction": "down",
-      "pm_volume": 110527,
-      "pm_vol_ratio": 0.2578,
-      "avg_vol_30d": 428684
+      "pm_volume": 185698,
+      "pm_vol_ratio": 0.5628,
+      "avg_vol_30d": 329980
+    },
+    {
+      "symbol": "AVGO",
+      "score": 27.3462,
+      "prior_close": 425.03,
+      "pm_last": 416.8,
+      "gap_pct": -1.94,
+      "gap_direction": "down",
+      "pm_volume": 388754,
+      "pm_vol_ratio": 0.6546,
+      "avg_vol_30d": 593886
+    },
+    {
+      "symbol": "MRVL",
+      "score": 24.6187,
+      "prior_close": 176.85,
+      "pm_last": 166.76,
+      "gap_pct": -5.71,
+      "gap_direction": "down",
+      "pm_volume": 428789,
+      "pm_vol_ratio": 0.5299,
+      "avg_vol_30d": 809209
+    },
+    {
+      "symbol": "INTC",
+      "score": 24.1588,
+      "prior_close": 108.87,
+      "pm_last": 105.16,
+      "gap_pct": -3.41,
+      "gap_direction": "down",
+      "pm_volume": 2026667,
+      "pm_vol_ratio": 0.5529,
+      "avg_vol_30d": 3665819
+    },
+    {
+      "symbol": "ARM",
+      "score": 23.8052,
+      "prior_close": 209.14,
+      "pm_last": 207.52,
+      "gap_pct": -0.77,
+      "gap_direction": "down",
+      "pm_volume": 212806,
+      "pm_vol_ratio": 0.5835,
+      "avg_vol_30d": 364698
+    },
+    {
+      "symbol": "NVDA",
+      "score": 22.6617,
+      "prior_close": 225.31,
+      "pm_last": 220.25,
+      "gap_pct": -2.24,
+      "gap_direction": "down",
+      "pm_volume": 2232506,
+      "pm_vol_ratio": 0.5329,
+      "avg_vol_30d": 4189443
+    },
+    {
+      "symbol": "AMZN",
+      "score": 22.6222,
+      "prior_close": 264.22,
+      "pm_last": 264.79,
+      "gap_pct": 0.22,
+      "gap_direction": "up",
+      "pm_volume": 1075092,
+      "pm_vol_ratio": 0.5623,
+      "avg_vol_30d": 1911888
     }
   ],
   "weekly_base": [
@@ -179,8 +179,8 @@
     "MU",
     "RKLB",
     "QCOM",
-    "ARM",
     "PANW",
+    "ARM",
     "TXN",
     "IONQ",
     "SMH",
@@ -197,6 +197,6 @@
     "TSLA",
     "NFLX",
     "PYPL",
-    "SCHW"
+    "XLY"
   ]
 }
