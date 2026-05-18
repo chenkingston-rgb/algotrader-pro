@@ -110,5 +110,27 @@
       "roc_prev": 0.051,
       "threshold": 0.3
     }
+  },
+  {
+    "timestamp": "2026-05-18T11:00:42.220317-04:00",
+    "strategy": "momentum_roc_15m",
+    "vix_type": "MOMENTUM",
+    "symbol": "QQQ",
+    "signal": "sell",
+    "price": 705.46,
+    "atr": 2.6677,
+    "qty": 0,
+    "stop_price": null,
+    "tp_price": null,
+    "executed": false,
+    "skip_reason": "no_position_to_sell",
+    "order_id": null,
+    "vix": 12.57,
+    "vix_reason": "vix_clear",
+    "indicators": {
+      "roc": -0.434,
+      "roc_prev": -0.285,
+      "threshold": 0.3
+    }
   }
 ]
