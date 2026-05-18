@@ -88,5 +88,27 @@
       "roc_prev": -0.203,
       "threshold": 0.3
     }
+  },
+  {
+    "timestamp": "2026-05-18T10:15:33.191111-04:00",
+    "strategy": "momentum_roc_15m",
+    "vix_type": "MOMENTUM",
+    "symbol": "XLE",
+    "signal": "buy",
+    "price": 59.3,
+    "atr": 0.2594,
+    "qty": 0,
+    "stop_price": null,
+    "tp_price": null,
+    "executed": false,
+    "skip_reason": "already_in_position",
+    "order_id": null,
+    "vix": 12.52,
+    "vix_reason": "vix_clear",
+    "indicators": {
+      "roc": 0.381,
+      "roc_prev": 0.051,
+      "threshold": 0.3
+    }
   }
 ]
