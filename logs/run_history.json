@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-07T15:15:35.814460-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 104712.47,
-    "vix": 12.25,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-07T15:30:42.831309-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2041,6 +2031,16 @@
     "strategy_mode": "intraday",
     "equity": 105727.01,
     "vix": 12.66,
+    "signals_count": 7,
+    "orders_count": 0,
+    "symbols_traded": []
+  },
+  {
+    "timestamp": "2026-05-19T15:30:35.113066-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 105692.23,
+    "vix": 12.81,
     "signals_count": 7,
     "orders_count": 0,
     "symbols_traded": []
