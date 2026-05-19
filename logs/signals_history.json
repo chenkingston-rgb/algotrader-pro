@@ -2271,5 +2271,156 @@
       "roc_prev": -0.107,
       "threshold": 0.3
     }
+  },
+  {
+    "timestamp": "2026-05-19T13:00:38.664154-04:00",
+    "strategy": "bollinger_bands_15m",
+    "strategy_mode": "intraday",
+    "symbol": "SPY",
+    "signal": "sell",
+    "price": 736.15,
+    "qty": 14,
+    "stop_price": null,
+    "tp_price": null,
+    "executed": true,
+    "skip_reason": null,
+    "order_id": "8f3c866d-c578-49a4-9775-0c82c27f92d6",
+    "vix": 12.65,
+    "atr": 1.5041,
+    "indicators": {
+      "price": 736.15,
+      "bb_lower": 731.5,
+      "bb_mid": 734.21,
+      "bb_upper": 736.91,
+      "ma_filter": 735.97
+    }
+  },
+  {
+    "timestamp": "2026-05-19T13:00:38.664154-04:00",
+    "strategy": "bollinger_bands_15m",
+    "strategy_mode": "intraday",
+    "symbol": "QQQ",
+    "signal": "sell",
+    "price": 703.97,
+    "qty": 15,
+    "stop_price": null,
+    "tp_price": null,
+    "executed": true,
+    "skip_reason": null,
+    "order_id": "e30b2109-8b36-4a14-a986-725dcfc3512d",
+    "vix": 12.65,
+    "atr": 2.2914,
+    "indicators": {
+      "price": 703.97,
+      "bb_lower": 695.14,
+      "bb_mid": 700.37,
+      "bb_upper": 705.61,
+      "ma_filter": 702.96
+    }
+  },
+  {
+    "timestamp": "2026-05-19T13:00:38.664154-04:00",
+    "strategy": "momentum_roc_15m",
+    "strategy_mode": "intraday",
+    "symbol": "SPY",
+    "signal": "hold",
+    "price": 736.15,
+    "qty": 0,
+    "stop_price": null,
+    "tp_price": null,
+    "executed": false,
+    "skip_reason": "no_signal",
+    "order_id": null,
+    "vix": 12.65,
+    "atr": 1.5041,
+    "indicators": {
+      "roc": 0.518,
+      "roc_prev": 0.342,
+      "threshold": 0.3
+    }
+  },
+  {
+    "timestamp": "2026-05-19T13:00:38.664154-04:00",
+    "strategy": "momentum_roc_15m",
+    "strategy_mode": "intraday",
+    "symbol": "QQQ",
+    "signal": "hold",
+    "price": 703.97,
+    "qty": 0,
+    "stop_price": null,
+    "tp_price": null,
+    "executed": false,
+    "skip_reason": "no_signal",
+    "order_id": null,
+    "vix": 12.65,
+    "atr": 2.2914,
+    "indicators": {
+      "roc": 1.094,
+      "roc_prev": 0.871,
+      "threshold": 0.3
+    }
+  },
+  {
+    "timestamp": "2026-05-19T13:00:38.664154-04:00",
+    "strategy": "momentum_roc_15m",
+    "strategy_mode": "intraday",
+    "symbol": "XLK",
+    "signal": "hold",
+    "price": 174.06,
+    "qty": 0,
+    "stop_price": null,
+    "tp_price": null,
+    "executed": false,
+    "skip_reason": "no_signal",
+    "order_id": null,
+    "vix": 12.65,
+    "atr": 0.87,
+    "indicators": {
+      "roc": 1.656,
+      "roc_prev": 1.491,
+      "threshold": 0.3
+    }
+  },
+  {
+    "timestamp": "2026-05-19T13:00:38.664154-04:00",
+    "strategy": "momentum_roc_15m",
+    "strategy_mode": "intraday",
+    "symbol": "XLE",
+    "signal": "hold",
+    "price": 61.08,
+    "qty": 0,
+    "stop_price": null,
+    "tp_price": null,
+    "executed": false,
+    "skip_reason": "no_signal",
+    "order_id": null,
+    "vix": 12.65,
+    "atr": 0.1905,
+    "indicators": {
+      "roc": 0.304,
+      "roc_prev": 0.494,
+      "threshold": 0.3
+    }
+  },
+  {
+    "timestamp": "2026-05-19T13:00:38.664154-04:00",
+    "strategy": "momentum_roc_15m",
+    "strategy_mode": "intraday",
+    "symbol": "XLF",
+    "signal": "hold",
+    "price": 51.52,
+    "qty": 0,
+    "stop_price": null,
+    "tp_price": null,
+    "executed": false,
+    "skip_reason": "no_signal",
+    "order_id": null,
+    "vix": 12.65,
+    "atr": 0.1147,
+    "indicators": {
+      "roc": -0.387,
+      "roc_prev": -0.396,
+      "threshold": 0.3
+    }
   }
 ]
