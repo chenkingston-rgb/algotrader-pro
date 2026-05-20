@@ -1245,13 +1245,28 @@ def main():
     orders_placed = []
 
     # ── Apply dynamic watchlist symbols ──────────────────────────────────
+    # IMPORTANT: always prepend symbols with open positions so that exit
+    # signals are never skipped for holdings that have dropped off the
+    # watchlist (e.g. after a weekly scan refresh removes a symbol).
+    position_symbols = list(positions.keys())
     dyn_symbols = load_dynamic_symbols()
     if dyn_symbols:
+        # Merge: open positions first (exit priority), then watchlist, deduplicated
+        merged_symbols = list(dict.fromkeys(position_symbols + dyn_symbols))
         for _sc in STRATEGIES.values():
-            _sc["symbols"] = dyn_symbols
-        print(f"[WATCHLIST] Applied {len(dyn_symbols)} symbols to all {STRATEGY_MODE} strategies")
+            _sc["symbols"] = merged_symbols
+        dropped = [s for s in position_symbols if s not in dyn_symbols]
+        print(
+            f"[WATCHLIST] Applied {len(merged_symbols)} symbols to all {STRATEGY_MODE} strategies "
+            f"({len(dyn_symbols)} watchlist + {len(dropped)} position-only: {dropped or 'none'})"
+        )
     else:
-        print("[WATCHLIST] Watchlist unavailable — using hardcoded symbol lists")
+        # Fallback to hardcoded lists, but still prepend open positions
+        for _sc in STRATEGIES.values():
+            existing = _sc["symbols"]
+            merged = list(dict.fromkeys(position_symbols + existing))
+            _sc["symbols"] = merged
+        print("[WATCHLIST] Watchlist unavailable — using hardcoded lists; open positions prepended")
 
     strats_to_run = {k: v for k, v in STRATEGIES.items()
                      if not STRATEGY_FILTER or k == STRATEGY_FILTER}
