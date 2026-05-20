@@ -125,6 +125,41 @@ HISTORY_FILE          = "logs/run_history.json"
 SIGNALS_HISTORY_FILE  = "logs/signals_history.json"
 MAX_SIGNALS_HISTORY   = 500   # rolling window kept in repo
 
+WATCHLIST_WEEKLY_FILE = "logs/watchlist_weekly.json"
+WATCHLIST_DAILY_FILE  = "logs/watchlist_daily.json"
+
+# ─────────────────────────────────────────────
+# DYNAMIC SYMBOL LOADING FROM WATCHLISTS
+# ─────────────────────────────────────────────
+def load_dynamic_symbols() -> list:
+    """
+    Fetch the appropriate watchlist for the current STRATEGY_MODE from GitHub.
+    - intraday mode → watchlist_daily.json  (daily pre-market picks + 7 core)
+    - daily mode    → watchlist_weekly.json (weekly scan top 25 + 7 core)
+    Falls back to None if the file is missing or the fetch fails.
+    """
+    repo = GITHUB_REPOSITORY or "chenkingston-rgb/algotrader-pro"
+    filename = WATCHLIST_DAILY_FILE if STRATEGY_MODE == "intraday" else WATCHLIST_WEEKLY_FILE
+    url = (
+        f"https://raw.githubusercontent.com/{repo}/main/{filename}"
+        f"?t={int(_time.time())}"
+    )
+    try:
+        r = requests.get(url, timeout=10)
+        if r.ok:
+            data = r.json()
+            symbols = data.get("symbols", [])
+            if symbols:
+                logging.info(
+                    f"[WATCHLIST] Loaded {len(symbols)} symbols from {filename}: {symbols}"
+                )
+                return symbols
+        logging.warning(f"[WATCHLIST] {filename} fetch returned {r.status_code}")
+    except Exception as e:
+        logging.warning(f"[WATCHLIST] Error fetching {filename}: {e}")
+    return []
+
+
 # ─────────────────────────────────────────────
 # HELPERS: GITHUB LOGGING
 # ─────────────────────────────────────────────
@@ -1208,6 +1243,16 @@ def main():
 
     all_signals   = []
     orders_placed = []
+
+    # ── Apply dynamic watchlist symbols ──────────────────────────────────
+    dyn_symbols = load_dynamic_symbols()
+    if dyn_symbols:
+        for _sc in STRATEGIES.values():
+            _sc["symbols"] = dyn_symbols
+        print(f"[WATCHLIST] Applied {len(dyn_symbols)} symbols to all {STRATEGY_MODE} strategies")
+    else:
+        print("[WATCHLIST] Watchlist unavailable — using hardcoded symbol lists")
+
     strats_to_run = {k: v for k, v in STRATEGIES.items()
                      if not STRATEGY_FILTER or k == STRATEGY_FILTER}
 
@@ -1405,3 +1450,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
