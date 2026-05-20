@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-08T09:45:36.598756-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 104840.1,
-    "vix": 12.19,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-08T10:00:44.782475-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2053,6 +2043,20 @@
       "AMD",
       "AVGO",
       "XLE"
+    ]
+  },
+  {
+    "timestamp": "2026-05-20T10:15:40.287038-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 105676.54,
+    "vix": 12.39,
+    "signals_count": 38,
+    "orders_count": 3,
+    "symbols_traded": [
+      "QQQ",
+      "XLK",
+      "PANW"
     ]
   }
 ]
