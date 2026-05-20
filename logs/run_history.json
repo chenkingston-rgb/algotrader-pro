@@ -1,17 +1,5 @@
 [
   {
-    "timestamp": "2026-05-08T14:09:35.093514-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105059.14,
-    "vix": 12.32,
-    "signals_count": 7,
-    "orders_count": 1,
-    "symbols_traded": [
-      "QQQ"
-    ]
-  },
-  {
     "timestamp": "2026-05-08T14:15:31.672111-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2113,6 +2101,21 @@
       "PANW",
       "MRVL",
       "AMD"
+    ]
+  },
+  {
+    "timestamp": "2026-05-20T15:30:34.930588-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 105867.23,
+    "vix": 12.77,
+    "signals_count": 38,
+    "orders_count": 4,
+    "symbols_traded": [
+      "AMD",
+      "MRVL",
+      "PANW",
+      "XLK"
     ]
   }
 ]
