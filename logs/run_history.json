@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-08T14:15:31.672111-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105077.26,
-    "vix": 12.34,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-08T14:30:41.560189-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2116,6 +2106,20 @@
       "MRVL",
       "PANW",
       "XLK"
+    ]
+  },
+  {
+    "timestamp": "2026-05-21T09:45:31.454009-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 105882.67,
+    "vix": 12.71,
+    "signals_count": 38,
+    "orders_count": 3,
+    "symbols_traded": [
+      "XLK",
+      "PANW",
+      "AVGO"
     ]
   }
 ]
