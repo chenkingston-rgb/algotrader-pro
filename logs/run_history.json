@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-12T11:15:30.106152-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 104984.18,
-    "vix": 12.9,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-12T11:30:46.470415-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2234,6 +2224,19 @@
       "QQQ",
       "NVDA",
       "AVGO"
+    ]
+  },
+  {
+    "timestamp": "2026-05-22T13:15:29.671442-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 106405.87,
+    "vix": 12.23,
+    "signals_count": 38,
+    "orders_count": 2,
+    "symbols_traded": [
+      "GLD",
+      "QQQ"
     ]
   }
 ]
