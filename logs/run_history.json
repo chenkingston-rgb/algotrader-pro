@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-12T13:00:46.838158-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 104912.44,
-    "vix": 13.17,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-12T13:15:36.794708-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2259,6 +2249,20 @@
     "orders_count": 1,
     "symbols_traded": [
       "QCOM"
+    ]
+  },
+  {
+    "timestamp": "2026-05-22T15:00:44.076228-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 106165.01,
+    "vix": 12.18,
+    "signals_count": 38,
+    "orders_count": 3,
+    "symbols_traded": [
+      "XLE",
+      "AMD",
+      "TSLA"
     ]
   }
 ]
