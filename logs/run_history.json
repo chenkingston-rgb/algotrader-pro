@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-12T11:00:49.123259-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105071.8,
-    "vix": 12.78,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-12T11:15:30.106152-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2228,6 +2218,22 @@
       "IWM",
       "GLD",
       "XLK"
+    ]
+  },
+  {
+    "timestamp": "2026-05-22T13:00:41.503368-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 106362.27,
+    "vix": 12.19,
+    "signals_count": 38,
+    "orders_count": 5,
+    "symbols_traded": [
+      "IWM",
+      "XLK",
+      "QQQ",
+      "NVDA",
+      "AVGO"
     ]
   }
 ]
