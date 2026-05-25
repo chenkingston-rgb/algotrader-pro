@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-12T13:45:28.367933-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105108.03,
-    "vix": 12.59,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-12T14:00:47.864166-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2273,6 +2263,18 @@
       "IONQ",
       "QCOM",
       "TXN",
+      "XLE"
+    ]
+  },
+  {
+    "timestamp": "2026-05-25T09:45:28.482010-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 106193.66,
+    "vix": 12.11,
+    "signals_count": 38,
+    "orders_count": 1,
+    "symbols_traded": [
       "XLE"
     ]
   }
