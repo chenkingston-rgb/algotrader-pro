@@ -1,5 +1,5 @@
 {
-  "run_timestamp": "2026-05-25T10:30:37.655940-04:00",
+  "run_timestamp": "2026-05-25T10:45:27.197354-04:00",
   "mode": "paper",
   "strategy_mode": "intraday",
   "equity": 106193.66,
@@ -140,7 +140,7 @@
   ],
   "signals": [
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "IONQ",
@@ -164,7 +164,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "QCOM",
@@ -188,7 +188,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "QQQ",
@@ -212,7 +212,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "RKLB",
@@ -236,7 +236,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "SPY",
@@ -260,7 +260,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "TXN",
@@ -284,7 +284,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "XLE",
@@ -296,7 +296,7 @@
       "tp_price": null,
       "executed": true,
       "skip_reason": null,
-      "order_id": "9e354f3c-77fb-48c9-8107-64cee5090d1f",
+      "order_id": "4818c7d0-fad3-4f0b-b146-c72fe6767177",
       "vix": 12.11,
       "vix_reason": "vix_clear",
       "indicators": {
@@ -308,7 +308,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "XLK",
@@ -332,7 +332,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "IWM",
@@ -356,7 +356,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "GLD",
@@ -380,7 +380,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "XLF",
@@ -404,7 +404,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "ARM",
@@ -428,7 +428,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "NVDA",
@@ -452,7 +452,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "SMCI",
@@ -476,7 +476,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "AAPL",
@@ -500,7 +500,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "AVGO",
@@ -524,7 +524,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "AMD",
@@ -548,7 +548,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "TSLA",
@@ -572,7 +572,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "bollinger_bands_15m",
       "vix_type": "MEAN_REV",
       "symbol": "XLY",
@@ -596,7 +596,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "IONQ",
@@ -618,7 +618,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "QCOM",
@@ -640,7 +640,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "QQQ",
@@ -662,7 +662,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "RKLB",
@@ -684,7 +684,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "SPY",
@@ -706,7 +706,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "TXN",
@@ -728,7 +728,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "XLE",
@@ -750,7 +750,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "XLK",
@@ -772,7 +772,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "IWM",
@@ -794,7 +794,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "GLD",
@@ -816,7 +816,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "XLF",
@@ -838,7 +838,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "ARM",
@@ -860,7 +860,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "NVDA",
@@ -882,7 +882,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "SMCI",
@@ -904,7 +904,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "AAPL",
@@ -926,7 +926,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "AVGO",
@@ -948,7 +948,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "AMD",
@@ -970,7 +970,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "TSLA",
@@ -992,7 +992,7 @@
       }
     },
     {
-      "timestamp": "2026-05-25T10:30:37.655940-04:00",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00",
       "strategy": "momentum_roc_15m",
       "vix_type": "MOMENTUM",
       "symbol": "XLY",
@@ -1025,8 +1025,8 @@
       "est_value": 10522.65,
       "stop_price": null,
       "tp_price": null,
-      "order_id": "9e354f3c-77fb-48c9-8107-64cee5090d1f",
-      "timestamp": "2026-05-25T10:30:37.655940-04:00"
+      "order_id": "4818c7d0-fad3-4f0b-b146-c72fe6767177",
+      "timestamp": "2026-05-25T10:45:27.197354-04:00"
     }
   ]
 }
