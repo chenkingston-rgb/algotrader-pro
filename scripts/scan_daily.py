@@ -1,5 +1,6 @@
 """
-AlgoTrader Pro — Daily Pre-Market Symbol Filter  (v1)
+AlgoTrader Pro — Daily Pre-Market Symbol Filter  (v2)
+FIX: pre-market start uses ET-localised datetime (correct DST handling).
 Runs Mon–Fri at 9:15 AM ET via GitHub Actions.
 
 Reads the weekly watchlist and applies pre-market filters to surface
@@ -72,8 +73,14 @@ def get_premarket_data(symbols: list) -> dict:
     Returns {symbol: {prior_close, avg_vol_30d, pm_volume, pm_last}}
     """
     now = datetime.now(timezone.utc)
-    # Pre-market starts 4:00 AM ET = 8:00 AM UTC during EDT (UTC-4)
-    pm_start = now.replace(hour=8, minute=0, second=0, microsecond=0)
+    # FIX: Use ET-localised pre-market start to handle EDT/EST DST correctly.
+    # Old code hardcoded hour=8 UTC which = 3 AM ET in winter (EST, UTC-5).
+    # Now we compute 4:00 AM ET and convert to UTC regardless of DST.
+    import pytz as _pytz
+    ET_TZ   = _pytz.timezone("America/New_York")
+    now_et  = now.astimezone(ET_TZ)
+    pm_start_et = now_et.replace(hour=4, minute=0, second=0, microsecond=0)
+    pm_start    = pm_start_et.astimezone(timezone.utc)
     results  = {}
     chunk_size = 40
 
