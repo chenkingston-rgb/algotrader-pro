@@ -1,8 +1,20 @@
-name: AlgoTrader — Daily Strategies (manual dispatch only — v4)
-# Schedule crons removed in v4; Render WebSocket engine handles continuous execution.
-# Retain workflow_dispatch for manual paper/live test runs and diagnostics.
+name: AlgoTrader — Daily Strategies (v2 — cron re-enabled)
+# V2: Restored hourly cron schedule for daily trend strategies.
+# These run ONCE per hour during market hours (not every 15-min like intraday).
+# The Render WebSocket engine handles real-time intraday execution;
+# daily strategies need end-of-bar signals from completed daily bars,
+# so GitHub Actions fetches fresh 1Day bars each hourly cycle.
 
 on:
+  schedule:
+    # Run hourly 10:05 AM–3:35 PM ET (Mon–Fri). 5-min offset avoids exact-hour congestion.
+    # ET = UTC-4 (EDT summer) / UTC-5 (EST winter). Times below are EDT (UTC-4).
+    - cron: '5 14 * * 1-5'   # 10:05 AM ET
+    - cron: '5 15 * * 1-5'   # 11:05 AM ET
+    - cron: '5 16 * * 1-5'   # 12:05 PM ET
+    - cron: '5 17 * * 1-5'   #  1:05 PM ET
+    - cron: '5 18 * * 1-5'   #  2:05 PM ET
+    - cron: '5 19 * * 1-5'   #  3:05 PM ET
   workflow_dispatch:
     inputs:
       mode:
@@ -24,7 +36,27 @@ jobs:
       - name: Install Python dependencies
         run: pip3 install --quiet alpaca-py>=0.30.0 pandas>=2.0.0 numpy>=1.24.0 requests python-dateutil pytz
 
+      - name: Check market hours
+        id: market_check
+        run: |
+          python3 - <<'PYEOF'
+          from datetime import datetime
+          import pytz, sys
+          et = pytz.timezone('America/New_York')
+          now = datetime.now(et)
+          if now.weekday() >= 5:
+              open("market_open.txt","w").write("false")
+              print("Weekend — skipping"); sys.exit(0)
+          open_t  = now.replace(hour=10, minute=0,  second=0, microsecond=0)
+          close_t = now.replace(hour=15, minute=45, second=0, microsecond=0)
+          ok = open_t <= now <= close_t
+          open("market_open.txt","w").write("true" if ok else "false")
+          print(f"Market tradeable: {ok} at {now.strftime('%H:%M %Z')}")
+          PYEOF
+          echo "TRADEABLE=$(cat market_open.txt)" >> $GITHUB_OUTPUT
+
       - name: Run daily trend strategies
+        if: steps.market_check.outputs.TRADEABLE == 'true'
         env:
           ALPACA_PAPER_KEY:    ${{ secrets.ALPACA_PAPER_KEY }}
           ALPACA_PAPER_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
