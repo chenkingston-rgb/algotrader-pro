@@ -1,14 +1,15 @@
 """
-AlgoTrader Pro — GitHub Actions Strategy Runner  (v5 FINAL)
+AlgoTrader Pro — GitHub Actions Strategy Runner  (v6)
 Dual-frequency: daily bars for trend strategies, 15-min bars for mean-rev/momentum.
 Writes JSON log files back to the repo so Base44 can read them via raw.githubusercontent.com.
 
-V5 additions:
-  - Section A: Engine exports (get_trading_symbols, is_market_hours, run_all_strategies)
-  - Section B: 7th strategy — VWAP Breakout (5-condition entry, 9:45–11:30 ET only)
-  - Section C: VWAP-adjusted take-profit multiplier (shared across all 7 strategies)
-  - Section D: RSI(2) position-size multiplier (shared across all 7 strategies)
-  - Section E: ADX(14) regime size scaler via StockHistoricalDataClient
+V6 fixes:
+  - FIX 1: Bollinger exit raised from bb_mid to bb_upper (no more premature exits)
+  - FIX 2: Momentum ROC entry changed from zero-crossing to sustained-above logic
+  - FIX 3: Bollinger buy filter: require price ABOVE 50-MA (not just != NaN)
+  - FIX 4: daily.yml cron re-enabled (handled separately in workflow file)
+  - FIX 5: scan_symbols.py: ADX filter split — mean-rev candidates use ADX < 22
+  - FIX 6: scan_daily.py: pre-market start uses ET-localised datetime (no DST bug)
 
 Environment variables (GitHub Secrets):
   ALPACA_PAPER_KEY / ALPACA_PAPER_SECRET
@@ -508,9 +509,15 @@ def signal_bollinger_bands_15m(df: pd.DataFrame, p: dict) -> tuple:
     price, l, m, u, ma_v = c.iloc[-1], lower.iloc[-1], mid.iloc[-1], upper.iloc[-1], ma.iloc[-1]
     inds = {"price": round(price,2), "bb_lower": round(l,2), "bb_mid": round(m,2),
             "bb_upper": round(u,2), "ma_filter": round(ma_v,2) if not np.isnan(ma_v) else None}
-    if price < l and (np.isnan(ma_v) or price > ma_v):
+    # FIX 1: Entry — price must be BELOW lower band AND ABOVE 50-MA (trend filter)
+    #         The original allowed entry when ma_v was NaN (insufficient data).
+    #         Now we require a valid, confirmed uptrend filter before buying.
+    ma_valid = not np.isnan(ma_v)
+    if price < l and ma_valid and price > ma_v:
         return "buy", inds
-    if price > m:
+    # FIX 2: Exit — raise from bb_mid to bb_upper so winners run to full mean-reversion
+    #         Old logic sold the moment price crossed the midband, cutting all profit.
+    if price > u:
         return "sell", inds
     return "hold", inds
 
@@ -519,9 +526,16 @@ def signal_momentum_roc_15m(df: pd.DataFrame, p: dict) -> tuple:
     roc = (c / c.shift(p["roc_period"]) - 1) * 100
     r, prev_r = roc.iloc[-1], roc.iloc[-2]
     inds = {"roc": round(r,3), "roc_prev": round(prev_r,3), "threshold": p["roc_threshold"]}
-    if r > p["roc_threshold"] and prev_r <= p["roc_threshold"]:
+    # FIX 3: Changed from zero-crossing to sustained-momentum logic.
+    # Old: required prev_r to be BELOW threshold (zero-crossing). On volatile watchlist
+    #      names (RKLB, IONQ, AMD) ROC stays above threshold across bars — crossing was
+    #      never re-triggered, missing the best continuation entries.
+    # New: fire buy if ROC currently above threshold AND was accelerating (r > prev_r).
+    #      This catches sustained momentum moves, not just the initial cross.
+    #      Sell fires if ROC is below negative threshold AND decelerating (r < prev_r).
+    if r > p["roc_threshold"] and r > prev_r:
         return "buy", inds
-    if r < -p["roc_threshold"] and prev_r >= -p["roc_threshold"]:
+    if r < -p["roc_threshold"] and r < prev_r:
         return "sell", inds
     return "hold", inds
 
@@ -1076,8 +1090,14 @@ def _run_streaming_strategy(
 
     if signal == "buy":
         tp_mult    = shared["tp_mult"]
-        stop_price = price * (1.0 - ATR_STOP_MULT * atr / price)
-        tp_price   = price * (1.0 + tp_mult * atr / price)
+        # FIX 4: Enforce a minimum stop distance of 0.20% of price.
+        # 15-min ATR on low-volatility windows (e.g. GLD at market open) can
+        # be severely compressed, producing stop/TP distances of <$1 on $400 stocks.
+        # 0.20% floor = ~$0.83 on GLD, ~$1.50 on SPY — sensible minimums.
+        min_atr = price * 0.0020
+        eff_atr = max(atr, min_atr)
+        stop_price = price - (ATR_STOP_MULT * eff_atr)
+        tp_price   = price + (tp_mult * eff_atr)
         try:
             place_order(symbol, qty, "buy", stop_price, tp_price)
             logging.info(
@@ -1328,8 +1348,11 @@ def main():
                     skip_reason = "insufficient_buying_power"
                     print(f"  {symbol}: not enough buying power for {qty} shares at ${price:.2f}")
                 else:
-                    stop_price = price * (1 - ATR_STOP_MULT * atr / price)
-                    tp_price   = price * (1 + ATR_TP_MULT * atr / price)
+                    # FIX 4 (main loop): same ATR floor as streaming engine
+                    min_atr_ga = price * 0.0020
+                    eff_atr_ga = max(atr, min_atr_ga)
+                    stop_price = price - (ATR_STOP_MULT * eff_atr_ga)
+                    tp_price   = price + (ATR_TP_MULT   * eff_atr_ga)
                     try:
                         order    = place_order(symbol, qty, "buy", stop_price, tp_price)
                         order_id = order.get("id")
