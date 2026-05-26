@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-14T11:15:37.878732-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105961.41,
-    "vix": 11.55,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-14T11:30:43.871125-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2381,6 +2371,20 @@
     "orders_count": 1,
     "symbols_traded": [
       "SMCI"
+    ]
+  },
+  {
+    "timestamp": "2026-05-26T13:15:29.115430-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 107167.42,
+    "vix": 11.94,
+    "signals_count": 38,
+    "orders_count": 3,
+    "symbols_traded": [
+      "QCOM",
+      "MRVL",
+      "NOW"
     ]
   }
 ]
