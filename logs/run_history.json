@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-13T14:00:43.300875-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105485.64,
-    "vix": 11.55,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-13T14:15:38.282102-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2331,6 +2321,19 @@
       "ARM",
       "IONQ",
       "GLD"
+    ]
+  },
+  {
+    "timestamp": "2026-05-26T10:00:47.619772-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 107304.15,
+    "vix": 12.03,
+    "signals_count": 38,
+    "orders_count": 2,
+    "symbols_traded": [
+      "QCOM",
+      "MRK"
     ]
   }
 ]
