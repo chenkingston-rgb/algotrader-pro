@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-13T14:15:38.282102-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105572.69,
-    "vix": 11.62,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-13T14:30:40.796476-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2334,6 +2324,18 @@
     "symbols_traded": [
       "QCOM",
       "MRK"
+    ]
+  },
+  {
+    "timestamp": "2026-05-26T10:15:36.197939-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 107460.81,
+    "vix": 12.1,
+    "signals_count": 38,
+    "orders_count": 1,
+    "symbols_traded": [
+      "ARM"
     ]
   }
 ]
