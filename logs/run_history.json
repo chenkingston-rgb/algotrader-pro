@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-14T11:30:43.871125-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 106012.79,
-    "vix": 11.61,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-14T11:45:32.116262-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2385,6 +2375,19 @@
       "QCOM",
       "MRVL",
       "NOW"
+    ]
+  },
+  {
+    "timestamp": "2026-05-26T13:30:36.857177-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 107047.73,
+    "vix": 11.91,
+    "signals_count": 38,
+    "orders_count": 2,
+    "symbols_traded": [
+      "ARM",
+      "RKLB"
     ]
   }
 ]
