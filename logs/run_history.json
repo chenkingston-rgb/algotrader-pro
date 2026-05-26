@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-13T15:00:46.175616-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105530.83,
-    "vix": 11.58,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-13T15:15:35.424382-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2354,6 +2344,21 @@
       "QCOM",
       "SMCI",
       "ARM"
+    ]
+  },
+  {
+    "timestamp": "2026-05-26T11:00:43.530411-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 107681.82,
+    "vix": 12.1,
+    "signals_count": 38,
+    "orders_count": 4,
+    "symbols_traded": [
+      "ARM",
+      "QCOM",
+      "SMCI",
+      "XLK"
     ]
   }
 ]
