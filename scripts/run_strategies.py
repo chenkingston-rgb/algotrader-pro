@@ -1467,42 +1467,47 @@ def main():
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
-                # BUY: bracket order with stop-loss + take-profit
-                qty = atr_position_size(equity, price, atr, vix_mult)
-                if qty < 1:
-                    skip_reason = "qty_too_small"
-                    print(f"  {symbol}: position size rounds to 0, skipping")
-                elif price * qty > buying_power * 0.95:
-                    skip_reason = "insufficient_buying_power"
-                    print(f"  {symbol}: not enough buying power for {qty} shares at ${price:.2f}")
+                # Regime gate: block new buys when SPY is below its 20-day MA
+                if os.environ.get("REGIME_OK", "1") == "0":
+                    skip_reason = "bear_regime"
+                    print(f"  {symbol}: buy blocked — bear regime (SPY below 20-day MA)")
                 else:
-                    # FIX 4 (main loop): same ATR floor as streaming engine
-                    min_atr_ga = price * 0.0020
-                    eff_atr_ga = max(atr, min_atr_ga)
-                    stop_price = price - (ATR_STOP_MULT * eff_atr_ga)
-                    tp_price   = price + (ATR_TP_MULT   * eff_atr_ga)
-                    try:
-                        order    = place_order(symbol, qty, "buy", stop_price, tp_price)
-                        order_id = order.get("id")
-                        executed = True
-                        print(f"  ✓ BUY ORDER: {qty} {symbol} @ market | "
-                              f"stop={stop_price:.2f} tp={tp_price:.2f} | id={order_id}")
-                        orders_placed.append({
-                            "symbol":       symbol,
-                            "strat":        strat_name,
-                            "signal":       "buy",
-                            "side":         "buy",
-                            "qty":          qty,
-                            "price":        round(price, 2),
-                            "est_value":    round(price * qty, 2),
-                            "stop_price":   round(stop_price, 2),
-                            "tp_price":     round(tp_price, 2),
-                            "order_id":     order_id,
-                            "timestamp":    run_start.isoformat(),
-                        })
-                    except Exception as e:
-                        skip_reason = f"order_error: {e}"
-                        print(f"  {symbol}: buy order failed — {e}")
+                    # BUY: bracket order with stop-loss + take-profit
+                    qty = atr_position_size(equity, price, atr, vix_mult)
+                    if qty < 1:
+                        skip_reason = "qty_too_small"
+                        print(f"  {symbol}: position size rounds to 0, skipping")
+                    elif price * qty > buying_power * 0.95:
+                        skip_reason = "insufficient_buying_power"
+                        print(f"  {symbol}: not enough buying power for {qty} shares at ${price:.2f}")
+                    else:
+                        # FIX 4 (main loop): same ATR floor as streaming engine
+                        min_atr_ga = price * 0.0020
+                        eff_atr_ga = max(atr, min_atr_ga)
+                        stop_price = price - (ATR_STOP_MULT * eff_atr_ga)
+                        tp_price   = price + (ATR_TP_MULT   * eff_atr_ga)
+                        try:
+                            order    = place_order(symbol, qty, "buy", stop_price, tp_price)
+                            order_id = order.get("id")
+                            executed = True
+                            print(f"  ✓ BUY ORDER: {qty} {symbol} @ market | "
+                                  f"stop={stop_price:.2f} tp={tp_price:.2f} | id={order_id}")
+                            orders_placed.append({
+                                "symbol":       symbol,
+                                "strat":        strat_name,
+                                "signal":       "buy",
+                                "side":         "buy",
+                                "qty":          qty,
+                                "price":        round(price, 2),
+                                "est_value":    round(price * qty, 2),
+                                "stop_price":   round(stop_price, 2),
+                                "tp_price":     round(tp_price, 2),
+                                "order_id":     order_id,
+                                "timestamp":    run_start.isoformat(),
+                            })
+                        except Exception as e:
+                            skip_reason = f"order_error: {e}"
+                            print(f"  {symbol}: buy order failed — {e}")
             else:
                 # SELL: plain market close — bracket orders are INVALID for closes
                 pos_qty = int(float(positions[symbol].get("qty", 0)))
