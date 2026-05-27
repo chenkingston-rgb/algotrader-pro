@@ -138,33 +138,79 @@ WATCHLIST_DAILY_FILE  = "logs/watchlist_daily.json"
 # ─────────────────────────────────────────────
 # DYNAMIC SYMBOL LOADING FROM WATCHLISTS
 # ─────────────────────────────────────────────
-def load_dynamic_symbols() -> list:
+def load_dynamic_symbols() -> dict:
     """
-    Fetch the appropriate watchlist for the current STRATEGY_MODE from GitHub.
-    - intraday mode → watchlist_daily.json  (daily pre-market picks + 7 core)
-    - daily mode    → watchlist_weekly.json (weekly scan top 25 + 7 core)
-    Falls back to None if the file is missing or the fetch fails.
+    Fetch the watchlist and return a pool-tagged symbol map:
+      {
+        "all":      [...],          # every symbol (for fallback / exit coverage)
+        "trend":    [...],          # TREND pool  — ADX > 20, strong momentum
+        "mean_rev": [...],          # MEAN_REV pool — ADX 10-22, ranging
+        "core":     [...],          # always-on core ETFs (SPY, QQQ, IWM, etc.)
+      }
+
+    Routing:
+      momentum_roc_15m   → trend + core symbols only
+      bollinger_bands_15m → mean_rev + core symbols only
+
+    Weekly mode (watchlist_weekly.json): pool tags come from ranked_picks[].
+      ranked_picks with ADX > 22 → TREND; ADX 10-22 → MEAN_REV.
+    Intraday mode (watchlist_daily.json): intraday_picks ranked by gap+pm_vol.
+      High-gap symbols (score > 3) are treated as TREND momentum candidates;
+      lower-activity symbols stay MEAN_REV.
+
+    Falls back to {"all": [], "trend": [], "mean_rev": [], "core": []} on failure.
     """
-    repo = GITHUB_REPOSITORY or "chenkingston-rgb/algotrader-pro"
+    repo     = GITHUB_REPOSITORY or "chenkingston-rgb/algotrader-pro"
     filename = WATCHLIST_DAILY_FILE if STRATEGY_MODE == "intraday" else WATCHLIST_WEEKLY_FILE
-    url = (
+    url      = (
         f"https://raw.githubusercontent.com/{repo}/main/{filename}"
         f"?t={int(_time.time())}"
     )
+    empty = {"all": [], "trend": [], "mean_rev": [], "core": []}
     try:
         r = requests.get(url, timeout=10)
-        if r.ok:
-            data = r.json()
-            symbols = data.get("symbols", [])
-            if symbols:
-                logging.info(
-                    f"[WATCHLIST] Loaded {len(symbols)} symbols from {filename}: {symbols}"
-                )
-                return symbols
-        logging.warning(f"[WATCHLIST] {filename} fetch returned {r.status_code}")
+        if not r.ok:
+            logging.warning(f"[WATCHLIST] {filename} fetch returned {r.status_code}")
+            return empty
+        data = r.json()
     except Exception as e:
         logging.warning(f"[WATCHLIST] Error fetching {filename}: {e}")
-    return []
+        return empty
+
+    core_syms = data.get("core_symbols", ["SPY", "QQQ", "IWM", "GLD", "XLK", "XLE", "XLF"])
+    all_syms  = data.get("symbols", [])
+
+    if STRATEGY_MODE == "intraday":
+        # Daily watchlist: use gap score as a proxy for trend vs mean-rev
+        # High gap/pm-vol (score >= 3.0) → genuine momentum → TREND
+        # Lower activity                  → ranging candidate → MEAN_REV
+        picks   = data.get("intraday_picks", [])
+        trend   = [p["symbol"] for p in picks if p.get("score", 0) >= 3.0]
+        mean_rev = [p["symbol"] for p in picks if p.get("score", 0) < 3.0]
+        # Core ETFs split: trend ETFs (XLK, XLE, XLF) to momentum; broad ETFs to MR
+        trend    = list(dict.fromkeys(["SPY", "QQQ"] + trend))
+        mean_rev = list(dict.fromkeys(["IWM", "GLD", "XLK", "XLE", "XLF"] + mean_rev))
+    else:
+        # Weekly watchlist: use ADX threshold already embedded in ranked_picks
+        picks    = data.get("ranked_picks", [])
+        trend    = [p["symbol"] for p in picks if p.get("adx14", 0) > 22]
+        mean_rev = [p["symbol"] for p in picks if 10 <= p.get("adx14", 0) <= 22]
+        # Always include core in both for exit coverage
+        trend    = list(dict.fromkeys(core_syms + trend))
+        mean_rev = list(dict.fromkeys(core_syms + mean_rev))
+
+    result = {
+        "all":      all_syms,
+        "trend":    trend,
+        "mean_rev": mean_rev,
+        "core":     core_syms,
+    }
+    logging.info(
+        f"[WATCHLIST] Pool routing from {filename}: "
+        f"trend={len(trend)} symbols, mean_rev={len(mean_rev)} symbols | "
+        f"trend={trend[:8]}... mean_rev={mean_rev[:8]}..."
+    )
+    return result
 
 
 # ─────────────────────────────────────────────
@@ -1134,6 +1180,10 @@ def _run_streaming_strategy(
         return
 
     if signal == "buy":
+        # Regime gate: block all new long entries in bear market (SPY < 20MA)
+        if os.environ.get("REGIME_OK", "1") == "0":
+            logging.info(f"[{strategy_name}] {symbol}: buy blocked — bear regime (SPY below 20MA)")
+            return
         tp_mult    = shared["tp_mult"]
         # FIX 4: Enforce a minimum stop distance of 0.20% of price.
         # 15-min ATR on low-volatility windows (e.g. GLD at market open) can
@@ -1309,29 +1359,62 @@ def main():
     all_signals   = []
     orders_placed = []
 
-    # ── Apply dynamic watchlist symbols ──────────────────────────────────
+    # ── Market regime filter (SPY 20-bar MA) ────────────────────────────
+    # If SPY is below its 20-bar MA the broad market is in a downtrend.
+    # In that regime momentum entries are high-risk; skip all new buys.
+    # Sells / exits are never blocked — we always let the strategy close.
+    try:
+        spy_df        = get_bars("SPY", timeframe="1Day", bar_days=30)
+        spy_ma20      = spy_df["close"].rolling(20).mean().iloc[-1]
+        spy_price     = spy_df["close"].iloc[-1]
+        regime_ok     = float(spy_price) > float(spy_ma20)
+        regime_label  = "BULL" if regime_ok else "BEAR — new buys BLOCKED"
+        print(f"[REGIME] SPY ${spy_price:.2f} vs 20-day MA ${spy_ma20:.2f} → {regime_label}")
+    except Exception as e:
+        logging.warning(f"[REGIME] SPY MA check failed ({e}) — defaulting to regime_ok=True")
+        regime_ok = True
+
+    # ── Pool-aware symbol routing ─────────────────────────────────────────
     # IMPORTANT: always prepend symbols with open positions so that exit
     # signals are never skipped for holdings that have dropped off the
     # watchlist (e.g. after a weekly scan refresh removes a symbol).
     position_symbols = list(positions.keys())
-    dyn_symbols = load_dynamic_symbols()
-    if dyn_symbols:
-        # Merge: open positions first (exit priority), then watchlist, deduplicated
-        merged_symbols = list(dict.fromkeys(position_symbols + dyn_symbols))
-        for _sc in STRATEGIES.values():
-            _sc["symbols"] = merged_symbols
-        dropped = [s for s in position_symbols if s not in dyn_symbols]
+    pools = load_dynamic_symbols()
+
+    # Strategy → pool mapping
+    POOL_MAP = {
+        "momentum_roc_15m":    "trend",     # only trade confirmed trend/momentum names
+        "bollinger_bands_15m": "mean_rev",  # only trade ranging/low-ADX names
+        "macd_crossover":      "trend",
+        "ema_crossover":       "trend",
+        "triple_ema":          "trend",
+        "rsi_macd_combo":      "mean_rev",
+    }
+
+    if pools.get("all"):
+        for strat_name, _sc in STRATEGIES.items():
+            pool_key    = POOL_MAP.get(strat_name, "all")
+            pool_syms   = pools.get(pool_key) or pools["all"]
+            # Prepend open positions for exit coverage (regardless of pool)
+            merged      = list(dict.fromkeys(position_symbols + pool_syms))
+            _sc["symbols"] = merged
+        dropped = [s for s in position_symbols if s not in pools["all"]]
         print(
-            f"[WATCHLIST] Applied {len(merged_symbols)} symbols to all {STRATEGY_MODE} strategies "
-            f"({len(dyn_symbols)} watchlist + {len(dropped)} position-only: {dropped or 'none'})"
+            f"[WATCHLIST] Pool-routed: "
+            f"trend={pools['trend'][:6]}... ({len(pools['trend'])} syms) | "
+            f"mean_rev={pools['mean_rev'][:6]}... ({len(pools['mean_rev'])} syms) | "
+            f"position-only exits: {dropped or 'none'}"
         )
     else:
-        # Fallback to hardcoded lists, but still prepend open positions
+        # Fallback: prepend open positions to hardcoded lists
         for _sc in STRATEGIES.values():
             existing = _sc["symbols"]
-            merged = list(dict.fromkeys(position_symbols + existing))
-            _sc["symbols"] = merged
+            _sc["symbols"] = list(dict.fromkeys(position_symbols + existing))
         print("[WATCHLIST] Watchlist unavailable — using hardcoded lists; open positions prepended")
+
+    # Inject regime flag so signal execution can skip buys in bear market
+    # (sells are always allowed through)
+    os.environ["REGIME_OK"] = "1" if regime_ok else "0"
 
     strats_to_run = {k: v for k, v in STRATEGIES.items()
                      if not STRATEGY_FILTER or k == STRATEGY_FILTER}
