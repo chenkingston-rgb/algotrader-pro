@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-15T10:00:42.076956-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105633.82,
-    "vix": 13.18,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-15T10:30:35.492007-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2434,6 +2424,18 @@
     "symbols_traded": [
       "SMCI",
       "IONQ"
+    ]
+  },
+  {
+    "timestamp": "2026-05-27T11:30:37.413995-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 105947.98,
+    "vix": 12.1,
+    "signals_count": 38,
+    "orders_count": 1,
+    "symbols_traded": [
+      "RKLB"
     ]
   }
 ]
