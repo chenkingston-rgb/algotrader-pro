@@ -115,7 +115,13 @@ INTRADAY_STRATEGIES = {
         "symbols":  ["SPY", "QQQ", "XLK", "XLE", "XLF"],
         "vix_type": "MOMENTUM",
         "vix_block": 35, "vix_reduce": 25, "vix_reduce_pct": 0.50,
-        "params": {"roc_period": 10, "roc_threshold": 0.3},
+        "params": {
+            "roc_period":     10,
+            "roc_threshold":  0.3,
+            "trend_ma":       50,    # FIX-A: price must be above this MA (trend filter)
+            "vol_ma":         20,    # FIX-B: volume confirmation lookback
+            "vol_threshold":  1.0,   # FIX-B: current bar volume must be >= vol_threshold x avg volume
+        },
         "timeframe": "15Min", "bar_days": 20,
     },
 }
@@ -522,21 +528,60 @@ def signal_bollinger_bands_15m(df: pd.DataFrame, p: dict) -> tuple:
     return "hold", inds
 
 def signal_momentum_roc_15m(df: pd.DataFrame, p: dict) -> tuple:
-    c = df["close"]
-    roc = (c / c.shift(p["roc_period"]) - 1) * 100
+    c   = df["close"]
+    vol = df["volume"]
+
+    roc    = (c / c.shift(p["roc_period"]) - 1) * 100
     r, prev_r = roc.iloc[-1], roc.iloc[-2]
-    inds = {"roc": round(r,3), "roc_prev": round(prev_r,3), "threshold": p["roc_threshold"]}
-    # FIX 3: Changed from zero-crossing to sustained-momentum logic.
-    # Old: required prev_r to be BELOW threshold (zero-crossing). On volatile watchlist
-    #      names (RKLB, IONQ, AMD) ROC stays above threshold across bars — crossing was
-    #      never re-triggered, missing the best continuation entries.
-    # New: fire buy if ROC currently above threshold AND was accelerating (r > prev_r).
-    #      This catches sustained momentum moves, not just the initial cross.
-    #      Sell fires if ROC is below negative threshold AND decelerating (r < prev_r).
+
+    # ── FIX-A: Trend confirmation filter ──────────────────────────────────────
+    # Only take long entries when price is above its trend MA AND the MA is
+    # sloping upward. This blocks buying counter-trend bounces (e.g. RKLB
+    # spiking on one bar while the short-term trend is still down).
+    trend_ma_period = p.get("trend_ma", 50)
+    trend_ma = c.rolling(trend_ma_period).mean()
+    ma_now   = trend_ma.iloc[-1]
+    ma_prev  = trend_ma.iloc[-2]
+    price    = c.iloc[-1]
+    trend_ok_long  = (price > ma_now) and (ma_now > ma_prev)   # price above rising MA
+    trend_ok_short = (price < ma_now) and (ma_now < ma_prev)   # price below falling MA
+
+    # ── FIX-B: Volume confirmation ────────────────────────────────────────────
+    # Require the signal bar volume to be at least vol_threshold x the rolling
+    # average volume. Filters out thin one-bar price spikes with no real participation
+    # (common in SMCI, RKLB during mid-day lulls).
+    vol_ma_period   = p.get("vol_ma", 20)
+    vol_threshold   = p.get("vol_threshold", 1.0)
+    avg_vol         = vol.rolling(vol_ma_period).mean().iloc[-1]
+    cur_vol         = vol.iloc[-1]
+    vol_ok          = (avg_vol > 0) and (cur_vol >= vol_threshold * avg_vol)
+
+    inds = {
+        "roc":          round(r, 3),
+        "roc_prev":     round(prev_r, 3),
+        "threshold":    p["roc_threshold"],
+        "price":        round(price, 2),
+        "trend_ma":     round(ma_now, 2) if not pd.isna(ma_now) else None,
+        "trend_ok":     trend_ok_long,
+        "vol_ratio":    round(cur_vol / avg_vol, 2) if avg_vol > 0 else None,
+        "vol_ok":       vol_ok,
+    }
+
+    # ROC sustained-momentum logic (v6) + trend + volume gates
     if r > p["roc_threshold"] and r > prev_r:
+        if not trend_ok_long:
+            return "hold", {**inds, "skip_reason": "trend_filter_long"}
+        if not vol_ok:
+            return "hold", {**inds, "skip_reason": "vol_filter_long"}
         return "buy", inds
+
     if r < -p["roc_threshold"] and r < prev_r:
+        # Sells (exits) do not need vol confirmation — always exit if signal fires
+        # but do apply trend filter to avoid exiting into a still-rising trend
+        if trend_ok_long:
+            return "hold", {**inds, "skip_reason": "trend_filter_short"}
         return "sell", inds
+
     return "hold", inds
 
 SIGNAL_FNS = {
