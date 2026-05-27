@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-15T11:15:27.382405-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105639.22,
-    "vix": 12.74,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-15T11:30:37.280343-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2445,6 +2435,18 @@
     "symbols_traded": [
       "IONQ",
       "MRK"
+    ]
+  },
+  {
+    "timestamp": "2026-05-27T12:30:35.809794-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 106342.05,
+    "vix": 12.09,
+    "signals_count": 38,
+    "orders_count": 1,
+    "symbols_traded": [
+      "IONQ"
     ]
   }
 ]
