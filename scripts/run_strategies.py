@@ -1483,7 +1483,102 @@ def main():
         "symbols_traded": [o["symbol"] for o in orders_placed],
     }
     append_run_history(run_summary)
+
+
+# ─────────────────────────────────────────────
+# BASE44 ENTITY SYNC  (no integration credits — plain HTTPS POST)
+# Pushes live portfolio data into the Base44 portfolio_state entity
+# so the dashboard always shows current numbers.
+# ─────────────────────────────────────────────
+BASE44_API = "https://base44.app/api/apps"
+BASE44_SERVICE_TOKEN = os.getenv("BASE44_SERVICE_TOKEN", "")
+
+def sync_to_base44(run_log: dict) -> None:
+    """Push the latest run data into Base44 portfolio_state + signal_log entities."""
+    if not BASE44_SERVICE_TOKEN:
+        logging.warning("[BASE44] BASE44_SERVICE_TOKEN not set — skipping sync")
+        return
+
+    app_id = BASE44_APP_ID
+    hdrs = {
+        "Authorization": f"Bearer {BASE44_SERVICE_TOKEN}",
+        "Content-Type": "application/json",
+    }
+
+    positions   = run_log.get("position_details", [])
+    unrealized  = sum(p.get("unrealized_pl", 0) for p in positions)
+
+    # ── 1. Upsert portfolio_state ──────────────────────────────────────────
+    portfolio_payload = {
+        "timestamp":           run_log["run_timestamp"],
+        "equity":              run_log["equity"],
+        "buying_power":        run_log["buying_power"],
+        "peak_equity":         run_log["equity"],
+        "current_drawdown_pct": run_log["drawdown_pct"],
+        "is_halted":           False,
+        "mode":                run_log["mode"],
+        "pnl_today":           round(unrealized, 2),
+    }
+
+    try:
+        list_r = requests.get(
+            f"{BASE44_API}/{app_id}/entities/portfolio_state/",
+            headers=hdrs, timeout=10
+        )
+        records = list_r.json() if list_r.ok else []
+        if isinstance(records, list) and records:
+            rec_id = records[0]["id"]
+            existing_peak = records[0].get("peak_equity", 0) or 0
+            portfolio_payload["peak_equity"] = max(existing_peak, run_log["equity"])
+            up_r = requests.put(
+                f"{BASE44_API}/{app_id}/entities/portfolio_state/{rec_id}",
+                headers=hdrs, json=portfolio_payload, timeout=10
+            )
+            if up_r.ok:
+                logging.info(f"[BASE44] ✓ portfolio_state updated (equity={run_log['equity']})")
+            else:
+                logging.warning(f"[BASE44] portfolio_state update failed: {up_r.status_code} {up_r.text[:200]}")
+        else:
+            cr = requests.post(
+                f"{BASE44_API}/{app_id}/entities/portfolio_state/",
+                headers=hdrs, json=portfolio_payload, timeout=10
+            )
+            if cr.ok:
+                logging.info(f"[BASE44] ✓ portfolio_state created")
+            else:
+                logging.warning(f"[BASE44] portfolio_state create failed: {cr.status_code} {cr.text[:200]}")
+    except Exception as e:
+        logging.warning(f"[BASE44] portfolio_state sync error: {e}")
+
+    # ── 2. Write executed signals to signal_log ────────────────────────────
+    executed = [s for s in run_log.get("signals", []) if s.get("executed")]
+    for sig in executed:
+        sig_payload = {
+            "timestamp":         sig["timestamp"],
+            "strategy_name":     sig["strategy"],
+            "symbol":            sig["symbol"],
+            "signal":            sig["signal"],
+            "vix_at_signal":     sig.get("vix"),
+            "size_multiplier":   1.0,
+            "executed":          True,
+            "reason_if_skipped": None,
+            "mode":              run_log["mode"],
+        }
+        try:
+            sr = requests.post(
+                f"{BASE44_API}/{app_id}/entities/signal_log/",
+                headers=hdrs, json=sig_payload, timeout=10
+            )
+            if sr.ok:
+                logging.info(f"[BASE44] ✓ signal_log: {sig['signal']} {sig['symbol']} ({sig['strategy']})")
+            else:
+                logging.warning(f"[BASE44] signal_log failed: {sr.status_code} {sr.text[:100]}")
+        except Exception as e:
+            logging.warning(f"[BASE44] signal_log error for {sig['symbol']}: {e}")
+
+
     append_signals_history(all_signals)
+    sync_to_base44(run_log)
 
 
 if __name__ == "__main__":
