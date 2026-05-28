@@ -233,7 +233,7 @@ def write_github_log(filepath: str, content_dict: dict):
     get_r = requests.get(api_url, headers=headers, timeout=10)
     sha = get_r.json().get("sha") if get_r.ok else None
     payload = {
-        "message": f"[bot] Update {filepath} — {datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}",
+        "message": f"[bot][skip render] Update {filepath} — {datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}",
         "content": content_b64,
     }
     if sha:
@@ -270,7 +270,7 @@ def append_run_history(run_summary: dict):
     content_b64 = base64.b64encode(
         json.dumps(history, indent=2, default=str).encode()
     ).decode()
-    payload = {"message": f"[bot] Append {HISTORY_FILE}", "content": content_b64}
+    payload = {"message": f"[bot][skip render] Append {HISTORY_FILE}", "content": content_b64}
     if sha:
         payload["sha"] = sha
     put_r = requests.put(api_url, headers=headers, json=payload, timeout=15)
@@ -333,7 +333,7 @@ def append_signals_history(new_signals: list):
     ).decode()
     payload = {
         "message": (
-            f"[bot] Signal history — "
+            f"[bot][skip render] Signal history — "
             f"{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')} UTC"
         ),
         "content": content_b64,
