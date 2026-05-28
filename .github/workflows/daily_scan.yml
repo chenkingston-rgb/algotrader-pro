@@ -21,7 +21,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install requests alpaca-py pandas numpy python-dateutil pytz
 
       - name: Run daily pre-market scanner
         env:
