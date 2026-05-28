@@ -1624,6 +1624,8 @@ def main():
         "symbols_traded": [o["symbol"] for o in orders_placed],
     }
     append_run_history(run_summary)
+    append_signals_history(all_signals)  # write today's signals to signals_history.json
+    sync_to_base44(run_log)               # push live state to Base44 dashboard entities
 
 
 # ─────────────────────────────────────────────
@@ -1726,9 +1728,6 @@ def sync_to_base44(run_log: dict) -> None:
         except Exception as e:
             logging.warning(f"[BASE44] signal_log error for {sig['symbol']}: {e}")
 
-
-    append_signals_history(all_signals)
-    sync_to_base44(run_log)
 
 
 if __name__ == "__main__":
