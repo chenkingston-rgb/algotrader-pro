@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-18T14:30:46.739706-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105675.2,
-    "vix": 12.94,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-18T14:45:34.564020-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2471,5 +2461,15 @@
       "NOW",
       "ORCL"
     ]
+  },
+  {
+    "timestamp": "2026-05-28T14:17:48.221051-04:00",
+    "mode": "paper",
+    "strategy_mode": "daily",
+    "equity": 106393.5,
+    "vix": 11.69,
+    "signals_count": 98,
+    "orders_count": 0,
+    "symbols_traded": []
   }
 ]
