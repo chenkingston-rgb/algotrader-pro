@@ -1,17 +1,5 @@
 [
   {
-    "timestamp": "2026-05-18T09:45:37.068004-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105544.72,
-    "vix": 12.59,
-    "signals_count": 7,
-    "orders_count": 1,
-    "symbols_traded": [
-      "XLF"
-    ]
-  },
-  {
     "timestamp": "2026-05-18T10:00:40.201454-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2444,6 +2432,19 @@
       "TSLA",
       "IONQ",
       "MRK"
+    ]
+  },
+  {
+    "timestamp": "2026-05-28T10:00:43.300485-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 105940.04,
+    "vix": 11.7,
+    "signals_count": 21,
+    "orders_count": 2,
+    "symbols_traded": [
+      "IONQ",
+      "SMCI"
     ]
   }
 ]
