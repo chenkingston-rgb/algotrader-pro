@@ -1358,7 +1358,13 @@ def main():
 
     all_signals   = []
     orders_placed = []
-    sold_this_run = set()   # anti-churn: block same-run re-buys
+    # sold_this_run: tracks symbols sold in THIS run cycle only.
+    # Scope: resets every 15-minute run (it's local to main()).
+    # Purpose: block same-candle sell+rebuy artifacts where two strategies
+    #   evaluate the same bar simultaneously and give conflicting signals.
+    # This does NOT block re-buys in the NEXT run — a fresh 15-min candle
+    #   with a genuine new momentum signal is allowed through normally.
+    sold_this_run = set()
 
     # ── Market regime filter (SPY 20-bar MA) ────────────────────────────
     # If SPY is below its 20-bar MA the broad market is in a downtrend.
@@ -1467,7 +1473,7 @@ def main():
                 print(f"  {symbol}: already holding position, skipping buy")
             elif signal == "buy" and symbol in sold_this_run:
                 skip_reason = "sold_this_run"
-                print(f"  {symbol}: SKIPPED buy — sold earlier this run (anti-churn guard)")
+                print(f"  {symbol}: SKIPPED buy — sold this same 15-min cycle (same-candle conflict guard)")
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
