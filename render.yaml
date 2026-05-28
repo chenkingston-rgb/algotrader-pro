@@ -4,6 +4,11 @@ services:
     runtime: python
     buildCommand: pip install -r requirements.txt
     startCommand: python scripts/run_engine.py
+    # Only redeploy on real code changes — never on [bot] log commits
+    # This prevents burning free-plan build minutes on data updates
+    ignoredPaths:
+      - logs/**
+      - docs/**
     envVars:
       - key: ALPACA_PAPER_KEY
         sync: false
