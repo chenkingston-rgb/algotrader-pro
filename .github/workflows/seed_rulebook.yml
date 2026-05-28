@@ -16,5 +16,6 @@ jobs:
       - name: Seed StrategyRulebook entity in Base44
         env:
           BASE44_SERVICE_TOKEN: ${{ secrets.BASE44_SERVICE_TOKEN }}
+          BASE44_API_KEY: ${{ secrets.BASE44_API_KEY }}
           BASE44_APP_ID: 69f60c0cd56ea2902b494394
         run: python3 scripts/seed_rulebook.py
