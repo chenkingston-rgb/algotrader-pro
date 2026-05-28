@@ -1,6 +1,7 @@
-alpaca-py>=0.30.0
-pandas>=2.0.0
-numpy>=1.24.0
+alpaca-py>=0.30.0,<1.0.0
+pandas>=2.0.0,<3.0.0
+numpy>=1.24.0,<2.0.0
 requests>=2.31.0
 python-dateutil>=2.8.2
 pytz>=2023.3
+websockets>=11.0
