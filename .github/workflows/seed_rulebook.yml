@@ -1,0 +1,20 @@
+name: Seed Strategy Rulebook
+on:
+  workflow_dispatch:
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: pip install requests
+      - name: Seed StrategyRulebook entity in Base44
+        env:
+          BASE44_SERVICE_TOKEN: ${{ secrets.BASE44_SERVICE_TOKEN }}
+          BASE44_APP_ID: 69f60c0cd56ea2902b494394
+        run: python3 scripts/seed_rulebook.py
