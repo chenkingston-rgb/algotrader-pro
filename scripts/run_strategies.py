@@ -1623,8 +1623,8 @@ def main():
 # Pushes live portfolio data into the Base44 portfolio_state entity
 # so the dashboard always shows current numbers.
 # ─────────────────────────────────────────────
-BASE44_API = "https://base44.app/api/apps"
-BASE44_SERVICE_TOKEN = os.getenv("BASE44_SERVICE_TOKEN", "")
+BASE44_API = "https://app.base44.com/api/apps"
+BASE44_SERVICE_TOKEN = os.getenv("BASE44_API_KEY", "") or os.getenv("BASE44_SERVICE_TOKEN", "")
 
 def sync_to_base44(run_log: dict) -> None:
     """Push the latest run data into Base44 portfolio_state + signal_log entities."""
@@ -1651,11 +1651,20 @@ def sync_to_base44(run_log: dict) -> None:
         "is_halted":           False,
         "mode":                run_log["mode"],
         "pnl_today":           round(unrealized, 2),
+        "open_positions":      json.dumps([{
+            "symbol":          p.get("symbol"),
+            "qty":             p.get("qty"),
+            "avg_entry_price": p.get("avg_entry_price"),
+            "current_price":   p.get("current_price"),
+            "unrealized_pl":   round(p.get("unrealized_pl", 0) or 0, 2),
+            "market_value":    round(p.get("market_value", 0) or 0, 2),
+            "strategy":        p.get("strategy", "unknown"),
+        } for p in positions]),
     }
 
     try:
         list_r = requests.get(
-            f"{BASE44_API}/{app_id}/entities/portfolio_state/",
+            f"{BASE44_API}/{app_id}/entities/portfolio_state",
             headers=hdrs, timeout=10
         )
         records = list_r.json() if list_r.ok else []
@@ -1673,7 +1682,7 @@ def sync_to_base44(run_log: dict) -> None:
                 logging.warning(f"[BASE44] portfolio_state update failed: {up_r.status_code} {up_r.text[:200]}")
         else:
             cr = requests.post(
-                f"{BASE44_API}/{app_id}/entities/portfolio_state/",
+                f"{BASE44_API}/{app_id}/entities/portfolio_state",
                 headers=hdrs, json=portfolio_payload, timeout=10
             )
             if cr.ok:
@@ -1699,7 +1708,7 @@ def sync_to_base44(run_log: dict) -> None:
         }
         try:
             sr = requests.post(
-                f"{BASE44_API}/{app_id}/entities/signal_log/",
+                f"{BASE44_API}/{app_id}/entities/signal_log",
                 headers=hdrs, json=sig_payload, timeout=10
             )
             if sr.ok:
