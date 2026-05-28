@@ -1358,6 +1358,7 @@ def main():
 
     all_signals   = []
     orders_placed = []
+    sold_this_run = set()   # anti-churn: block same-run re-buys
 
     # ── Market regime filter (SPY 20-bar MA) ────────────────────────────
     # If SPY is below its 20-bar MA the broad market is in a downtrend.
@@ -1464,6 +1465,9 @@ def main():
             elif signal == "buy" and symbol in positions:
                 skip_reason = "already_in_position"
                 print(f"  {symbol}: already holding position, skipping buy")
+            elif signal == "buy" and symbol in sold_this_run:
+                skip_reason = "sold_this_run"
+                print(f"  {symbol}: SKIPPED buy — sold earlier this run (anti-churn guard)")
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
@@ -1490,6 +1494,7 @@ def main():
                             order    = place_order(symbol, qty, "buy", stop_price, tp_price)
                             order_id = order.get("id")
                             executed = True
+                            positions[symbol] = {"qty": str(qty), "avg_entry_price": str(price)}  # anti-churn: mark as held
                             print(f"  ✓ BUY ORDER: {qty} {symbol} @ market | "
                                   f"stop={stop_price:.2f} tp={tp_price:.2f} | id={order_id}")
                             orders_placed.append({
@@ -1518,6 +1523,9 @@ def main():
                     order    = close_position_order(symbol, qty)
                     order_id = order.get("id")
                     executed = True
+                    # ── ANTI-CHURN: remove from in-memory positions immediately
+                    positions.pop(symbol, None)
+                    sold_this_run.add(symbol)
                     print(f"  ✓ SELL ORDER: {qty} {symbol} @ market (close) | id={order_id}")
                     orders_placed.append({
                         "symbol":       symbol,
