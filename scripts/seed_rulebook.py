@@ -4,9 +4,9 @@ and seeds all 31 strategy rules via the Base44 REST API.
 """
 import os, requests, time, sys
 
-TOKEN  = os.environ["BASE44_SERVICE_TOKEN"]
+TOKEN  = os.environ.get("BASE44_API_KEY") or os.environ.get("BASE44_SERVICE_TOKEN") or ""
 APP_ID = os.environ.get("BASE44_APP_ID", "69f60c0cd56ea2902b494394")
-BASE   = f"https://superagent-f5f9b72f.base44.app/api/entities/StrategyRulebook"
+BASE   = f"https://app.base44.com/api/apps/{APP_ID}/entities/StrategyRuleBook"
 
 hdrs = {
     "Authorization": f"Bearer {TOKEN}",
