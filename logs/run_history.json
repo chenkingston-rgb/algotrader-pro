@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-19T10:30:38.282333-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105673.75,
-    "vix": 13.18,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-19T10:45:34.007619-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2468,6 +2458,28 @@
     "orders_count": 1,
     "symbols_traded": [
       "SMH"
+    ]
+  },
+  {
+    "timestamp": "2026-05-29T09:45:35.934806-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 106512.42,
+    "vix": 11.62,
+    "signals_count": 25,
+    "orders_count": 11,
+    "symbols_traded": [
+      "NVDA",
+      "ORCL",
+      "QQQ",
+      "SMH",
+      "RKLB",
+      "SPY",
+      "SMCI",
+      "ARM",
+      "NOW",
+      "AVGO",
+      "MU"
     ]
   }
 ]
