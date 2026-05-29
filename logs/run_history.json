@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-19T11:00:48.545443-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105568.01,
-    "vix": 13.04,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-19T11:15:31.615087-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2486,6 +2476,18 @@
       "SPY",
       "QQQ",
       "IONQ"
+    ]
+  },
+  {
+    "timestamp": "2026-05-29T10:15:32.065756-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 106865.33,
+    "vix": 11.62,
+    "signals_count": 23,
+    "orders_count": 1,
+    "symbols_traded": [
+      "ORCL"
     ]
   }
 ]
