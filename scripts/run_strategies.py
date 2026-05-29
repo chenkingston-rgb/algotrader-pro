@@ -1390,13 +1390,13 @@ def main():
 
     all_signals   = []
     orders_placed = []
-    # sold_this_run: tracks symbols sold in THIS run cycle only.
-    # Scope: resets every 15-minute run (it's local to main()).
-    # Purpose: block same-candle sell+rebuy artifacts where two strategies
-    #   evaluate the same bar simultaneously and give conflicting signals.
-    # This does NOT block re-buys in the NEXT run — a fresh 15-min candle
-    #   with a genuine new momentum signal is allowed through normally.
-    sold_this_run = set()
+    # sold_this_run / bought_this_run: cross-strategy conflict guards.
+    # Scope: both reset every run (local to main()) — NOT session-wide.
+    # sold_this_run:   populated on SELL → blocks same-run re-buy (sell→buy churn).
+    # bought_this_run: populated on BUY  → blocks same-run re-sell (buy→sell churn).
+    # Neither blocks the NEXT run — a fresh candle with a genuine new signal passes freely.
+    sold_this_run   = set()
+    bought_this_run = set()
 
     # ── Market regime filter (SPY 20-bar MA) ────────────────────────────
     # If SPY is below its 20-bar MA the broad market is in a downtrend.
@@ -1541,6 +1541,7 @@ def main():
                             order_id = order.get("id")
                             executed = True
                             positions[symbol] = {"qty": str(qty), "avg_entry_price": str(price)}  # anti-churn: mark as held
+                            bought_this_run.add(symbol)  # block same-run sell of a just-bought position
                             print(f"  ✓ BUY ORDER: {qty} {symbol} @ market | "
                                   f"stop={stop_price:.2f} tp={tp_price:.2f} | id={order_id}")
                             orders_placed.append({
