@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-19T13:45:29.111080-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105711.81,
-    "vix": 12.57,
-    "signals_count": 7,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-19T14:00:37.896951-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2496,5 +2486,15 @@
     "symbols_traded": [
       "MSTR"
     ]
+  },
+  {
+    "timestamp": "2026-05-29T13:00:42.946650-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 107434.25,
+    "vix": 11.62,
+    "signals_count": 28,
+    "orders_count": 0,
+    "symbols_traded": []
   }
 ]
