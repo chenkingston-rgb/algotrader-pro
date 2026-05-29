@@ -1353,6 +1353,38 @@ def main():
     positions = get_positions()
     print(f"Open positions: {list(positions.keys()) or 'none'}")
 
+    # ── Hard stop: force-close any position with unrealized loss >= 7% ──────
+    # This fires BEFORE strategy signals so we never hold a blow-up position.
+    # ATR stops are the primary exit; this is a secondary safety net for
+    # cases where the strategy signal fails to fire (e.g. thin bars, bad data).
+    HARD_STOP_PCT = 0.07   # 7% loss on position market value
+    for sym, pos in list(positions.items()):
+        try:
+            entry_px  = float(pos.get("avg_entry_price", 0))
+            cur_px    = float(pos.get("current_price", 0))
+            if entry_px <= 0:
+                continue
+            loss_pct = (entry_px - cur_px) / entry_px   # positive = loss
+            if loss_pct >= HARD_STOP_PCT:
+                print(f"  [HARD STOP] {sym}: loss={loss_pct*100:.2f}% >= {HARD_STOP_PCT*100:.0f}% threshold — force closing")
+                try:
+                    close_position_order(sym, int(float(pos.get("qty", 0))))
+                    positions.pop(sym, None)
+                    sold_this_run.add(sym)
+                    orders_placed.append({
+                        "symbol": sym, "strat": "hard_stop", "signal": "sell",
+                        "side": "sell", "qty": int(float(pos.get("qty", 0))),
+                        "price": round(cur_px, 2),
+                        "est_value": round(cur_px * float(pos.get("qty", 0)), 2),
+                        "stop_price": None, "tp_price": None, "order_id": None,
+                        "timestamp": run_start.isoformat(),
+                    })
+                    print(f"  [HARD STOP] {sym}: closed ✓")
+                except Exception as e:
+                    print(f"  [HARD STOP] {sym}: close failed — {e}")
+        except Exception as e:
+            print(f"  [HARD STOP] {sym}: check error — {e}")
+
     peak_equity  = equity
     drawdown_pct = 0.0
 
@@ -1477,8 +1509,16 @@ def main():
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
-                # Regime gate: block new buys when SPY is below its 20-day MA
-                if os.environ.get("REGIME_OK", "1") == "0":
+                # ── Time gate: block new entries after 15:45 ET (9 min before close)
+                # After-hours fills have wide spreads and poor price discovery.
+                # Exits are never time-gated — we always allow closes.
+                _now_et = run_start  # run_start is already tz-aware ET
+                _hhmm   = _now_et.hour * 100 + _now_et.minute
+                if _hhmm > 1545:
+                    skip_reason = "after_hours_cutoff"
+                    print(f"  {symbol}: buy blocked — after 15:45 ET cutoff ({_hhmm})")
+                # ── Regime gate: block new buys when SPY is below its 20-day MA
+                elif os.environ.get("REGIME_OK", "1") == "0":
                     skip_reason = "bear_regime"
                     print(f"  {symbol}: buy blocked — bear regime (SPY below 20-day MA)")
                 else:
