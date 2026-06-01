@@ -1,19 +1,5 @@
 [
   {
-    "timestamp": "2026-05-20T11:45:32.760425-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105752.33,
-    "vix": 12.7,
-    "signals_count": 38,
-    "orders_count": 3,
-    "symbols_traded": [
-      "TSLA",
-      "XLF",
-      "SPY"
-    ]
-  },
-  {
     "timestamp": "2026-05-20T12:00:41.053358-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2473,6 +2459,18 @@
       "NOW",
       "SMCI",
       "NVDA",
+      "PANW"
+    ]
+  },
+  {
+    "timestamp": "2026-06-01T10:00:45.006053-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 109368.16,
+    "vix": 11.35,
+    "signals_count": 23,
+    "orders_count": 1,
+    "symbols_traded": [
       "PANW"
     ]
   }
