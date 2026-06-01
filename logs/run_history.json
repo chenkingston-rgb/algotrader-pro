@@ -1,15 +1,5 @@
 [
   {
-    "timestamp": "2026-05-20T12:31:47.370869-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105756.24,
-    "vix": 12.55,
-    "signals_count": 38,
-    "orders_count": 0,
-    "symbols_traded": []
-  },
-  {
     "timestamp": "2026-05-20T12:46:27.637350-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2476,5 +2466,15 @@
       "PANW",
       "SMCI"
     ]
+  },
+  {
+    "timestamp": "2026-06-01T10:47:39.564824-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 110044.57,
+    "vix": 11.35,
+    "signals_count": 23,
+    "orders_count": 0,
+    "symbols_traded": []
   }
 ]
