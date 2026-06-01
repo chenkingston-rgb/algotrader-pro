@@ -1,19 +1,5 @@
 [
   {
-    "timestamp": "2026-05-21T09:45:31.454009-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105882.67,
-    "vix": 12.71,
-    "signals_count": 38,
-    "orders_count": 3,
-    "symbols_traded": [
-      "XLK",
-      "PANW",
-      "AVGO"
-    ]
-  },
-  {
     "timestamp": "2026-05-21T10:00:49.904420-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2446,6 +2432,18 @@
     "equity": 111047.04,
     "vix": 11.27,
     "signals_count": 25,
+    "orders_count": 1,
+    "symbols_traded": [
+      "SPY"
+    ]
+  },
+  {
+    "timestamp": "2026-06-01T14:00:40.443911-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 111175.13,
+    "vix": 11.28,
+    "signals_count": 24,
     "orders_count": 1,
     "symbols_traded": [
       "SPY"
