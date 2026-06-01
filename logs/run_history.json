@@ -1,17 +1,5 @@
 [
   {
-    "timestamp": "2026-05-20T12:17:28.493481-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 105748.96,
-    "vix": 12.65,
-    "signals_count": 38,
-    "orders_count": 1,
-    "symbols_traded": [
-      "MU"
-    ]
-  },
-  {
     "timestamp": "2026-05-20T12:31:47.370869-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2474,6 +2462,19 @@
       "SMCI",
       "AVGO",
       "PANW"
+    ]
+  },
+  {
+    "timestamp": "2026-06-01T10:30:44.943692-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 109969.75,
+    "vix": 11.33,
+    "signals_count": 25,
+    "orders_count": 2,
+    "symbols_traded": [
+      "PANW",
+      "SMCI"
     ]
   }
 ]
