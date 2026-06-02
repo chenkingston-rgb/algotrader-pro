@@ -1,1 +1,19 @@
-[]
+[
+  {
+    "timestamp": "2026-06-02T09:45:35.888801-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 776.15,
+    "vix": 11.39,
+    "signals_count": 38,
+    "orders_count": 4,
+    "symbols_traded": [
+      "ARM",
+      "XLE",
+      "RKLB",
+      "ARM"
+    ],
+    "trading_pnl": 0.0,
+    "total_deposited": 0.0
+  }
+]
