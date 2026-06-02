@@ -37,7 +37,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 # CONFIG
 # ─────────────────────────────────────────────
 IS_PAPER        = os.environ.get("ALPACA_IS_PAPER", "true").lower() == "true"
-MODE            = os.getenv("TRADING_MODE", "paper").lower()
+MODE            = os.getenv("TRADING_MODE", "live").lower()
 STRATEGY_FILTER = os.getenv("STRATEGY_FILTER", "").strip()
 STRATEGY_MODE   = os.getenv("STRATEGY_MODE", "daily").lower()
 BASE44_APP_ID   = os.getenv("BASE44_APP_ID", "69f60c0cd56ea2902b494394")
@@ -181,7 +181,7 @@ def write_github_log(filepath: str, content_dict: dict):
     get_r = requests.get(api_url, headers=headers, timeout=10)
     sha = get_r.json().get("sha") if get_r.ok else None
     payload = {
-        "message": f"[bot] Update {filepath} — {datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}",
+        "message": f"[bot] Update {filepath} — {datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')} [skip render]",
         "content": content_b64,
     }
     if sha:
@@ -218,7 +218,7 @@ def append_run_history(run_summary: dict):
     content_b64 = base64.b64encode(
         json.dumps(history, indent=2, default=str).encode()
     ).decode()
-    payload = {"message": f"[bot] Append {HISTORY_FILE}", "content": content_b64}
+    payload = {"message": f"[bot] Append {HISTORY_FILE} [skip render]", "content": content_b64}
     if sha:
         payload["sha"] = sha
     put_r = requests.put(api_url, headers=headers, json=payload, timeout=15)
