@@ -1,10 +1,4 @@
 {
-  "XLE": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-02T09:45:35.888801-04:00",
-    "entry_price": 57.65
-  },
   "RKLB": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
