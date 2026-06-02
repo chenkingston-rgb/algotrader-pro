@@ -1,1 +1,8 @@
-{}
+{
+  "ARM": {
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-02T09:45:35.888801-04:00",
+    "entry_price": 394.02
+  }
+}
