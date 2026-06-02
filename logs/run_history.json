@@ -29,5 +29,23 @@
     ],
     "trading_pnl": 0.93,
     "total_deposited": 0.0
+  },
+  {
+    "timestamp": "2026-06-02T10:07:31.176581-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 776.56,
+    "day_pnl": 0.41,
+    "vix": null,
+    "signals_count": 10,
+    "orders_count": 5,
+    "symbols_traded": [
+      "XLE",
+      "ARM",
+      "RKLB",
+      "XLE",
+      "ARM"
+    ],
+    "trading_pnl": 1.34
   }
 ]
