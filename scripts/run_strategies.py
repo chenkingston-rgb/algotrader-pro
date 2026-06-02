@@ -115,13 +115,7 @@ INTRADAY_STRATEGIES = {
         "symbols":  ["SPY", "QQQ", "XLK", "XLE", "XLF"],
         "vix_type": "MOMENTUM",
         "vix_block": 35, "vix_reduce": 25, "vix_reduce_pct": 0.50,
-        "params": {
-            "roc_period":     10,
-            "roc_threshold":  0.3,
-            "trend_ma":       50,    # FIX-A: price must be above this MA (trend filter)
-            "vol_ma":         20,    # FIX-B: volume confirmation lookback
-            "vol_threshold":  1.0,   # FIX-B: current bar volume must be >= vol_threshold x avg volume
-        },
+        "params": {"roc_period": 10, "roc_threshold": 0.3},
         "timeframe": "15Min", "bar_days": 20,
     },
 }
@@ -138,79 +132,33 @@ WATCHLIST_DAILY_FILE  = "logs/watchlist_daily.json"
 # ─────────────────────────────────────────────
 # DYNAMIC SYMBOL LOADING FROM WATCHLISTS
 # ─────────────────────────────────────────────
-def load_dynamic_symbols() -> dict:
+def load_dynamic_symbols() -> list:
     """
-    Fetch the watchlist and return a pool-tagged symbol map:
-      {
-        "all":      [...],          # every symbol (for fallback / exit coverage)
-        "trend":    [...],          # TREND pool  — ADX > 20, strong momentum
-        "mean_rev": [...],          # MEAN_REV pool — ADX 10-22, ranging
-        "core":     [...],          # always-on core ETFs (SPY, QQQ, IWM, etc.)
-      }
-
-    Routing:
-      momentum_roc_15m   → trend + core symbols only
-      bollinger_bands_15m → mean_rev + core symbols only
-
-    Weekly mode (watchlist_weekly.json): pool tags come from ranked_picks[].
-      ranked_picks with ADX > 22 → TREND; ADX 10-22 → MEAN_REV.
-    Intraday mode (watchlist_daily.json): intraday_picks ranked by gap+pm_vol.
-      High-gap symbols (score > 3) are treated as TREND momentum candidates;
-      lower-activity symbols stay MEAN_REV.
-
-    Falls back to {"all": [], "trend": [], "mean_rev": [], "core": []} on failure.
+    Fetch the appropriate watchlist for the current STRATEGY_MODE from GitHub.
+    - intraday mode → watchlist_daily.json  (daily pre-market picks + 7 core)
+    - daily mode    → watchlist_weekly.json (weekly scan top 25 + 7 core)
+    Falls back to None if the file is missing or the fetch fails.
     """
-    repo     = GITHUB_REPOSITORY or "chenkingston-rgb/algotrader-pro"
+    repo = GITHUB_REPOSITORY or "chenkingston-rgb/algotrader-pro"
     filename = WATCHLIST_DAILY_FILE if STRATEGY_MODE == "intraday" else WATCHLIST_WEEKLY_FILE
-    url      = (
+    url = (
         f"https://raw.githubusercontent.com/{repo}/main/{filename}"
         f"?t={int(_time.time())}"
     )
-    empty = {"all": [], "trend": [], "mean_rev": [], "core": []}
     try:
         r = requests.get(url, timeout=10)
-        if not r.ok:
-            logging.warning(f"[WATCHLIST] {filename} fetch returned {r.status_code}")
-            return empty
-        data = r.json()
+        if r.ok:
+            data = r.json()
+            symbols = data.get("symbols", [])
+            if symbols:
+                logging.info(
+                    f"[WATCHLIST] Loaded {len(symbols)} symbols from {filename}: {symbols}"
+                )
+                return symbols
+        logging.warning(f"[WATCHLIST] {filename} fetch returned {r.status_code}")
     except Exception as e:
         logging.warning(f"[WATCHLIST] Error fetching {filename}: {e}")
-        return empty
-
-    core_syms = data.get("core_symbols", ["SPY", "QQQ", "IWM", "GLD", "XLK", "XLE", "XLF"])
-    all_syms  = data.get("symbols", [])
-
-    if STRATEGY_MODE == "intraday":
-        # Daily watchlist: use gap score as a proxy for trend vs mean-rev
-        # High gap/pm-vol (score >= 3.0) → genuine momentum → TREND
-        # Lower activity                  → ranging candidate → MEAN_REV
-        picks   = data.get("intraday_picks", [])
-        trend   = [p["symbol"] for p in picks if p.get("score", 0) >= 3.0]
-        mean_rev = [p["symbol"] for p in picks if p.get("score", 0) < 3.0]
-        # Core ETFs split: trend ETFs (XLK, XLE, XLF) to momentum; broad ETFs to MR
-        trend    = list(dict.fromkeys(["SPY", "QQQ"] + trend))
-        mean_rev = list(dict.fromkeys(["IWM", "GLD", "XLK", "XLE", "XLF"] + mean_rev))
-    else:
-        # Weekly watchlist: use ADX threshold already embedded in ranked_picks
-        picks    = data.get("ranked_picks", [])
-        trend    = [p["symbol"] for p in picks if p.get("adx14", 0) > 22]
-        mean_rev = [p["symbol"] for p in picks if 10 <= p.get("adx14", 0) <= 22]
-        # Always include core in both for exit coverage
-        trend    = list(dict.fromkeys(core_syms + trend))
-        mean_rev = list(dict.fromkeys(core_syms + mean_rev))
-
-    result = {
-        "all":      all_syms,
-        "trend":    trend,
-        "mean_rev": mean_rev,
-        "core":     core_syms,
-    }
-    logging.info(
-        f"[WATCHLIST] Pool routing from {filename}: "
-        f"trend={len(trend)} symbols, mean_rev={len(mean_rev)} symbols | "
-        f"trend={trend[:8]}... mean_rev={mean_rev[:8]}..."
-    )
-    return result
+    return []
 
 
 # ─────────────────────────────────────────────
@@ -233,7 +181,7 @@ def write_github_log(filepath: str, content_dict: dict):
     get_r = requests.get(api_url, headers=headers, timeout=10)
     sha = get_r.json().get("sha") if get_r.ok else None
     payload = {
-        "message": f"[bot][skip render] Update {filepath} — {datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}",
+        "message": f"[bot] Update {filepath} — {datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}",
         "content": content_b64,
     }
     if sha:
@@ -270,7 +218,7 @@ def append_run_history(run_summary: dict):
     content_b64 = base64.b64encode(
         json.dumps(history, indent=2, default=str).encode()
     ).decode()
-    payload = {"message": f"[bot][skip render] Append {HISTORY_FILE}", "content": content_b64}
+    payload = {"message": f"[bot] Append {HISTORY_FILE}", "content": content_b64}
     if sha:
         payload["sha"] = sha
     put_r = requests.put(api_url, headers=headers, json=payload, timeout=15)
@@ -333,7 +281,7 @@ def append_signals_history(new_signals: list):
     ).decode()
     payload = {
         "message": (
-            f"[bot][skip render] Signal history — "
+            f"[bot] Signal history — "
             f"{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')} UTC"
         ),
         "content": content_b64,
@@ -574,60 +522,21 @@ def signal_bollinger_bands_15m(df: pd.DataFrame, p: dict) -> tuple:
     return "hold", inds
 
 def signal_momentum_roc_15m(df: pd.DataFrame, p: dict) -> tuple:
-    c   = df["close"]
-    vol = df["volume"]
-
-    roc    = (c / c.shift(p["roc_period"]) - 1) * 100
+    c = df["close"]
+    roc = (c / c.shift(p["roc_period"]) - 1) * 100
     r, prev_r = roc.iloc[-1], roc.iloc[-2]
-
-    # ── FIX-A: Trend confirmation filter ──────────────────────────────────────
-    # Only take long entries when price is above its trend MA AND the MA is
-    # sloping upward. This blocks buying counter-trend bounces (e.g. RKLB
-    # spiking on one bar while the short-term trend is still down).
-    trend_ma_period = p.get("trend_ma", 50)
-    trend_ma = c.rolling(trend_ma_period).mean()
-    ma_now   = trend_ma.iloc[-1]
-    ma_prev  = trend_ma.iloc[-2]
-    price    = c.iloc[-1]
-    trend_ok_long  = (price > ma_now) and (ma_now > ma_prev)   # price above rising MA
-    trend_ok_short = (price < ma_now) and (ma_now < ma_prev)   # price below falling MA
-
-    # ── FIX-B: Volume confirmation ────────────────────────────────────────────
-    # Require the signal bar volume to be at least vol_threshold x the rolling
-    # average volume. Filters out thin one-bar price spikes with no real participation
-    # (common in SMCI, RKLB during mid-day lulls).
-    vol_ma_period   = p.get("vol_ma", 20)
-    vol_threshold   = p.get("vol_threshold", 1.0)
-    avg_vol         = vol.rolling(vol_ma_period).mean().iloc[-1]
-    cur_vol         = vol.iloc[-1]
-    vol_ok          = (avg_vol > 0) and (cur_vol >= vol_threshold * avg_vol)
-
-    inds = {
-        "roc":          round(r, 3),
-        "roc_prev":     round(prev_r, 3),
-        "threshold":    p["roc_threshold"],
-        "price":        round(price, 2),
-        "trend_ma":     round(ma_now, 2) if not pd.isna(ma_now) else None,
-        "trend_ok":     trend_ok_long,
-        "vol_ratio":    round(cur_vol / avg_vol, 2) if avg_vol > 0 else None,
-        "vol_ok":       vol_ok,
-    }
-
-    # ROC sustained-momentum logic (v6) + trend + volume gates
+    inds = {"roc": round(r,3), "roc_prev": round(prev_r,3), "threshold": p["roc_threshold"]}
+    # FIX 3: Changed from zero-crossing to sustained-momentum logic.
+    # Old: required prev_r to be BELOW threshold (zero-crossing). On volatile watchlist
+    #      names (RKLB, IONQ, AMD) ROC stays above threshold across bars — crossing was
+    #      never re-triggered, missing the best continuation entries.
+    # New: fire buy if ROC currently above threshold AND was accelerating (r > prev_r).
+    #      This catches sustained momentum moves, not just the initial cross.
+    #      Sell fires if ROC is below negative threshold AND decelerating (r < prev_r).
     if r > p["roc_threshold"] and r > prev_r:
-        if not trend_ok_long:
-            return "hold", {**inds, "skip_reason": "trend_filter_long"}
-        if not vol_ok:
-            return "hold", {**inds, "skip_reason": "vol_filter_long"}
         return "buy", inds
-
     if r < -p["roc_threshold"] and r < prev_r:
-        # Sells (exits) do not need vol confirmation — always exit if signal fires
-        # but do apply trend filter to avoid exiting into a still-rising trend
-        if trend_ok_long:
-            return "hold", {**inds, "skip_reason": "trend_filter_short"}
         return "sell", inds
-
     return "hold", inds
 
 SIGNAL_FNS = {
@@ -1180,10 +1089,6 @@ def _run_streaming_strategy(
         return
 
     if signal == "buy":
-        # Regime gate: block all new long entries in bear market (SPY < 20MA)
-        if os.environ.get("REGIME_OK", "1") == "0":
-            logging.info(f"[{strategy_name}] {symbol}: buy blocked — bear regime (SPY below 20MA)")
-            return
         tp_mult    = shared["tp_mult"]
         # FIX 4: Enforce a minimum stop distance of 0.20% of price.
         # 15-min ATR on low-volatility windows (e.g. GLD at market open) can
@@ -1332,10 +1237,133 @@ def run_all_strategies(symbol: str, candles: list) -> None:
 # ─────────────────────────────────────────────
 # MAIN EXECUTION LOOP (GitHub Actions / manual workflow_dispatch)
 # ─────────────────────────────────────────────
+
+# ─────────────────────────────────────────────
+# EOD EXIT + DEPOSIT DETECTION + MAIN (v7)
+# ─────────────────────────────────────────────
+INTRADAY_STRATEGY_NAMES = set(INTRADAY_STRATEGIES.keys())
+EOD_EXIT_HOUR  = 15
+EOD_EXIT_MIN   = 30
+EOD_TAG_FILE   = "logs/intraday_position_tags.json"
+LIVE_BASELINE_FILE = "logs/live_baseline.json"
+
+
+def load_json_from_github(filepath: str) -> dict:
+    if not GITHUB_TOKEN or not GITHUB_REPOSITORY:
+        return {}
+    headers = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github+json"}
+    r = requests.get(
+        f"https://api.github.com/repos/{GITHUB_REPOSITORY}/contents/{filepath}",
+        headers=headers, timeout=10
+    )
+    if r.ok:
+        try:
+            return json.loads(base64.b64decode(r.json()["content"]).decode())
+        except Exception:
+            return {}
+    return {}
+
+
+def run_eod_exit(positions, position_tags, all_signals, orders_placed, run_start):
+    """Force-close all intraday-tagged positions at/after 3:30 PM ET."""
+    now_et  = datetime.now(ET)
+    if STRATEGY_MODE != "intraday":
+        return position_tags
+    cutoff = now_et.replace(hour=EOD_EXIT_HOUR, minute=EOD_EXIT_MIN, second=0, microsecond=0)
+    if now_et < cutoff:
+        return position_tags
+    print(f"\n[EOD EXIT] {now_et.strftime('%H:%M %Z')} — forcing close of intraday-tagged positions.")
+    for sym in list(position_tags.keys()):
+        tag = position_tags[sym]
+        if tag.get("strategy_type") != "intraday":
+            continue
+        if sym not in positions:
+            del position_tags[sym]
+            continue
+        pos   = positions[sym]
+        qty   = int(float(pos.get("qty", 0)))
+        price = float(pos.get("current_price", 0))
+        upl   = float(pos.get("unrealized_pl", 0))
+        uplpc = float(pos.get("unrealized_plpc", 0)) * 100
+        print(f"  [EOD] Closing {sym} qty={qty}  unreal=${upl:+.2f} ({uplpc:+.2f}%)")
+        try:
+            order    = close_position_order(sym, qty)
+            order_id = order.get("id")
+            orders_placed.append({
+                "symbol": sym, "strat": "eod_exit", "strategy_type": "intraday",
+                "signal": "eod_exit", "side": "sell", "qty": qty,
+                "price": round(price, 2), "est_value": round(price * qty, 2),
+                "stop_price": None, "tp_price": None,
+                "order_id": order_id, "timestamp": run_start.isoformat(), "eod_exit": True,
+            })
+            all_signals.append({
+                "timestamp": run_start.isoformat(), "strategy": "eod_exit",
+                "strategy_type": "intraday", "vix_type": "EOD", "symbol": sym,
+                "signal": "eod_exit", "price": round(price, 2), "atr": 0, "qty": qty,
+                "stop_price": None, "tp_price": None, "executed": True,
+                "skip_reason": None, "order_id": order_id, "vix": None,
+                "vix_reason": "eod_forced_exit",
+                "indicators": {"unrealized_pl": round(upl, 2),
+                               "unrealized_plpc": round(uplpc, 2),
+                               "entry_strategy": tag.get("strategy")},
+            })
+            print(f"  ✓ EOD CLOSED {sym}  order_id={order_id}")
+            del position_tags[sym]
+        except Exception as e:
+            print(f"  [WARN] EOD exit failed for {sym}: {e}")
+    return position_tags
+
+
+def detect_deposit(current_equity: float, baseline: dict) -> dict:
+    """
+    Detects cash deposits by comparing current equity to last known equity.
+    A jump > $500 AND > 1% in one engine cycle is flagged as a deposit.
+    Normal trading P&L is tracked separately.
+    """
+    if not baseline:
+        baseline = {
+            "start_equity":      current_equity,
+            "last_known_equity": current_equity,
+            "total_deposited":   0.0,
+            "total_trading_pnl": 0.0,
+            "deposits":          [],
+            "initialized_at":    datetime.now(ET).isoformat(),
+        }
+        print(f"  [LIVE BASELINE] Initialized at ${current_equity:,.2f}")
+        write_github_log(LIVE_BASELINE_FILE, baseline)
+        return baseline
+
+    last_eq   = baseline.get("last_known_equity", current_equity)
+    delta     = current_equity - last_eq
+    delta_pct = (delta / last_eq * 100) if last_eq > 0 else 0
+
+    if delta > 500 and delta_pct > 1.0:
+        # Deposit detected
+        dep = {
+            "timestamp":     datetime.now(ET).isoformat(),
+            "amount":        round(delta, 2),
+            "equity_before": round(last_eq, 2),
+            "equity_after":  round(current_equity, 2),
+        }
+        baseline.setdefault("deposits", []).append(dep)
+        baseline["total_deposited"] = round(baseline.get("total_deposited", 0) + delta, 2)
+        print(f"  [DEPOSIT] ${delta:,.2f} deposit detected "
+              f"(${last_eq:,.2f} → ${current_equity:,.2f})")
+    else:
+        baseline["total_trading_pnl"] = round(
+            baseline.get("total_trading_pnl", 0) + delta, 2
+        )
+
+    baseline["last_known_equity"] = round(current_equity, 2)
+    write_github_log(LIVE_BASELINE_FILE, baseline)
+    return baseline
+
+
 def main():
-    run_start = datetime.now(ET)
+    run_start    = datetime.now(ET)
     print(f"\n{'='*60}")
-    print(f"AlgoTrader Pro — {run_start.strftime('%Y-%m-%d %H:%M %Z')} [{MODE.upper()}] [{STRATEGY_MODE.upper()}]")
+    print(f"AlgoTrader Pro v7 — {run_start.strftime('%Y-%m-%d %H:%M %Z')} "
+          f"[{'LIVE' if not IS_PAPER else 'PAPER'}] [{STRATEGY_MODE.upper()}]")
     print(f"{'='*60}")
 
     try:
@@ -1346,271 +1374,166 @@ def main():
 
     equity       = float(account["equity"])
     buying_power = float(account["buying_power"])
-    print(f"Account equity: ${equity:,.2f} | Buying power: ${buying_power:,.2f}")
+    last_equity  = float(account.get("last_equity", equity))
+    print(f"Equity: ${equity:,.2f} | Buying power: ${buying_power:,.2f}")
 
     vix = get_vix()
 
-    positions = get_positions()
-    print(f"Open positions: {list(positions.keys()) or 'none'}")
+    # Fresh positions on every loop start (Rule: never stale)
+    positions     = get_positions()
+    position_tags = load_json_from_github(EOD_TAG_FILE)
 
-    # ── Hard stop: force-close any position with unrealized loss >= 7% ──────
-    # This fires BEFORE strategy signals so we never hold a blow-up position.
-    # ATR stops are the primary exit; this is a secondary safety net for
-    # cases where the strategy signal fails to fire (e.g. thin bars, bad data).
-    HARD_STOP_PCT = 0.07   # 7% loss on position market value
-    for sym, pos in list(positions.items()):
-        try:
-            entry_px  = float(pos.get("avg_entry_price", 0))
-            cur_px    = float(pos.get("current_price", 0))
-            if entry_px <= 0:
-                continue
-            loss_pct = (entry_px - cur_px) / entry_px   # positive = loss
-            if loss_pct >= HARD_STOP_PCT:
-                print(f"  [HARD STOP] {sym}: loss={loss_pct*100:.2f}% >= {HARD_STOP_PCT*100:.0f}% threshold — force closing")
-                try:
-                    close_position_order(sym, int(float(pos.get("qty", 0))))
-                    positions.pop(sym, None)
-                    sold_this_run.add(sym)
-                    orders_placed.append({
-                        "symbol": sym, "strat": "hard_stop", "signal": "sell",
-                        "side": "sell", "qty": int(float(pos.get("qty", 0))),
-                        "price": round(cur_px, 2),
-                        "est_value": round(cur_px * float(pos.get("qty", 0)), 2),
-                        "stop_price": None, "tp_price": None, "order_id": None,
-                        "timestamp": run_start.isoformat(),
-                    })
-                    print(f"  [HARD STOP] {sym}: closed ✓")
-                except Exception as e:
-                    print(f"  [HARD STOP] {sym}: close failed — {e}")
-        except Exception as e:
-            print(f"  [HARD STOP] {sym}: check error — {e}")
+    # Live mode: deposit detection
+    live_baseline = {}
+    if not IS_PAPER:
+        live_baseline = load_json_from_github(LIVE_BASELINE_FILE)
+        live_baseline = detect_deposit(equity, live_baseline)
 
     peak_equity  = equity
     drawdown_pct = 0.0
-
     all_signals   = []
     orders_placed = []
-    # sold_this_run / bought_this_run: cross-strategy conflict guards.
-    # Scope: both reset every run (local to main()) — NOT session-wide.
-    # sold_this_run:   populated on SELL → blocks same-run re-buy (sell→buy churn).
-    # bought_this_run: populated on BUY  → blocks same-run re-sell (buy→sell churn).
-    # Neither blocks the NEXT run — a fresh candle with a genuine new signal passes freely.
-    sold_this_run   = set()
-    bought_this_run = set()
+    sold_this_run = set()
 
-    # ── Market regime filter (SPY 20-bar MA) ────────────────────────────
-    # If SPY is below its 20-bar MA the broad market is in a downtrend.
-    # In that regime momentum entries are high-risk; skip all new buys.
-    # Sells / exits are never blocked — we always let the strategy close.
-    try:
-        spy_df        = get_bars("SPY", timeframe="1Day", bar_days=30)
-        spy_ma20      = spy_df["close"].rolling(20).mean().iloc[-1]
-        spy_price     = spy_df["close"].iloc[-1]
-        regime_ok     = float(spy_price) > float(spy_ma20)
-        regime_label  = "BULL" if regime_ok else "BEAR — new buys BLOCKED"
-        print(f"[REGIME] SPY ${spy_price:.2f} vs 20-day MA ${spy_ma20:.2f} → {regime_label}")
-    except Exception as e:
-        logging.warning(f"[REGIME] SPY MA check failed ({e}) — defaulting to regime_ok=True")
-        regime_ok = True
-
-    # ── Pool-aware symbol routing ─────────────────────────────────────────
-    # IMPORTANT: always prepend symbols with open positions so that exit
-    # signals are never skipped for holdings that have dropped off the
-    # watchlist (e.g. after a weekly scan refresh removes a symbol).
+    # Apply dynamic watchlist
     position_symbols = list(positions.keys())
-    pools = load_dynamic_symbols()
-
-    # Strategy → pool mapping
-    POOL_MAP = {
-        "momentum_roc_15m":    "trend",     # only trade confirmed trend/momentum names
-        "bollinger_bands_15m": "mean_rev",  # only trade ranging/low-ADX names
-        "macd_crossover":      "trend",
-        "ema_crossover":       "trend",
-        "triple_ema":          "trend",
-        "rsi_macd_combo":      "mean_rev",
-    }
-
-    if pools.get("all"):
-        for strat_name, _sc in STRATEGIES.items():
-            pool_key    = POOL_MAP.get(strat_name, "all")
-            pool_syms   = pools.get(pool_key) or pools["all"]
-            # Prepend open positions for exit coverage (regardless of pool)
-            merged      = list(dict.fromkeys(position_symbols + pool_syms))
-            _sc["symbols"] = merged
-        dropped = [s for s in position_symbols if s not in pools["all"]]
-        print(
-            f"[WATCHLIST] Pool-routed: "
-            f"trend={pools['trend'][:6]}... ({len(pools['trend'])} syms) | "
-            f"mean_rev={pools['mean_rev'][:6]}... ({len(pools['mean_rev'])} syms) | "
-            f"position-only exits: {dropped or 'none'}"
-        )
+    dyn_symbols = load_dynamic_symbols()
+    if dyn_symbols:
+        merged = list(dict.fromkeys(position_symbols + dyn_symbols))
+        for sc in STRATEGIES.values():
+            sc["symbols"] = merged
+        dropped = [s for s in position_symbols if s not in dyn_symbols]
+        print(f"[WATCHLIST] {len(merged)} symbols applied "
+              f"({len(dropped)} position-only: {dropped or 'none'})")
     else:
-        # Fallback: prepend open positions to hardcoded lists
-        for _sc in STRATEGIES.values():
-            existing = _sc["symbols"]
-            _sc["symbols"] = list(dict.fromkeys(position_symbols + existing))
-        print("[WATCHLIST] Watchlist unavailable — using hardcoded lists; open positions prepended")
+        for sc in STRATEGIES.values():
+            sc["symbols"] = list(dict.fromkeys(position_symbols + sc["symbols"]))
+        print("[WATCHLIST] Using hardcoded lists; open positions prepended")
 
-    # Inject regime flag so signal execution can skip buys in bear market
-    # (sells are always allowed through)
-    os.environ["REGIME_OK"] = "1" if regime_ok else "0"
+    # ── PHASE 1: EOD exit sweep ──────────────────────────────────────────
+    positions     = get_positions()
+    position_tags = run_eod_exit(
+        positions, position_tags, all_signals, orders_placed, run_start
+    )
+    write_github_log(EOD_TAG_FILE, position_tags)
 
+    # ── PHASE 2: Refresh + run strategy signals ───────────────────────────
+    positions = get_positions()
     strats_to_run = {k: v for k, v in STRATEGIES.items()
                      if not STRATEGY_FILTER or k == STRATEGY_FILTER}
 
     for strat_name, strat_cfg in strats_to_run.items():
-        print(f"\n--- {strat_name} [{strat_cfg['vix_type']}] ---")
-        signal_fn = SIGNAL_FNS[strat_name]
-        p         = strat_cfg["params"]
-        timeframe = strat_cfg.get("timeframe", "1Day")
-        bar_days  = strat_cfg.get("bar_days", 300)
+        strategy_type = "intraday" if strat_name in INTRADAY_STRATEGY_NAMES else "daily"
+        signal_fn     = SIGNAL_FNS[strat_name]
+        p             = strat_cfg["params"]
+        tf            = strat_cfg.get("timeframe", "1Day")
+        bar_days      = strat_cfg.get("bar_days", 300)
+        print(f"\n--- {strat_name} [{strat_cfg['vix_type']}] [{strategy_type.upper()}] ---")
 
         for symbol in strat_cfg["symbols"]:
             try:
-                df = get_bars(symbol, timeframe=timeframe, bar_days=bar_days)
-                min_bars = 30 if timeframe != "1Day" else 60
-                if len(df) < min_bars:
-                    print(f"  {symbol}: insufficient bars ({len(df)}), skipping")
+                df = get_bars(symbol, timeframe=tf, bar_days=bar_days)
+                if len(df) < (30 if tf != "1Day" else 60):
                     continue
             except Exception as e:
-                print(f"  {symbol}: bar fetch error — {e}")
-                continue
+                print(f"  {symbol}: bar fetch error — {e}"); continue
 
             price = df["close"].iloc[-1]
             atr   = calc_atr(df).iloc[-1]
-
             try:
                 signal, inds = signal_fn(df, p)
             except Exception as e:
-                print(f"  {symbol}: signal error — {e}")
-                continue
+                print(f"  {symbol}: signal error — {e}"); continue
 
-            print(f"  {symbol}: signal={signal} price={price:.2f} atr={atr:.3f} | {inds}")
+            print(f"  {symbol}: signal={signal} price={price:.2f} atr={atr:.3f}")
 
             vix_mult, vix_reason = vix_size_multiplier(strat_cfg, vix or 0.0)
-            executed    = False
-            skip_reason = None
-            order_id    = None
-            qty         = 0
-            stop_price  = None
-            tp_price    = None
+            executed = False; skip_reason = None; order_id = None
+            qty = 0; stop_price = None; tp_price = None
 
             if signal == "hold":
                 skip_reason = "no_signal"
             elif vix_mult == 0.0:
                 skip_reason = vix_reason
-                print(f"  {symbol}: SKIPPED — {vix_reason}")
             elif signal == "buy" and symbol in positions:
                 skip_reason = "already_in_position"
-                print(f"  {symbol}: already holding position, skipping buy")
             elif signal == "buy" and symbol in sold_this_run:
-                skip_reason = "sold_this_run"
-                print(f"  {symbol}: SKIPPED buy — sold this same 15-min cycle (same-candle conflict guard)")
+                skip_reason = "sold_this_run"   # BUG-001 guard
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
-                # ── Time gate: block new entries after 15:45 ET (9 min before close)
-                # After-hours fills have wide spreads and poor price discovery.
-                # Exits are never time-gated — we always allow closes.
-                _now_et = run_start  # run_start is already tz-aware ET
-                _hhmm   = _now_et.hour * 100 + _now_et.minute
-                if _hhmm > 1545:
-                    skip_reason = "after_hours_cutoff"
-                    print(f"  {symbol}: buy blocked — after 15:45 ET cutoff ({_hhmm})")
-                # ── Regime gate: block new buys when SPY is below its 20-day MA
-                elif os.environ.get("REGIME_OK", "1") == "0":
-                    skip_reason = "bear_regime"
-                    print(f"  {symbol}: buy blocked — bear regime (SPY below 20-day MA)")
+                qty = atr_position_size(equity, price, atr, vix_mult)
+                if qty < 1:
+                    skip_reason = "qty_too_small"
+                elif price * qty > buying_power * 0.95:
+                    skip_reason = "insufficient_buying_power"
                 else:
-                    # BUY: bracket order with stop-loss + take-profit
-                    qty = atr_position_size(equity, price, atr, vix_mult)
-                    if qty < 1:
-                        skip_reason = "qty_too_small"
-                        print(f"  {symbol}: position size rounds to 0, skipping")
-                    elif price * qty > buying_power * 0.95:
-                        skip_reason = "insufficient_buying_power"
-                        print(f"  {symbol}: not enough buying power for {qty} shares at ${price:.2f}")
-                    else:
-                        # FIX 4 (main loop): same ATR floor as streaming engine
-                        min_atr_ga = price * 0.0020
-                        eff_atr_ga = max(atr, min_atr_ga)
-                        stop_price = price - (ATR_STOP_MULT * eff_atr_ga)
-                        tp_price   = price + (ATR_TP_MULT   * eff_atr_ga)
-                        try:
-                            order    = place_order(symbol, qty, "buy", stop_price, tp_price)
-                            order_id = order.get("id")
-                            executed = True
-                            positions[symbol] = {"qty": str(qty), "avg_entry_price": str(price)}  # anti-churn: mark as held
-                            bought_this_run.add(symbol)  # block same-run sell of a just-bought position
-                            print(f"  ✓ BUY ORDER: {qty} {symbol} @ market | "
-                                  f"stop={stop_price:.2f} tp={tp_price:.2f} | id={order_id}")
-                            orders_placed.append({
-                                "symbol":       symbol,
-                                "strat":        strat_name,
-                                "signal":       "buy",
-                                "side":         "buy",
-                                "qty":          qty,
-                                "price":        round(price, 2),
-                                "est_value":    round(price * qty, 2),
-                                "stop_price":   round(stop_price, 2),
-                                "tp_price":     round(tp_price, 2),
-                                "order_id":     order_id,
-                                "timestamp":    run_start.isoformat(),
-                            })
-                        except Exception as e:
-                            skip_reason = f"order_error: {e}"
-                            print(f"  {symbol}: buy order failed — {e}")
-            else:
-                # SELL: plain market close — bracket orders are INVALID for closes
+                    eff_atr    = max(atr, price * 0.002)
+                    stop_price = price - ATR_STOP_MULT * eff_atr
+                    tp_price   = price + ATR_TP_MULT   * eff_atr
+                    try:
+                        order    = place_order(symbol, qty, "buy", stop_price, tp_price)
+                        order_id = order.get("id"); executed = True
+                        print(f"  ✓ BUY {qty} {symbol} stop={stop_price:.2f} tp={tp_price:.2f}")
+                        orders_placed.append({
+                            "symbol": symbol, "strat": strat_name,
+                            "strategy_type": strategy_type,
+                            "signal": "buy", "side": "buy", "qty": qty,
+                            "price": round(price, 2), "est_value": round(price * qty, 2),
+                            "stop_price": round(stop_price, 2), "tp_price": round(tp_price, 2),
+                            "order_id": order_id, "timestamp": run_start.isoformat(),
+                        })
+                        # Tag intraday entries for EOD exit
+                        if strategy_type == "intraday":
+                            position_tags[symbol] = {
+                                "strategy": strat_name, "strategy_type": "intraday",
+                                "entry_time": run_start.isoformat(),
+                                "entry_price": round(price, 2),
+                            }
+                            write_github_log(EOD_TAG_FILE, position_tags)
+                        # Immediate in-memory cache update (BUG-001)
+                        positions[symbol] = {"symbol": symbol, "qty": str(qty),
+                                             "current_price": str(price),
+                                             "avg_entry_price": str(price)}
+                    except Exception as e:
+                        skip_reason = f"order_error: {e}"
+            else:  # SELL
                 pos_qty = int(float(positions[symbol].get("qty", 0)))
-                qty = pos_qty if pos_qty > 0 else atr_position_size(equity, price, atr, vix_mult)
-                stop_price = None
-                tp_price   = None
+                qty     = pos_qty if pos_qty > 0 else atr_position_size(equity, price, atr, vix_mult)
                 try:
                     order    = close_position_order(symbol, qty)
-                    order_id = order.get("id")
-                    executed = True
-                    # ── ANTI-CHURN: remove from in-memory positions immediately
-                    positions.pop(symbol, None)
-                    sold_this_run.add(symbol)
-                    print(f"  ✓ SELL ORDER: {qty} {symbol} @ market (close) | id={order_id}")
+                    order_id = order.get("id"); executed = True
+                    print(f"  ✓ SELL {qty} {symbol}")
                     orders_placed.append({
-                        "symbol":       symbol,
-                        "strat":        strat_name,
-                        "signal":       "sell",
-                        "side":         "sell",
-                        "qty":          qty,
-                        "price":        round(price, 2),
-                        "est_value":    round(price * qty, 2),
-                        "stop_price":   None,
-                        "tp_price":     None,
-                        "order_id":     order_id,
-                        "timestamp":    run_start.isoformat(),
+                        "symbol": symbol, "strat": strat_name,
+                        "strategy_type": strategy_type,
+                        "signal": "sell", "side": "sell", "qty": qty,
+                        "price": round(price, 2), "est_value": round(price * qty, 2),
+                        "stop_price": None, "tp_price": None,
+                        "order_id": order_id, "timestamp": run_start.isoformat(),
                     })
+                    # BUG-001: update cache + blocklist immediately
+                    sold_this_run.add(symbol)
+                    positions.pop(symbol, None)
+                    position_tags.pop(symbol, None)
+                    write_github_log(EOD_TAG_FILE, position_tags)
                 except Exception as e:
                     skip_reason = f"order_error: {e}"
-                    print(f"  {symbol}: sell order failed — {e}")
 
             all_signals.append({
-                "timestamp":   run_start.isoformat(),
-                "strategy":    strat_name,
-                "vix_type":    strat_cfg["vix_type"],
-                "symbol":      symbol,
-                "signal":      signal,
-                "price":       round(price, 2),
-                "atr":         round(atr, 4),
-                "qty":         qty,
-                "stop_price":  round(stop_price, 2) if stop_price else None,
-                "tp_price":    round(tp_price, 2)   if tp_price   else None,
-                "executed":    executed,
-                "skip_reason": skip_reason,
-                "order_id":    order_id,
-                "vix":         vix,
-                "vix_reason":  vix_reason,
-                "indicators":  inds,
+                "timestamp": run_start.isoformat(), "strategy": strat_name,
+                "strategy_type": strategy_type, "vix_type": strat_cfg["vix_type"],
+                "symbol": symbol, "signal": signal, "price": round(price, 2),
+                "atr": round(atr, 4), "qty": qty,
+                "stop_price": round(stop_price, 2) if stop_price else None,
+                "tp_price": round(tp_price, 2) if tp_price else None,
+                "executed": executed, "skip_reason": skip_reason,
+                "order_id": order_id, "vix": vix, "vix_reason": vix_reason,
+                "indicators": inds,
             })
 
-    # Build enriched position details for dashboard
+    # Final position snapshot
+    positions = get_positions()
     position_details = []
     for sym, pos in positions.items():
         try:
@@ -1620,163 +1543,56 @@ def main():
             mval  = float(pos.get("market_value", 0))
             upl   = float(pos.get("unrealized_pl", 0))
             uplpc = float(pos.get("unrealized_plpc", 0)) * 100
-            # Find which strategies are watching this symbol (for exit criteria)
-            watching = []
-            for sn, sc in STRATEGIES.items():
-                if sym in sc.get("symbols", []):
-                    watching.append(sn)
+            tag   = position_tags.get(sym, {})
             position_details.append({
-                "symbol":          sym,
-                "qty":             qty_p,
-                "side":            pos.get("side", "long"),
-                "avg_entry_price": round(entry, 2),
-                "current_price":   round(cur, 2),
-                "market_value":    round(mval, 2),
-                "unrealized_pl":   round(upl, 2),
+                "symbol": sym, "qty": qty_p, "side": pos.get("side", "long"),
+                "avg_entry_price": round(entry, 2), "current_price": round(cur, 2),
+                "market_value": round(mval, 2), "unrealized_pl": round(upl, 2),
                 "unrealized_plpc": round(uplpc, 3),
-                "cost_basis":      round(float(pos.get("cost_basis", entry * qty_p)), 2),
-                "watching_strategies": watching,
+                "cost_basis": round(float(pos.get("cost_basis", entry * qty_p)), 2),
+                "strategy_type": tag.get("strategy_type", "daily"),
+                "entry_strategy": tag.get("strategy", "unknown"),
+                "watching_strategies": [sn for sn, sc in STRATEGIES.items()
+                                        if sym in sc.get("symbols", [])],
             })
         except Exception as e:
             position_details.append({"symbol": sym, "error": str(e)})
 
-    run_log = {
-        "run_timestamp":    run_start.isoformat(),
-        "mode":             MODE,
-        "strategy_mode":    STRATEGY_MODE,
-        "equity":           round(equity, 2),
-        "buying_power":     round(buying_power, 2),
-        "vix":              vix,
-        "drawdown_pct":     round(drawdown_pct, 2),
-        "positions":        list(positions.keys()),
-        "position_details": position_details,
-        "signals":          all_signals,
-        "orders_placed":    orders_placed,
-    }
+    # Live-mode deposit-aware P&L fields
+    trading_pnl = total_deposited = deposit_count = None
+    if not IS_PAPER and live_baseline:
+        trading_pnl     = round(live_baseline.get("total_trading_pnl", 0), 2)
+        total_deposited = round(live_baseline.get("total_deposited", 0), 2)
+        deposit_count   = len(live_baseline.get("deposits", []))
+        print(f"\n[LIVE P&L] Trading P&L: ${trading_pnl:+,.2f} | "
+              f"Deposits: ${total_deposited:,.2f} ({deposit_count}x)")
 
-    print(f"\n{'='*60}")
-    print(f"Run complete — {len(all_signals)} signals, {len(orders_placed)} orders placed")
-    print(f"{'='*60}\n")
+    run_log = {
+        "run_timestamp": run_start.isoformat(), "mode": MODE,
+        "strategy_mode": STRATEGY_MODE,
+        "equity": round(equity, 2), "last_equity": round(last_equity, 2),
+        "buying_power": round(buying_power, 2), "vix": vix,
+        "drawdown_pct": round(drawdown_pct, 2),
+        "positions": list(positions.keys()),
+        "position_details": position_details,
+        "signals": all_signals, "orders_placed": orders_placed,
+        "trading_pnl": trading_pnl,
+        "total_deposited": total_deposited,
+        "deposit_count": deposit_count,
+    }
 
     write_github_log(LOG_FILE, run_log)
-
-    run_summary = {
-        "timestamp":      run_start.isoformat(),
-        "mode":           MODE,
-        "strategy_mode":  STRATEGY_MODE,
-        "equity":         round(equity, 2),
-        "vix":            vix,
-        "signals_count":  len(all_signals),
-        "orders_count":   len(orders_placed),
+    append_run_history({
+        "timestamp": run_start.isoformat(), "mode": MODE,
+        "strategy_mode": STRATEGY_MODE, "equity": round(equity, 2),
+        "vix": vix, "signals_count": len(all_signals),
+        "orders_count": len(orders_placed),
         "symbols_traded": [o["symbol"] for o in orders_placed],
-    }
-    append_run_history(run_summary)
-    append_signals_history(all_signals)  # write today's signals to signals_history.json
-    sync_to_base44(run_log)               # push live state to Base44 dashboard entities
-
-
-# ─────────────────────────────────────────────
-# BASE44 ENTITY SYNC  (no integration credits — plain HTTPS POST)
-# Pushes live portfolio data into the Base44 portfolio_state entity
-# so the dashboard always shows current numbers.
-# ─────────────────────────────────────────────
-BASE44_API = "https://app.base44.com/api/apps"
-BASE44_SERVICE_TOKEN = os.getenv("BASE44_API_KEY", "") or os.getenv("BASE44_SERVICE_TOKEN", "")
-
-def sync_to_base44(run_log: dict) -> None:
-    """Push the latest run data into Base44 portfolio_state + signal_log entities."""
-    if not BASE44_SERVICE_TOKEN:
-        logging.warning("[BASE44] BASE44_SERVICE_TOKEN not set — skipping sync")
-        return
-
-    app_id = BASE44_APP_ID
-    hdrs = {
-        "Authorization": f"Bearer {BASE44_SERVICE_TOKEN}",
-        "Content-Type": "application/json",
-    }
-
-    positions   = run_log.get("position_details", [])
-    unrealized  = sum(p.get("unrealized_pl", 0) for p in positions)
-
-    # ── 1. Upsert portfolio_state ──────────────────────────────────────────
-    portfolio_payload = {
-        "timestamp":           run_log["run_timestamp"],
-        "equity":              run_log["equity"],
-        "buying_power":        run_log["buying_power"],
-        "peak_equity":         run_log["equity"],
-        "current_drawdown_pct": run_log["drawdown_pct"],
-        "is_halted":           False,
-        "mode":                run_log["mode"],
-        "pnl_today":           round(unrealized, 2),
-        "open_positions":      json.dumps([{
-            "symbol":          p.get("symbol"),
-            "qty":             p.get("qty"),
-            "avg_entry_price": p.get("avg_entry_price"),
-            "current_price":   p.get("current_price"),
-            "unrealized_pl":   round(p.get("unrealized_pl", 0) or 0, 2),
-            "market_value":    round(p.get("market_value", 0) or 0, 2),
-            "strategy":        p.get("strategy", "unknown"),
-        } for p in positions]),
-    }
-
-    try:
-        list_r = requests.get(
-            f"{BASE44_API}/{app_id}/entities/portfolio_state",
-            headers=hdrs, timeout=10
-        )
-        records = list_r.json() if list_r.ok else []
-        if isinstance(records, list) and records:
-            rec_id = records[0]["id"]
-            existing_peak = records[0].get("peak_equity", 0) or 0
-            portfolio_payload["peak_equity"] = max(existing_peak, run_log["equity"])
-            up_r = requests.put(
-                f"{BASE44_API}/{app_id}/entities/portfolio_state/{rec_id}",
-                headers=hdrs, json=portfolio_payload, timeout=10
-            )
-            if up_r.ok:
-                logging.info(f"[BASE44] ✓ portfolio_state updated (equity={run_log['equity']})")
-            else:
-                logging.warning(f"[BASE44] portfolio_state update failed: {up_r.status_code} {up_r.text[:200]}")
-        else:
-            cr = requests.post(
-                f"{BASE44_API}/{app_id}/entities/portfolio_state",
-                headers=hdrs, json=portfolio_payload, timeout=10
-            )
-            if cr.ok:
-                logging.info(f"[BASE44] ✓ portfolio_state created")
-            else:
-                logging.warning(f"[BASE44] portfolio_state create failed: {cr.status_code} {cr.text[:200]}")
-    except Exception as e:
-        logging.warning(f"[BASE44] portfolio_state sync error: {e}")
-
-    # ── 2. Write executed signals to signal_log ────────────────────────────
-    executed = [s for s in run_log.get("signals", []) if s.get("executed")]
-    for sig in executed:
-        sig_payload = {
-            "timestamp":         sig["timestamp"],
-            "strategy_name":     sig["strategy"],
-            "symbol":            sig["symbol"],
-            "signal":            sig["signal"],
-            "vix_at_signal":     sig.get("vix"),
-            "size_multiplier":   1.0,
-            "executed":          True,
-            "reason_if_skipped": None,
-            "mode":              run_log["mode"],
-        }
-        try:
-            sr = requests.post(
-                f"{BASE44_API}/{app_id}/entities/signal_log",
-                headers=hdrs, json=sig_payload, timeout=10
-            )
-            if sr.ok:
-                logging.info(f"[BASE44] ✓ signal_log: {sig['signal']} {sig['symbol']} ({sig['strategy']})")
-            else:
-                logging.warning(f"[BASE44] signal_log failed: {sr.status_code} {sr.text[:100]}")
-        except Exception as e:
-            logging.warning(f"[BASE44] signal_log error for {sig['symbol']}: {e}")
-
+        "trading_pnl": trading_pnl, "total_deposited": total_deposited,
+    })
+    append_signals_history(all_signals)
+    print(f"\nRun complete — {len(all_signals)} signals | {len(orders_placed)} orders")
 
 
 if __name__ == "__main__":
     main()
-
