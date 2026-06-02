@@ -47,5 +47,17 @@
       "ARM"
     ],
     "trading_pnl": 1.34
+  },
+  {
+    "timestamp": "2026-06-02T10:15:37.672099-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 777.51,
+    "vix": 11.32,
+    "signals_count": 38,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": 2.29,
+    "total_deposited": 0.0
   }
 ]
