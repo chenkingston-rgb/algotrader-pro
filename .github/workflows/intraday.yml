@@ -1,14 +1,17 @@
-name: AlgoTrader — Intraday Strategies (manual dispatch only — v4)
-# Schedule crons removed in v4; Render WebSocket engine handles continuous execution.
-# Retain workflow_dispatch so cron-job.org can still dispatch for fallback testing.
+name: AlgoTrader — Intraday Strategies (v5 — live trading)
+# V5: Switched to live trading mode.
+# ALPACA_IS_PAPER=false hardcoded. TRADING_MODE defaults to live.
 
 on:
+  schedule:
+    # Run every 15 min 9:45 AM–3:45 PM ET (Mon–Fri).
+    - cron: '*/15 13-19 * * 1-5'
   workflow_dispatch:
     inputs:
       mode:
         description: 'Trading mode (paper or live)'
-        required: false
-        default: 'paper'
+        required: true
+        default: 'live'
 
 jobs:
   run-intraday-strategies:
@@ -39,7 +42,7 @@ jobs:
           close_t = now.replace(hour=15, minute=45, second=0, microsecond=0)
           ok = open_t <= now <= close_t
           open("market_open.txt","w").write("true" if ok else "false")
-          print(f"Intraday tradeable: {ok} at {now.strftime('%H:%M %Z')}")
+          print(f"Market tradeable: {ok} at {now.strftime('%H:%M %Z')}")
           PYEOF
           echo "TRADEABLE=$(cat market_open.txt)" >> $GITHUB_OUTPUT
 
@@ -50,8 +53,9 @@ jobs:
           ALPACA_PAPER_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
           ALPACA_LIVE_KEY:     ${{ secrets.ALPACA_LIVE_KEY }}
           ALPACA_LIVE_SECRET:  ${{ secrets.ALPACA_LIVE_SECRET }}
+          ALPACA_IS_PAPER:     "false"
           BASE44_APP_ID:       69f60c0cd56ea2902b494394
-          TRADING_MODE:        ${{ github.event.inputs.mode || 'paper' }}
+          TRADING_MODE:        ${{ github.event.inputs.mode || 'live' }}
           STRATEGY_MODE:       intraday
           GITHUB_TOKEN:        ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY:   ${{ github.repository }}
