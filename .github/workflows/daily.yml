@@ -1,9 +1,6 @@
-name: AlgoTrader — Daily Strategies (v2 — cron re-enabled)
-# V2: Restored hourly cron schedule for daily trend strategies.
-# These run ONCE per hour during market hours (not every 15-min like intraday).
-# The Render WebSocket engine handles real-time intraday execution;
-# daily strategies need end-of-bar signals from completed daily bars,
-# so GitHub Actions fetches fresh 1Day bars each hourly cycle.
+name: AlgoTrader — Daily Strategies (v3 — live trading)
+# V3: Switched to live trading mode.
+# ALPACA_IS_PAPER=false hardcoded. TRADING_MODE defaults to live.
 
 on:
   schedule:
@@ -62,8 +59,9 @@ jobs:
           ALPACA_PAPER_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
           ALPACA_LIVE_KEY:     ${{ secrets.ALPACA_LIVE_KEY }}
           ALPACA_LIVE_SECRET:  ${{ secrets.ALPACA_LIVE_SECRET }}
+          ALPACA_IS_PAPER:     "false"
           BASE44_APP_ID:       69f60c0cd56ea2902b494394
-          TRADING_MODE:        ${{ github.event.inputs.mode || 'paper' }}
+          TRADING_MODE:        ${{ github.event.inputs.mode || 'live' }}
           STRATEGY_MODE:       daily
           GITHUB_TOKEN:        ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY:   ${{ github.repository }}
