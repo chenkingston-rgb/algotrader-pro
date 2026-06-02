@@ -19,8 +19,8 @@ on:
     inputs:
       mode:
         description: 'Trading mode (paper or live)'
-        required: false
-        default: 'paper'
+        required: true
+        default: 'live'
 
 jobs:
   run-daily-strategies:
