@@ -494,5 +494,17 @@
     "symbols_traded": [],
     "trading_pnl": -0.58,
     "total_deposited": 0.0
+  },
+  {
+    "timestamp": "2026-06-03T12:30:44.000376-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 774.18,
+    "vix": 11.68,
+    "signals_count": 38,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": -0.58,
+    "total_deposited": 0.0
   }
 ]
