@@ -63,6 +63,13 @@ ATR_STOP_MULT    = 1.5     # Stop loss = entry ± 1.5 × ATR
 ATR_TP_MULT      = 3.0     # Take profit default (overridden by VWAP tp_mult)
 MAX_DRAWDOWN_PCT = 25.0    # Kill switch threshold
 
+# ── PDT GUARD ─────────────────────────────────────────────────────────────────
+# Prevents a 4th same-day round-trip when account is below the $25k PDT threshold.
+# Set PDT_GUARD_ENABLED = False (or env DISABLE_PDT_GUARD=true) once capital >= $25k.
+# TO REMOVE: delete this block and the check_pdt_limit() call in main().
+PDT_GUARD_ENABLED = os.getenv("DISABLE_PDT_GUARD", "false").lower() != "true"
+PDT_MAX_DAYTRADES = 3   # Alpaca allows 3 day-trades per rolling 5-day window (<$25k)
+
 ET = pytz.timezone("America/New_York")
 
 # ─────────────────────────────────────────────
@@ -1089,6 +1096,18 @@ def _run_streaming_strategy(
         return
 
     if signal == "buy":
+        # PDT guard — skip new entries when day-trade limit is reached
+        if PDT_GUARD_ENABLED:
+            try:
+                _pdt_ok, _pdt_count = check_pdt_limit()
+                if not _pdt_ok:
+                    logging.warning(
+                        f"[PDT_GUARD] {symbol} BUY skipped — "
+                        f"daytrade_count={_pdt_count}/{PDT_MAX_DAYTRADES}"
+                    )
+                    return
+            except Exception:
+                pass  # fail open — let the order attempt proceed
         tp_mult    = shared["tp_mult"]
         # FIX 4: Enforce a minimum stop distance of 0.20% of price.
         # 15-min ATR on low-volatility windows (e.g. GLD at market open) can
@@ -1359,6 +1378,37 @@ def detect_deposit(current_equity: float, baseline: dict) -> dict:
     return baseline
 
 
+
+# ─────────────────────────────────────────────
+# PDT GUARD — remove call in main() once capital >= $25k
+# ─────────────────────────────────────────────
+def check_pdt_limit() -> tuple[bool, int]:
+    """
+    Returns (can_daytrade: bool, daytrade_count: int).
+    Fetches live daytrade_count from Alpaca account.
+    If PDT_GUARD_ENABLED is False, always returns (True, 0) — guard is off.
+    TO REMOVE THIS GUARD: set env DISABLE_PDT_GUARD=true or flip PDT_GUARD_ENABLED above.
+    """
+    if not PDT_GUARD_ENABLED:
+        return True, 0
+    try:
+        acct  = get_account()
+        count = int(acct.get("daytrade_count", 0))
+        ok    = count < PDT_MAX_DAYTRADES
+        if not ok:
+            logging.warning(
+                f"[PDT_GUARD] daytrade_count={count}/{PDT_MAX_DAYTRADES} — "
+                f"new BUY entries blocked for today. "
+                f"Disable guard by setting DISABLE_PDT_GUARD=true once capital >= $25k."
+            )
+        else:
+            logging.info(f"[PDT_GUARD] daytrade_count={count}/{PDT_MAX_DAYTRADES} — OK to trade")
+        return ok, count
+    except Exception as e:
+        logging.warning(f"[PDT_GUARD] Could not fetch daytrade count: {e} — allowing trade")
+        return True, 0
+
+
 def main():
     run_start    = datetime.now(ET)
     print(f"\n{'='*60}")
@@ -1376,6 +1426,9 @@ def main():
     buying_power = float(account["buying_power"])
     last_equity  = float(account.get("last_equity", equity))
     print(f"Equity: ${equity:,.2f} | Buying power: ${buying_power:,.2f}")
+
+    # ── PDT guard check — remove once capital >= $25k ───────────────────────
+    pdt_ok, pdt_count = check_pdt_limit()
 
     vix = get_vix()
 
@@ -1462,10 +1515,14 @@ def main():
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
-                qty = atr_position_size(equity, price, atr, vix_mult)
-                if qty < 1:
+                # PDT guard — blocks new entries when daytrade limit reached
+                if not pdt_ok:
+                    skip_reason = f"pdt_limit_reached ({pdt_count}/{PDT_MAX_DAYTRADES} day trades used)"
+                else:
+                    qty = atr_position_size(equity, price, atr, vix_mult)
+                if pdt_ok and qty < 1:
                     skip_reason = "qty_too_small"
-                elif price * qty > buying_power * 0.95:
+                elif pdt_ok and price * qty > buying_power * 0.95:
                     skip_reason = "insufficient_buying_power"
                 else:
                     eff_atr    = max(atr, price * 0.002)
@@ -1573,6 +1630,7 @@ def main():
         "equity": round(equity, 2), "last_equity": round(last_equity, 2),
         "buying_power": round(buying_power, 2), "vix": vix,
         "drawdown_pct": round(drawdown_pct, 2),
+        "pdt_count": pdt_count, "pdt_guard_active": PDT_GUARD_ENABLED and not pdt_ok,
         "positions": list(positions.keys()),
         "position_details": position_details,
         "signals": all_signals, "orders_placed": orders_placed,
