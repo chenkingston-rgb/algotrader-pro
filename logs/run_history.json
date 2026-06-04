@@ -704,5 +704,25 @@
     ],
     "trading_pnl": -0.58,
     "total_deposited": 851.54
+  },
+  {
+    "timestamp": "2026-06-04T10:00:46.539509-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 1626.29,
+    "vix": 11.54,
+    "signals_count": 38,
+    "orders_count": 7,
+    "symbols_traded": [
+      "WFC",
+      "XLF",
+      "XLV",
+      "IWM",
+      "NOW",
+      "ORCL",
+      "RKLB"
+    ],
+    "trading_pnl": -0.01,
+    "total_deposited": 851.54
   }
 ]
