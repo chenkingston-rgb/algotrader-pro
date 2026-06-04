@@ -46,5 +46,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-04T11:00:48.468232-04:00",
     "entry_price": 300.29
+  },
+  "RKLB": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-04T11:00:48.468232-04:00",
+    "entry_price": 117.38
   }
 }
