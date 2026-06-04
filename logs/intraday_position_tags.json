@@ -11,12 +11,6 @@
     "entry_time": "2026-06-04T10:00:46.539509-04:00",
     "entry_price": 122.9
   },
-  "IWM": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-04T10:00:46.539509-04:00",
-    "entry_price": 289.1
-  },
   "ORCL": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
