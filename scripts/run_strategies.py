@@ -16,7 +16,7 @@ Environment variables (GitHub Secrets):
   ALPACA_LIVE_KEY  / ALPACA_LIVE_SECRET
   ALPACA_IS_PAPER  (true | false, default: true)
   BASE44_APP_ID    (optional)
-  TRADING_MODE     (paper | live, default: paper)
+  ALPACA_IS_PAPER  ("true" | "false") — sole source of truth for paper/live mode
   STRATEGY_FILTER  (optional: run only one strategy by name)
   STRATEGY_MODE    (daily | intraday, set by workflow)
   GITHUB_TOKEN     (auto-injected by GitHub Actions)
@@ -37,7 +37,10 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 # CONFIG
 # ─────────────────────────────────────────────
 IS_PAPER        = os.environ.get("ALPACA_IS_PAPER", "true").lower() == "true"
-MODE            = os.getenv("TRADING_MODE", "live").lower()
+# MODE derives from IS_PAPER — always matches the actual broker in use.
+# Previously set from TRADING_MODE env var, which could diverge from IS_PAPER
+# and cause misleading "mode=paper" log entries during live runs.
+MODE            = "paper" if IS_PAPER else "live"
 STRATEGY_FILTER = os.getenv("STRATEGY_FILTER", "").strip()
 STRATEGY_MODE   = os.getenv("STRATEGY_MODE", "daily").lower()
 BASE44_APP_ID   = os.getenv("BASE44_APP_ID", "69f60c0cd56ea2902b494394")
