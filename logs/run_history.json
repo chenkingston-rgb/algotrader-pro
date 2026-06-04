@@ -978,5 +978,19 @@
     "symbols_traded": [],
     "trading_pnl": 22.91,
     "total_deposited": 851.54
+  },
+  {
+    "timestamp": "2026-06-04T14:00:44.451732-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 1651.58,
+    "vix": 11.51,
+    "signals_count": 40,
+    "orders_count": 1,
+    "symbols_traded": [
+      "RKLB"
+    ],
+    "trading_pnl": 25.28,
+    "total_deposited": 851.54
   }
 ]
