@@ -70,6 +70,12 @@ MAX_DRAWDOWN_PCT = 25.0    # Kill switch threshold
 PDT_GUARD_ENABLED = os.getenv("DISABLE_PDT_GUARD", "false").lower() != "true"
 PDT_MAX_DAYTRADES = 3   # Alpaca allows 3 day-trades per rolling 5-day window (<$25k)
 
+# ── KILL SWITCH ───────────────────────────────────────────────────────────────
+# Set once per run in main() after computing trailing drawdown.
+# Streaming strategies read this module-level flag to block new buys.
+# TO DISABLE: set MAX_DRAWDOWN_PCT higher (e.g. 50.0) or env DISABLE_KILL_SWITCH=true.
+_kill_switch_active: bool = False
+
 ET = pytz.timezone("America/New_York")
 
 # ─────────────────────────────────────────────
@@ -1096,6 +1102,13 @@ def _run_streaming_strategy(
         return
 
     if signal == "buy":
+        # Kill switch — block all new entries when trailing drawdown >= threshold
+        if _kill_switch_active:
+            logging.warning(
+                f"[KILL_SWITCH] {symbol} BUY skipped — "
+                f"drawdown >= {MAX_DRAWDOWN_PCT}% threshold"
+            )
+            return
         # PDT guard — skip new entries when day-trade limit is reached
         if PDT_GUARD_ENABLED:
             try:
@@ -1374,6 +1387,16 @@ def detect_deposit(current_equity: float, baseline: dict) -> dict:
         )
 
     baseline["last_known_equity"] = round(current_equity, 2)
+
+    # Trailing high-watermark — peak_equity only moves up, never down.
+    # The 25% kill switch is always measured from this rolling peak.
+    prev_peak = baseline.get("peak_equity", baseline.get("start_equity", current_equity))
+    if current_equity > prev_peak:
+        baseline["peak_equity"] = round(current_equity, 2)
+        print(f"  [WATERMARK] New peak equity: ${current_equity:,.2f}")
+    else:
+        baseline["peak_equity"] = round(prev_peak, 2)
+
     write_github_log(LIVE_BASELINE_FILE, baseline)
     return baseline
 
@@ -1442,8 +1465,28 @@ def main():
         live_baseline = load_json_from_github(LIVE_BASELINE_FILE)
         live_baseline = detect_deposit(equity, live_baseline)
 
-    peak_equity  = equity
-    drawdown_pct = 0.0
+    # ── Trailing drawdown (live) / per-run reset (paper) ────────────────────
+    # Live: peak_equity persisted in live_baseline.json — survives across runs.
+    # Paper: resets to current equity each run (paper mode has no persisted state).
+    global _kill_switch_active
+    if not IS_PAPER and live_baseline:
+        peak_equity  = float(live_baseline.get("peak_equity",
+                             live_baseline.get("start_equity", equity)))
+    else:
+        peak_equity  = equity  # paper mode: no trailing watermark
+    drawdown_pct = ((peak_equity - equity) / peak_equity * 100) if peak_equity > 0 else 0.0
+    _kill_switch_active = (
+        os.getenv("DISABLE_KILL_SWITCH", "false").lower() != "true"
+        and drawdown_pct >= MAX_DRAWDOWN_PCT
+    )
+    if _kill_switch_active:
+        print(f"[KILL_SWITCH] ⚠️  Drawdown {drawdown_pct:.2f}% >= {MAX_DRAWDOWN_PCT}% threshold. "
+              f"Peak=${peak_equity:,.2f}  Current=${equity:,.2f}. "
+              f"All new BUY entries blocked. Existing stops remain active.")
+    else:
+        print(f"[DRAWDOWN] {drawdown_pct:.2f}% from peak ${peak_equity:,.2f} "
+              f"(threshold: {MAX_DRAWDOWN_PCT}%)")
+
     all_signals   = []
     orders_placed = []
     sold_this_run = set()
@@ -1515,14 +1558,18 @@ def main():
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
+                # Kill switch — block all new entries when trailing drawdown >= threshold
+                if _kill_switch_active:
+                    skip_reason = (f"kill_switch_active "
+                                   f"(drawdown {drawdown_pct:.2f}% >= {MAX_DRAWDOWN_PCT}%)")
                 # PDT guard — blocks new entries when daytrade limit reached
-                if not pdt_ok:
+                elif not pdt_ok:
                     skip_reason = f"pdt_limit_reached ({pdt_count}/{PDT_MAX_DAYTRADES} day trades used)"
                 else:
                     qty = atr_position_size(equity, price, atr, vix_mult)
-                if pdt_ok and qty < 1:
+                if not skip_reason and qty < 1:
                     skip_reason = "qty_too_small"
-                elif pdt_ok and price * qty > buying_power * 0.95:
+                elif not skip_reason and price * qty > buying_power * 0.95:
                     skip_reason = "insufficient_buying_power"
                 else:
                     eff_atr    = max(atr, price * 0.002)
@@ -1630,6 +1677,8 @@ def main():
         "equity": round(equity, 2), "last_equity": round(last_equity, 2),
         "buying_power": round(buying_power, 2), "vix": vix,
         "drawdown_pct": round(drawdown_pct, 2),
+        "peak_equity": round(peak_equity, 2),
+        "kill_switch_active": _kill_switch_active,
         "pdt_count": pdt_count, "pdt_guard_active": PDT_GUARD_ENABLED and not pdt_ok,
         "positions": list(positions.keys()),
         "position_details": position_details,
