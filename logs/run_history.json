@@ -790,5 +790,20 @@
     ],
     "trading_pnl": 3.15,
     "total_deposited": 851.54
+  },
+  {
+    "timestamp": "2026-06-04T11:15:36.203789-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 1640.27,
+    "vix": 11.46,
+    "signals_count": 38,
+    "orders_count": 2,
+    "symbols_traded": [
+      "IWM",
+      "MRVL"
+    ],
+    "trading_pnl": 13.97,
+    "total_deposited": 851.54
   }
 ]
