@@ -835,5 +835,20 @@
     ],
     "trading_pnl": 8.35,
     "total_deposited": 851.54
+  },
+  {
+    "timestamp": "2026-06-04T12:00:45.440491-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 1632.55,
+    "vix": 11.46,
+    "signals_count": 38,
+    "orders_count": 2,
+    "symbols_traded": [
+      "XLE",
+      "INTC"
+    ],
+    "trading_pnl": 6.25,
+    "total_deposited": 851.54
   }
 ]
