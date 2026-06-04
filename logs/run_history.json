@@ -742,5 +742,20 @@
     ],
     "trading_pnl": 3.46,
     "total_deposited": 851.54
+  },
+  {
+    "timestamp": "2026-06-04T10:30:43.013025-04:00",
+    "mode": "paper",
+    "strategy_mode": "intraday",
+    "equity": 1631.58,
+    "vix": 11.5,
+    "signals_count": 38,
+    "orders_count": 2,
+    "symbols_traded": [
+      "SNOW",
+      "IWM"
+    ],
+    "trading_pnl": 5.28,
+    "total_deposited": 851.54
   }
 ]
