@@ -66,12 +66,7 @@ ATR_STOP_MULT    = 1.5     # Stop loss = entry ± 1.5 × ATR
 ATR_TP_MULT      = 3.0     # Take profit default (overridden by VWAP tp_mult)
 MAX_DRAWDOWN_PCT = 25.0    # Kill switch threshold
 
-# ── PDT GUARD ─────────────────────────────────────────────────────────────────
-# Prevents a 4th same-day round-trip when account is below the $25k PDT threshold.
-# Set PDT_GUARD_ENABLED = False (or env DISABLE_PDT_GUARD=true) once capital >= $25k.
-# TO REMOVE: delete this block and the check_pdt_limit() call in main().
-PDT_GUARD_ENABLED = os.getenv("DISABLE_PDT_GUARD", "false").lower() != "true"
-PDT_MAX_DAYTRADES = 3   # Alpaca allows 3 day-trades per rolling 5-day window (<$25k)
+# ── PDT GUARD retired 2026-06-05 — FINRA rule removed, buying_power is now sole constraint
 
 # ── KILL SWITCH ───────────────────────────────────────────────────────────────
 # Set once per run in main() after computing trailing drawdown.
@@ -1112,18 +1107,7 @@ def _run_streaming_strategy(
                 f"drawdown >= {MAX_DRAWDOWN_PCT}% threshold"
             )
             return
-        # PDT guard — skip new entries when day-trade limit is reached
-        if PDT_GUARD_ENABLED:
-            try:
-                _pdt_ok, _pdt_count = check_pdt_limit()
-                if not _pdt_ok:
-                    logging.warning(
-                        f"[PDT_GUARD] {symbol} BUY skipped — "
-                        f"daytrade_count={_pdt_count}/{PDT_MAX_DAYTRADES}"
-                    )
-                    return
-            except Exception:
-                pass  # fail open — let the order attempt proceed
+        # PDT guard retired Jun 2026 — buying_power is the sole entry constraint
         tp_mult    = shared["tp_mult"]
         # FIX 4: Enforce a minimum stop distance of 0.20% of price.
         # 15-min ATR on low-volatility windows (e.g. GLD at market open) can
@@ -1405,34 +1389,11 @@ def detect_deposit(current_equity: float, baseline: dict) -> dict:
 
 
 
-# ─────────────────────────────────────────────
-# PDT GUARD — remove call in main() once capital >= $25k
-# ─────────────────────────────────────────────
+# check_pdt_limit() — retired 2026-06-05 (FINRA PDT rule removed)
+# Stub retained for call-site compat. Safe to delete along with its callers.
 def check_pdt_limit() -> tuple[bool, int]:
-    """
-    Returns (can_daytrade: bool, daytrade_count: int).
-    Fetches live daytrade_count from Alpaca account.
-    If PDT_GUARD_ENABLED is False, always returns (True, 0) — guard is off.
-    TO REMOVE THIS GUARD: set env DISABLE_PDT_GUARD=true or flip PDT_GUARD_ENABLED above.
-    """
-    if not PDT_GUARD_ENABLED:
-        return True, 0
-    try:
-        acct  = get_account()
-        count = int(acct.get("daytrade_count", 0))
-        ok    = count < PDT_MAX_DAYTRADES
-        if not ok:
-            logging.warning(
-                f"[PDT_GUARD] daytrade_count={count}/{PDT_MAX_DAYTRADES} — "
-                f"new BUY entries blocked for today. "
-                f"Disable guard by setting DISABLE_PDT_GUARD=true once capital >= $25k."
-            )
-        else:
-            logging.info(f"[PDT_GUARD] daytrade_count={count}/{PDT_MAX_DAYTRADES} — OK to trade")
-        return ok, count
-    except Exception as e:
-        logging.warning(f"[PDT_GUARD] Could not fetch daytrade count: {e} — allowing trade")
-        return True, 0
+    """Retired stub — always returns (True, 0). PDT rule no longer applies."""
+    return True, 0
 
 
 def main():
@@ -1453,8 +1414,8 @@ def main():
     last_equity  = float(account.get("last_equity", equity))
     print(f"Equity: ${equity:,.2f} | Buying power: ${buying_power:,.2f}")
 
-    # ── PDT guard check — remove once capital >= $25k ───────────────────────
-    pdt_ok, pdt_count = check_pdt_limit()
+    # ── PDT guard retired 2026-06-05 ────────────────────────────────────────
+    pdt_ok, pdt_count = True, 0   # stubs; safe to remove with check_pdt_limit()
 
     vix = get_vix()
 
@@ -1565,9 +1526,6 @@ def main():
                 if _kill_switch_active:
                     skip_reason = (f"kill_switch_active "
                                    f"(drawdown {drawdown_pct:.2f}% >= {MAX_DRAWDOWN_PCT}%)")
-                # PDT guard — blocks new entries when daytrade limit reached
-                elif not pdt_ok:
-                    skip_reason = f"pdt_limit_reached ({pdt_count}/{PDT_MAX_DAYTRADES} day trades used)"
                 else:
                     qty = atr_position_size(equity, price, atr, vix_mult)
                 if not skip_reason and qty < 1:
@@ -1682,7 +1640,7 @@ def main():
         "drawdown_pct": round(drawdown_pct, 2),
         "peak_equity": round(peak_equity, 2),
         "kill_switch_active": _kill_switch_active,
-        "pdt_count": pdt_count, "pdt_guard_active": PDT_GUARD_ENABLED and not pdt_ok,
+        # pdt_count / pdt_guard_active retired Jun 2026 (FINRA PDT rule removed)
         "positions": list(positions.keys()),
         "position_details": position_details,
         "signals": all_signals, "orders_placed": orders_placed,
