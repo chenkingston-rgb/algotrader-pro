@@ -16,11 +16,5 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-04T10:15:35.172751-04:00",
     "entry_price": 52.05
-  },
-  "SNOW": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-04T10:15:35.172751-04:00",
-    "entry_price": 246.47
   }
 }
