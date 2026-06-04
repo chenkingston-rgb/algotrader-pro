@@ -1096,5 +1096,26 @@
     "symbols_traded": [],
     "trading_pnl": 28.74,
     "total_deposited": 851.54
+  },
+  {
+    "timestamp": "2026-06-04T15:30:38.604378-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 1659.82,
+    "vix": 11.54,
+    "signals_count": 48,
+    "orders_count": 8,
+    "symbols_traded": [
+      "XLF",
+      "RKLB",
+      "XLE",
+      "INTC",
+      "IWM",
+      "MRVL",
+      "XLK",
+      "PANW"
+    ],
+    "trading_pnl": 33.52,
+    "total_deposited": 851.54
   }
 ]
