@@ -35,12 +35,6 @@
     "entry_time": "2026-06-04T14:00:44.451732-04:00",
     "entry_price": 122.41
   },
-  "WFC": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-04T11:30:37.177503-04:00",
-    "entry_price": 81.72
-  },
   "XLE": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
