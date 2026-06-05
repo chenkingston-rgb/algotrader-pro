@@ -1259,5 +1259,19 @@
     "symbols_traded": [],
     "trading_pnl": 32.45,
     "total_deposited": 851.54
+  },
+  {
+    "timestamp": "2026-06-05T12:00:45.001129-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 1658.97,
+    "vix": 12.1,
+    "signals_count": 38,
+    "orders_count": 1,
+    "symbols_traded": [
+      "PANW"
+    ],
+    "trading_pnl": 32.67,
+    "total_deposited": 851.54
   }
 ]
