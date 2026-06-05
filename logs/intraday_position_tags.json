@@ -10,11 +10,5 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-05T12:00:45.001129-04:00",
     "entry_price": 276.82
-  },
-  "XLV": {
-    "strategy": "bollinger_bands_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-05T15:00:42.842264-04:00",
-    "entry_price": 153.37
   }
 }
