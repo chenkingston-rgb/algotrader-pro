@@ -11,12 +11,6 @@
     "entry_time": "2026-06-05T10:45:28.275290-04:00",
     "entry_price": 154.18
   },
-  "XLF": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-05T11:15:29.854177-04:00",
-    "entry_price": 52.44
-  },
   "PANW": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
