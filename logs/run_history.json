@@ -1573,5 +1573,21 @@
     ],
     "trading_pnl": 22.28,
     "total_deposited": 851.54
+  },
+  {
+    "timestamp": "2026-06-08T10:15:34.744652-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 1652.3,
+    "vix": 15.52,
+    "signals_count": 38,
+    "orders_count": 3,
+    "symbols_traded": [
+      "XLK",
+      "INTC",
+      "IONQ"
+    ],
+    "trading_pnl": 26.0,
+    "total_deposited": 851.54
   }
 ]
