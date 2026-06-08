@@ -8,8 +8,8 @@
   "GLD": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
-    "entry_time": "2026-06-08T09:45:35.180992-04:00",
-    "entry_price": 397.94
+    "entry_time": "2026-06-08T12:30:39.393872-04:00",
+    "entry_price": 398.49
   },
   "IWM": {
     "strategy": "momentum_roc_15m",
