@@ -17,12 +17,6 @@
     "entry_time": "2026-06-08T10:00:46.252243-04:00",
     "entry_price": 58.93
   },
-  "NOW": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-08T10:00:46.252243-04:00",
-    "entry_price": 114.33
-  },
   "IONQ": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
