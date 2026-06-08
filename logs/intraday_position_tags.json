@@ -46,5 +46,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-08T14:30:34.485139-04:00",
     "entry_price": 492.2
+  },
+  "MU": {
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-08T15:07:44.692410-04:00",
+    "entry_price": 936.39
   }
 }
