@@ -28,5 +28,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-08T10:00:46.252243-04:00",
     "entry_price": 284.16
+  },
+  "XLE": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-08T10:00:46.252243-04:00",
+    "entry_price": 58.93
   }
 }
