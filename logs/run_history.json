@@ -1910,5 +1910,25 @@
     ],
     "trading_pnl": -70.51,
     "total_deposited": 23889.96
+  },
+  {
+    "timestamp": "2026-06-08T15:15:31.582819-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 24526.5,
+    "vix": 15.39,
+    "signals_count": 40,
+    "orders_count": 7,
+    "symbols_traded": [
+      "QQQ",
+      "MRVL",
+      "MU",
+      "GLD",
+      "QQQ",
+      "MRVL",
+      "MU"
+    ],
+    "trading_pnl": -138.22,
+    "total_deposited": 23889.96
   }
 ]
