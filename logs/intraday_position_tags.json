@@ -70,5 +70,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-08T11:45:36.394999-04:00",
     "entry_price": 294.27
+  },
+  "AMD": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-08T11:45:36.394999-04:00",
+    "entry_price": 492.18
   }
 }
