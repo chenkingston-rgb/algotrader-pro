@@ -1656,5 +1656,22 @@
     ],
     "trading_pnl": 46.7,
     "total_deposited": 851.54
+  },
+  {
+    "timestamp": "2026-06-08T11:45:36.394999-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 24711.42,
+    "vix": 15.72,
+    "signals_count": 38,
+    "orders_count": 4,
+    "symbols_traded": [
+      "ORCL",
+      "TXN",
+      "AMD",
+      "MU"
+    ],
+    "trading_pnl": 46.7,
+    "total_deposited": 23889.96
   }
 ]
