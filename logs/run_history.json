@@ -1766,5 +1766,19 @@
     ],
     "trading_pnl": -27.49,
     "total_deposited": 23889.96
+  },
+  {
+    "timestamp": "2026-06-08T13:25:47.749143-04:00",
+    "mode": "live",
+    "strategy_mode": "daily",
+    "equity": 24653.86,
+    "vix": 15.44,
+    "signals_count": 124,
+    "orders_count": 1,
+    "symbols_traded": [
+      "MU"
+    ],
+    "trading_pnl": -10.86,
+    "total_deposited": 23889.96
   }
 ]
