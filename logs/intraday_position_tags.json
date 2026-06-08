@@ -82,5 +82,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-08T11:45:36.394999-04:00",
     "entry_price": 958.93
+  },
+  "SMCI": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-08T12:15:38.279850-04:00",
+    "entry_price": 43.45
   }
 }
