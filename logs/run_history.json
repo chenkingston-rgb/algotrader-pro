@@ -1944,5 +1944,24 @@
     ],
     "trading_pnl": -143.94,
     "total_deposited": 23889.96
+  },
+  {
+    "timestamp": "2026-06-08T15:30:35.954567-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 24533.18,
+    "vix": 15.39,
+    "signals_count": 42,
+    "orders_count": 6,
+    "symbols_traded": [
+      "XLE",
+      "SMCI",
+      "MRVL",
+      "SMH",
+      "MU",
+      "SMH"
+    ],
+    "trading_pnl": -131.54,
+    "total_deposited": 23889.96
   }
 ]
