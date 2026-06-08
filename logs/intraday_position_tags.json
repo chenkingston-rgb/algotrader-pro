@@ -34,11 +34,5 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-08T12:15:38.279850-04:00",
     "entry_price": 43.45
-  },
-  "SMH": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-08T12:30:39.393872-04:00",
-    "entry_price": 601.12
   }
 }
