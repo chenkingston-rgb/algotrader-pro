@@ -1685,5 +1685,20 @@
     "symbols_traded": [],
     "trading_pnl": -4.54,
     "total_deposited": 23889.96
+  },
+  {
+    "timestamp": "2026-06-08T12:15:38.279850-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 24694.44,
+    "vix": 15.65,
+    "signals_count": 38,
+    "orders_count": 2,
+    "symbols_traded": [
+      "QQQ",
+      "SMCI"
+    ],
+    "trading_pnl": 29.72,
+    "total_deposited": 23889.96
   }
 ]
