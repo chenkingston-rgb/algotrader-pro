@@ -41,12 +41,6 @@
     "entry_time": "2026-06-08T14:30:34.485139-04:00",
     "entry_price": 492.2
   },
-  "QQQ": {
-    "strategy": "bollinger_bands_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-08T15:15:31.582819-04:00",
-    "entry_price": 715.42
-  },
   "MRVL": {
     "strategy": "bollinger_bands_15m",
     "strategy_type": "intraday",
