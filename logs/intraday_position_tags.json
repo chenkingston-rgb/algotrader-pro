@@ -14,8 +14,8 @@
   "IONQ": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
-    "entry_time": "2026-06-08T10:15:34.744652-04:00",
-    "entry_price": 60.7
+    "entry_time": "2026-06-08T14:15:32.055643-04:00",
+    "entry_price": 64.74
   },
   "XLI": {
     "strategy": "momentum_roc_15m",
