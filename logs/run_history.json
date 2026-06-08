@@ -1780,5 +1780,20 @@
     ],
     "trading_pnl": -10.86,
     "total_deposited": 23889.96
+  },
+  {
+    "timestamp": "2026-06-08T13:30:36.021251-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 24715.49,
+    "vix": 15.55,
+    "signals_count": 42,
+    "orders_count": 2,
+    "symbols_traded": [
+      "ORCL",
+      "XLK"
+    ],
+    "trading_pnl": 50.77,
+    "total_deposited": 23889.96
   }
 ]
