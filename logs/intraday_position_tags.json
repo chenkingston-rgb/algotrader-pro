@@ -1,10 +1,4 @@
 {
-  "QQQ": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-08T12:15:38.279850-04:00",
-    "entry_price": 720.35
-  },
   "GLD": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
