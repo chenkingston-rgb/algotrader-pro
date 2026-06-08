@@ -1867,5 +1867,21 @@
     ],
     "trading_pnl": 7.13,
     "total_deposited": 23889.96
+  },
+  {
+    "timestamp": "2026-06-08T14:30:34.485139-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 24673.57,
+    "vix": 15.55,
+    "signals_count": 40,
+    "orders_count": 3,
+    "symbols_traded": [
+      "INTC",
+      "XLY",
+      "AMD"
+    ],
+    "trading_pnl": 8.85,
+    "total_deposited": 23889.96
   }
 ]
