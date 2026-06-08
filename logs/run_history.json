@@ -1839,5 +1839,19 @@
     "symbols_traded": [],
     "trading_pnl": 15.76,
     "total_deposited": 23889.96
+  },
+  {
+    "timestamp": "2026-06-08T14:15:32.055643-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 24688.48,
+    "vix": 15.49,
+    "signals_count": 40,
+    "orders_count": 1,
+    "symbols_traded": [
+      "IONQ"
+    ],
+    "trading_pnl": 23.76,
+    "total_deposited": 23889.96
   }
 ]
