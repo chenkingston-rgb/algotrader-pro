@@ -1700,5 +1700,20 @@
     ],
     "trading_pnl": 29.72,
     "total_deposited": 23889.96
+  },
+  {
+    "timestamp": "2026-06-08T12:30:39.393872-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 24661.07,
+    "vix": 15.57,
+    "signals_count": 38,
+    "orders_count": 2,
+    "symbols_traded": [
+      "GLD",
+      "SMH"
+    ],
+    "trading_pnl": -3.65,
+    "total_deposited": 23889.96
   }
 ]
