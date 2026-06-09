@@ -73,6 +73,7 @@ MAX_DRAWDOWN_PCT = 25.0    # Kill switch threshold
 # Streaming strategies read this module-level flag to block new buys.
 # TO DISABLE: set MAX_DRAWDOWN_PCT higher (e.g. 50.0) or env DISABLE_KILL_SWITCH=true.
 _kill_switch_active: bool = False
+_ma20_bear_block:   bool = False   # True when SPY < 20-day MA — blocks new BUY entries (v7.1)
 
 ET = pytz.timezone("America/New_York")
 
@@ -351,6 +352,44 @@ def get_vix() -> Optional[float]:
     except Exception as e:
         print(f"  [WARN] Could not estimate VIX: {e}")
         return None
+
+# ── SPY MA20 REGIME FILTER ────────────────────────────────────────────────────
+# Added v7.1 (2026-06-09): blocks ALL new BUY entries when SPY is below its
+# 20-day moving average — indicating a broad market downtrend.
+#
+# This is the primary market regime gate. It fires before VIX checks.
+# Logic: if SPY's latest daily close < mean of last 20 daily closes → BEAR.
+#
+# To disable for testing: set env DISABLE_MA20_FILTER=true
+#
+# Returns: (is_bull: bool, spy_close: float, ma20: float)
+def get_spy_ma20_regime() -> tuple:
+    """
+    Returns (is_bull, spy_close, ma20).
+    is_bull = True  → SPY above 20-day MA, entries permitted.
+    is_bull = False → SPY below 20-day MA, all new BUY entries blocked.
+    Falls back to True (permissive) if data unavailable — never silently halts.
+    """
+    if os.getenv("DISABLE_MA20_FILTER", "false").lower() == "true":
+        return True, 0.0, 0.0
+    try:
+        df = get_bars("SPY", timeframe="1Day", bar_days=40)
+        if df.empty or len(df) < 20:
+            logging.warning("[MA20] Insufficient SPY bars — skipping regime filter")
+            return True, 0.0, 0.0
+        spy_close = float(df["close"].iloc[-1])
+        ma20      = float(df["close"].iloc[-20:].mean())
+        is_bull   = spy_close >= ma20
+        gap_pct   = (spy_close - ma20) / ma20 * 100
+        label     = "BULL" if is_bull else "BEAR"
+        print(f"  [MA20_REGIME] SPY close=${spy_close:.2f}  MA20=${ma20:.2f}  "
+              f"gap={gap_pct:+.2f}%  → {label}")
+        return is_bull, spy_close, ma20
+    except Exception as e:
+        logging.warning(f"[MA20] Regime check failed: {e} — defaulting to BULL (permissive)")
+        return True, 0.0, 0.0
+
+
 
 def get_positions() -> dict:
     r = requests.get(f"{ALPACA_BASE}/v2/positions", headers=alpaca_headers(), timeout=10)
@@ -1419,6 +1458,16 @@ def main():
 
     vix = get_vix()
 
+    # ── SPY MA20 REGIME GATE (v7.1) ─────────────────────────────────────────
+    # Core rule: if SPY is below its 20-day moving average the broad market is
+    # in a downtrend. New BUY entries have negative expectancy in this regime.
+    # We block ALL new buys. Existing positions keep their stops and can still sell.
+    spy_is_bull, spy_close_now, spy_ma20_now = get_spy_ma20_regime()
+    _ma20_bear_block = not spy_is_bull
+    if _ma20_bear_block:
+        print(f"[MA20_REGIME] ⚠️  BEAR MARKET — SPY ${spy_close_now:.2f} < MA20 ${spy_ma20_now:.2f}. "
+              f"All new BUY entries blocked. Sells/stops still active.")
+    
     # Fresh positions on every loop start (Rule: never stale)
     positions     = get_positions()
     position_tags = load_json_from_github(EOD_TAG_FILE)
@@ -1432,7 +1481,7 @@ def main():
     # ── Trailing drawdown (live) / per-run reset (paper) ────────────────────
     # Live: peak_equity persisted in live_baseline.json — survives across runs.
     # Paper: resets to current equity each run (paper mode has no persisted state).
-    global _kill_switch_active
+    global _kill_switch_active, _ma20_bear_block
     if not IS_PAPER and live_baseline:
         peak_equity  = float(live_baseline.get("peak_equity",
                              live_baseline.get("start_equity", equity)))
@@ -1526,6 +1575,10 @@ def main():
                 if _kill_switch_active:
                     skip_reason = (f"kill_switch_active "
                                    f"(drawdown {drawdown_pct:.2f}% >= {MAX_DRAWDOWN_PCT}%)")
+                # MA20 regime gate — block new buys when SPY is below 20-day MA (v7.1)
+                elif _ma20_bear_block:
+                    skip_reason = (f"ma20_bear_block "
+                                   f"(SPY {spy_close_now:.2f} < MA20 {spy_ma20_now:.2f})")
                 else:
                     qty = atr_position_size(equity, price, atr, vix_mult)
                 if not skip_reason and qty < 1:
