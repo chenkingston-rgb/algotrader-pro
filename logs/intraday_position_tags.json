@@ -1,10 +1,4 @@
 {
-  "MRVL": {
-    "strategy": "bollinger_bands_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-08T15:30:35.954567-04:00",
-    "entry_price": 293.09
-  },
   "MU": {
     "strategy": "bollinger_bands_15m",
     "strategy_type": "intraday",
