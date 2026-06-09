@@ -1,8 +1,8 @@
 {
   "start_equity": 776.15,
-  "last_known_equity": 28409.89,
+  "last_known_equity": 28448.78,
   "total_deposited": 27768.78,
-  "total_trading_pnl": -133.65,
+  "total_trading_pnl": -94.76,
   "deposits": [
     {
       "timestamp": "2026-06-04T09:45:33.443259-04:00",
@@ -25,5 +25,5 @@
   ],
   "initialized_at": "2026-06-02T08:25:44.778442-04:00",
   "_note": "Deposits: equity jump >$500 AND >1% in one engine cycle = cash deposit, not trading P&L",
-  "peak_equity": 28412.0
+  "peak_equity": 28448.78
 }
