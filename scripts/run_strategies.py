@@ -1436,6 +1436,7 @@ def check_pdt_limit() -> tuple[bool, int]:
 
 
 def main():
+    global _kill_switch_active, _ma20_bear_block
     run_start    = datetime.now(ET)
     print(f"\n{'='*60}")
     print(f"AlgoTrader Pro v7 — {run_start.strftime('%Y-%m-%d %H:%M %Z')} "
@@ -1481,7 +1482,6 @@ def main():
     # ── Trailing drawdown (live) / per-run reset (paper) ────────────────────
     # Live: peak_equity persisted in live_baseline.json — survives across runs.
     # Paper: resets to current equity each run (paper mode has no persisted state).
-    global _kill_switch_active, _ma20_bear_block
     if not IS_PAPER and live_baseline:
         peak_equity  = float(live_baseline.get("peak_equity",
                              live_baseline.get("start_equity", equity)))
