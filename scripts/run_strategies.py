@@ -42,7 +42,7 @@ IS_PAPER        = os.environ.get("ALPACA_IS_PAPER", "true").lower() == "true"
 # and cause misleading "mode=paper" log entries during live runs.
 MODE            = "paper" if IS_PAPER else "live"
 STRATEGY_FILTER = os.getenv("STRATEGY_FILTER", "").strip()
-STRATEGY_MODE   = os.getenv("STRATEGY_MODE", "daily").lower()
+STRATEGY_MODE   = os.getenv("STRATEGY_MODE", "intraday").lower()  # FIX-6: was "daily" default — Render now defaults to intraday
 BASE44_APP_ID   = os.getenv("BASE44_APP_ID", "69f60c0cd56ea2902b494394")
 
 GITHUB_TOKEN      = os.getenv("GITHUB_TOKEN", "")
@@ -344,10 +344,12 @@ def get_vix() -> Optional[float]:
         df = get_bars("SPY", timeframe="1Day", bar_days=60)
         if len(df) < 22:
             return None
-        log_returns = np.log(df["close"] / df["close"].shift(1)).dropna()
-        realized_vol = log_returns.rolling(21).std().iloc[-1] * math.sqrt(252) * 100
-        vix_est = round(realized_vol * 1.2, 2)
-        print(f"  VIX estimate (SPY 21d realized vol × 1.2): {vix_est:.1f}")
+        log_returns  = np.log(df["close"] / df["close"].shift(1)).dropna()
+        # FIX-4 (v7.2): shortened window 21d→10d for faster geopolitical spike response.
+        # 10-day realized vol reacts ~2× faster to sudden fear events vs 21-day.
+        realized_vol = log_returns.rolling(10).std().iloc[-1] * math.sqrt(252) * 100
+        vix_est      = round(realized_vol * 1.2, 2)
+        print(f"  VIX estimate (SPY 10d realized vol × 1.2): {vix_est:.1f}")
         return vix_est
     except Exception as e:
         print(f"  [WARN] Could not estimate VIX: {e}")
@@ -403,7 +405,7 @@ def place_order(symbol: str, qty: int, side: str,
         "qty":           str(qty),
         "side":          side,
         "type":          "market",
-        "time_in_force": "day",
+        "time_in_force": "gtc",   # FIX-2a: was "day" — stops now persist overnight
         "order_class":   "bracket",
         "stop_loss":     {"stop_price": str(round(stop_price, 2))},
         "take_profit":   {"limit_price": str(round(take_profit, 2))},
@@ -572,21 +574,43 @@ def signal_bollinger_bands_15m(df: pd.DataFrame, p: dict) -> tuple:
     return "hold", inds
 
 def signal_momentum_roc_15m(df: pd.DataFrame, p: dict) -> tuple:
-    c = df["close"]
+    c   = df["close"]
+    vol = df["volume"] if "volume" in df.columns else None
     roc = (c / c.shift(p["roc_period"]) - 1) * 100
     r, prev_r = roc.iloc[-1], roc.iloc[-2]
-    inds = {"roc": round(r,3), "roc_prev": round(prev_r,3), "threshold": p["roc_threshold"]}
-    # FIX 3: Changed from zero-crossing to sustained-momentum logic.
-    # Old: required prev_r to be BELOW threshold (zero-crossing). On volatile watchlist
-    #      names (RKLB, IONQ, AMD) ROC stays above threshold across bars — crossing was
-    #      never re-triggered, missing the best continuation entries.
-    # New: fire buy if ROC currently above threshold AND was accelerating (r > prev_r).
-    #      This catches sustained momentum moves, not just the initial cross.
-    #      Sell fires if ROC is below negative threshold AND decelerating (r < prev_r).
-    if r > p["roc_threshold"] and r > prev_r:
+
+    # FIX-A (v7.2): MA50 trend filter — only buy when price is above the 50-bar MA.
+    # Prevents entering long positions in a downtrend (rulebook STRATEGY_RULEBOOK FIX-A).
+    ma50 = float(c.iloc[-50:].mean()) if len(c) >= 50 else None
+
+    # FIX-B (v7.2): Volume confirmation — require current bar volume > 1.2× 20-bar avg.
+    # Filters out low-participation momentum signals on IEX thin data (rulebook FIX-B).
+    vol_ok = True
+    vol_ratio = None
+    if vol is not None and len(vol) >= 20:
+        avg_vol   = float(vol.iloc[-20:].mean())
+        cur_vol   = float(vol.iloc[-1])
+        vol_ratio = round(cur_vol / avg_vol, 2) if avg_vol > 0 else None
+        vol_ok    = (vol_ratio is not None and vol_ratio >= 1.2)
+
+    inds = {
+        "roc":       round(r, 3),
+        "roc_prev":  round(prev_r, 3),
+        "threshold": p["roc_threshold"],
+        "ma50":      round(ma50, 2) if ma50 else None,
+        "price_vs_ma50": round((c.iloc[-1] - ma50) / ma50 * 100, 3) if ma50 else None,
+        "vol_ratio": vol_ratio,
+    }
+
+    # BUY: ROC above threshold + accelerating + above MA50 + volume confirmed
+    above_ma50 = (ma50 is None or float(c.iloc[-1]) >= ma50)  # permissive if MA50 unavailable
+    if r > p["roc_threshold"] and r > prev_r and above_ma50 and vol_ok:
         return "buy", inds
+
+    # SELL: ROC below negative threshold + decelerating (no trend/vol filter on sells)
     if r < -p["roc_threshold"] and r < prev_r:
         return "sell", inds
+
     return "hold", inds
 
 SIGNAL_FNS = {
@@ -1568,6 +1592,14 @@ def main():
                 skip_reason = "already_in_position"
             elif signal == "buy" and symbol in sold_this_run:
                 skip_reason = "sold_this_run"   # BUG-001 guard
+            elif signal == "buy" and strategy_type == "intraday":
+                # FIX-2c: block new intraday entries after 3:15 PM ET — prevents
+                # the EOD sweep closing a position then this phase re-buying it
+                # seconds later, leaving a naked overnight position with no stop.
+                now_et_check = datetime.now(ET)
+                eod_cutoff   = now_et_check.replace(hour=15, minute=15, second=0, microsecond=0)
+                if now_et_check >= eod_cutoff:
+                    skip_reason = f"late_day_block (after 15:15 ET — intraday only)"
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
@@ -1581,11 +1613,11 @@ def main():
                                    f"(SPY {spy_close_now:.2f} < MA20 {spy_ma20_now:.2f})")
                 else:
                     qty = atr_position_size(equity, price, atr, vix_mult)
-                if not skip_reason and qty < 1:
-                    skip_reason = "qty_too_small"
-                elif not skip_reason and price * qty > buying_power * 0.95:
-                    skip_reason = "insufficient_buying_power"
-                else:
+                    if qty < 1:
+                        skip_reason = "qty_too_small"
+                    elif price * qty > buying_power * 0.95:
+                        skip_reason = "insufficient_buying_power"
+                if not skip_reason:
                     eff_atr    = max(atr, price * 0.002)
                     stop_price = price - ATR_STOP_MULT * eff_atr
                     tp_price   = price + ATR_TP_MULT   * eff_atr
