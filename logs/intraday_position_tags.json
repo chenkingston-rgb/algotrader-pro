@@ -22,5 +22,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-15T12:30:46.674628-04:00",
     "entry_price": 109.9
+  },
+  "MRVL": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-15T13:15:37.876403-04:00",
+    "entry_price": 300.85
   }
 }
