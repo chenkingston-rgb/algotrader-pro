@@ -1,19 +1,5 @@
 [
   {
-    "timestamp": "2026-06-04T13:15:35.171195-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 1642.22,
-    "vix": 11.47,
-    "signals_count": 40,
-    "orders_count": 1,
-    "symbols_traded": [
-      "XLK"
-    ],
-    "trading_pnl": 15.92,
-    "total_deposited": 851.54
-  },
-  {
     "timestamp": "2026-06-04T13:30:36.901011-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -2574,6 +2560,21 @@
       "IWM"
     ],
     "trading_pnl": -87.91,
+    "total_deposited": 27768.78
+  },
+  {
+    "timestamp": "2026-06-15T15:04:50.384474-04:00",
+    "mode": "live",
+    "strategy_mode": "daily",
+    "equity": 28452.47,
+    "vix": 25.55,
+    "signals_count": 120,
+    "orders_count": 2,
+    "symbols_traded": [
+      "UBER",
+      "QCOM"
+    ],
+    "trading_pnl": -91.07,
     "total_deposited": 27768.78
   }
 ]
