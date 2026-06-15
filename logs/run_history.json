@@ -1,23 +1,5 @@
 [
   {
-    "timestamp": "2026-06-04T10:15:35.172751-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 1629.76,
-    "vix": 11.53,
-    "signals_count": 38,
-    "orders_count": 5,
-    "symbols_traded": [
-      "IWM",
-      "ORCL",
-      "RKLB",
-      "XLF",
-      "SNOW"
-    ],
-    "trading_pnl": 3.46,
-    "total_deposited": 851.54
-  },
-  {
     "timestamp": "2026-06-04T10:30:43.013025-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2592,6 +2574,18 @@
     "orders_count": 0,
     "symbols_traded": [],
     "trading_pnl": -101.01,
+    "total_deposited": 27768.78
+  },
+  {
+    "timestamp": "2026-06-15T12:15:37.147857-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28441.37,
+    "vix": 26.05,
+    "signals_count": 38,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": -102.17,
     "total_deposited": 27768.78
   }
 ]
