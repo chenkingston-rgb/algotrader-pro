@@ -1,17 +1,5 @@
 [
   {
-    "timestamp": "2026-06-04T12:56:26.979984-04:00",
-    "mode": "live",
-    "strategy_mode": "daily",
-    "equity": 1641.4,
-    "vix": 11.47,
-    "signals_count": 120,
-    "orders_count": 0,
-    "symbols_traded": [],
-    "trading_pnl": 15.1,
-    "total_deposited": 851.54
-  },
-  {
     "timestamp": "2026-06-04T13:00:47.382441-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -2572,6 +2560,22 @@
       "QCOM"
     ],
     "trading_pnl": -84.8,
+    "total_deposited": 27768.78
+  },
+  {
+    "timestamp": "2026-06-15T14:45:46.885868-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28466.35,
+    "vix": 25.7,
+    "signals_count": 42,
+    "orders_count": 3,
+    "symbols_traded": [
+      "QCOM",
+      "RKLB",
+      "UBER"
+    ],
+    "trading_pnl": -77.19,
     "total_deposited": 27768.78
   }
 ]
