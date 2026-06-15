@@ -1,21 +1,5 @@
 [
   {
-    "timestamp": "2026-06-04T13:00:47.382441-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 1641.36,
-    "vix": 11.47,
-    "signals_count": 42,
-    "orders_count": 3,
-    "symbols_traded": [
-      "SMCI",
-      "IWM",
-      "MRVL"
-    ],
-    "trading_pnl": 15.06,
-    "total_deposited": 851.54
-  },
-  {
     "timestamp": "2026-06-04T13:15:35.171195-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -2576,6 +2560,20 @@
       "UBER"
     ],
     "trading_pnl": -77.19,
+    "total_deposited": 27768.78
+  },
+  {
+    "timestamp": "2026-06-15T15:00:49.112509-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28455.63,
+    "vix": 25.6,
+    "signals_count": 38,
+    "orders_count": 1,
+    "symbols_traded": [
+      "IWM"
+    ],
+    "trading_pnl": -87.91,
     "total_deposited": 27768.78
   }
 ]
