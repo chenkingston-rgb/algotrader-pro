@@ -22,5 +22,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-15T10:45:49.306354-04:00",
     "entry_price": 53.87
+  },
+  "QQQ": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-15T11:15:46.542668-04:00",
+    "entry_price": 742.5
   }
 }
