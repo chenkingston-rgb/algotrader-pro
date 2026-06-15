@@ -1,19 +1,5 @@
 [
   {
-    "timestamp": "2026-06-04T11:30:37.177503-04:00",
-    "mode": "paper",
-    "strategy_mode": "intraday",
-    "equity": 1638.16,
-    "vix": 11.46,
-    "signals_count": 38,
-    "orders_count": 1,
-    "symbols_traded": [
-      "WFC"
-    ],
-    "trading_pnl": 11.86,
-    "total_deposited": 851.54
-  },
-  {
     "timestamp": "2026-06-04T11:45:35.780015-04:00",
     "mode": "paper",
     "strategy_mode": "intraday",
@@ -2577,6 +2563,18 @@
       "MRVL"
     ],
     "trading_pnl": -148.02,
+    "total_deposited": 27768.78
+  },
+  {
+    "timestamp": "2026-06-15T13:30:46.346214-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28443.84,
+    "vix": 26.04,
+    "signals_count": 38,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": -99.7,
     "total_deposited": 27768.78
   }
 ]
