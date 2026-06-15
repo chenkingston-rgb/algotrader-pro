@@ -1592,26 +1592,26 @@ def main():
                 skip_reason = "already_in_position"
             elif signal == "buy" and symbol in sold_this_run:
                 skip_reason = "sold_this_run"   # BUG-001 guard
-            elif signal == "buy" and strategy_type == "intraday":
-                # FIX-2c: block new intraday entries after 3:15 PM ET — prevents
-                # the EOD sweep closing a position then this phase re-buying it
-                # seconds later, leaving a naked overnight position with no stop.
-                now_et_check = datetime.now(ET)
-                eod_cutoff   = now_et_check.replace(hour=15, minute=15, second=0, microsecond=0)
-                if now_et_check >= eod_cutoff:
-                    skip_reason = f"late_day_block (after 15:15 ET — intraday only)"
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
+                # FIX-2c (v7.3): late-day gate is now INSIDE the buy block (not a competing elif)
+                # Previously the elif at L1595 matched intraday buys before 3:15pm but did nothing,
+                # silently preventing the execution block from ever being reached.
+                if strategy_type == "intraday":
+                    now_et_check = datetime.now(ET)
+                    eod_cutoff   = now_et_check.replace(hour=15, minute=15, second=0, microsecond=0)
+                    if now_et_check >= eod_cutoff:
+                        skip_reason = f"late_day_block (after 15:15 ET — intraday only)"
                 # Kill switch — block all new entries when trailing drawdown >= threshold
-                if _kill_switch_active:
+                if not skip_reason and _kill_switch_active:
                     skip_reason = (f"kill_switch_active "
                                    f"(drawdown {drawdown_pct:.2f}% >= {MAX_DRAWDOWN_PCT}%)")
                 # MA20 regime gate — block new buys when SPY is below 20-day MA (v7.1)
-                elif _ma20_bear_block:
+                elif not skip_reason and _ma20_bear_block:
                     skip_reason = (f"ma20_bear_block "
                                    f"(SPY {spy_close_now:.2f} < MA20 {spy_ma20_now:.2f})")
-                else:
+                elif not skip_reason:
                     qty = atr_position_size(equity, price, atr, vix_mult)
                     if qty < 1:
                         skip_reason = "qty_too_small"
