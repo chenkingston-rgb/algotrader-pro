@@ -1,19 +1,5 @@
 [
   {
-    "timestamp": "2026-06-04T14:15:29.825439-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 1652.9,
-    "vix": 11.51,
-    "signals_count": 40,
-    "orders_count": 1,
-    "symbols_traded": [
-      "WFC"
-    ],
-    "trading_pnl": 26.6,
-    "total_deposited": 851.54
-  },
-  {
     "timestamp": "2026-06-04T14:17:32.827677-04:00",
     "mode": "live",
     "strategy_mode": "daily",
@@ -2582,6 +2568,18 @@
     "orders_count": 0,
     "symbols_traded": [],
     "trading_pnl": 39.12,
+    "total_deposited": 27768.78
+  },
+  {
+    "timestamp": "2026-06-16T10:15:47.537236-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28595.85,
+    "vix": 25.48,
+    "signals_count": 40,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": 52.31,
     "total_deposited": 27768.78
   }
 ]
