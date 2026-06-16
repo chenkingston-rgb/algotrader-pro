@@ -1,19 +1,5 @@
 [
   {
-    "timestamp": "2026-06-05T12:00:45.001129-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 1658.97,
-    "vix": 12.1,
-    "signals_count": 38,
-    "orders_count": 1,
-    "symbols_traded": [
-      "PANW"
-    ],
-    "trading_pnl": 32.67,
-    "total_deposited": 851.54
-  },
-  {
     "timestamp": "2026-06-05T12:15:29.402966-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -2557,6 +2543,18 @@
       "SCHW"
     ],
     "trading_pnl": -189.27,
+    "total_deposited": 27768.78
+  },
+  {
+    "timestamp": "2026-06-16T14:30:48.942062-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28346.4,
+    "vix": 25.53,
+    "signals_count": 40,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": -197.14,
     "total_deposited": 27768.78
   }
 ]
