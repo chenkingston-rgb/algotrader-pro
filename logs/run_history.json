@@ -1,19 +1,5 @@
 [
   {
-    "timestamp": "2026-06-04T14:00:44.451732-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 1651.58,
-    "vix": 11.51,
-    "signals_count": 40,
-    "orders_count": 1,
-    "symbols_traded": [
-      "RKLB"
-    ],
-    "trading_pnl": 25.28,
-    "total_deposited": 851.54
-  },
-  {
     "timestamp": "2026-06-04T14:15:29.825439-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -2584,6 +2570,18 @@
       "MRVL"
     ],
     "trading_pnl": -22.08,
+    "total_deposited": 27768.78
+  },
+  {
+    "timestamp": "2026-06-16T10:00:56.602048-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28582.66,
+    "vix": 25.48,
+    "signals_count": 40,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": 39.12,
     "total_deposited": 27768.78
   }
 ]
