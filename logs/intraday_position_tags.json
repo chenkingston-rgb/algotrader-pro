@@ -4,5 +4,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-17T09:45:40.333945-04:00",
     "entry_price": 54.57
+  },
+  "HOOD": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-17T09:45:40.333945-04:00",
+    "entry_price": 99.92
   }
 }
