@@ -1,25 +1,5 @@
 [
   {
-    "timestamp": "2026-06-08T13:45:32.843496-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 24660.14,
-    "vix": 15.44,
-    "signals_count": 42,
-    "orders_count": 7,
-    "symbols_traded": [
-      "AMD",
-      "INTC",
-      "MRVL",
-      "NOW",
-      "QQQ",
-      "SMH",
-      "TXN"
-    ],
-    "trading_pnl": -4.58,
-    "total_deposited": 23889.96
-  },
-  {
     "timestamp": "2026-06-08T13:56:17.133861-04:00",
     "mode": "live",
     "strategy_mode": "daily",
@@ -2514,6 +2494,18 @@
       "ARM"
     ],
     "trading_pnl": 59.05,
+    "total_deposited": 27768.78
+  },
+  {
+    "timestamp": "2026-06-18T10:15:42.194328-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28602.79,
+    "vix": 26.55,
+    "signals_count": 38,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": 59.25,
     "total_deposited": 27768.78
   }
 ]
