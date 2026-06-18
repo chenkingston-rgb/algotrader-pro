@@ -1,5 +1,5 @@
-import { createClient } from '@base44/sdk';
+import { createClient } from "@base44/sdk";
 
 export const base44 = createClient({
-  appId: import.meta.env.VITE_BASE44_APP_ID,
+  appId: "69f60c0cd56ea2902b494394",
 });
