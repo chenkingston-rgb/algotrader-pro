@@ -1,5 +1,1 @@
-export function getAppParams() {
-  return {
-    appId: import.meta.env.VITE_BASE44_APP_ID,
-  };
-}
+export const APP_ID = "69f60c0cd56ea2902b494394";
