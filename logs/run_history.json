@@ -1,17 +1,5 @@
 [
   {
-    "timestamp": "2026-06-09T13:49:59.938841-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28366.55,
-    "vix": 15.68,
-    "signals_count": 38,
-    "orders_count": 0,
-    "symbols_traded": [],
-    "trading_pnl": -176.99,
-    "total_deposited": 27768.78
-  },
-  {
     "timestamp": "2026-06-09T14:00:48.790963-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -2485,6 +2473,18 @@
       "QCOM"
     ],
     "trading_pnl": 59.25,
+    "total_deposited": 27768.78
+  },
+  {
+    "timestamp": "2026-06-18T13:30:46.137372-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28608.19,
+    "vix": 27.0,
+    "signals_count": 42,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": 64.65,
     "total_deposited": 27768.78
   }
 ]
