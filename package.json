@@ -1,0 +1,1 @@
+{"name":"traderv6-bot","version":"6.0.0","type":"module","scripts":{"scan":"node scripts/scan-and-trade.js","exits":"node scripts/check-exits.js","import":"node scripts/import-positions.js","reset":"node scripts/daily-reset.js"},"dependencies":{"@base44/sdk":"^0.8.26","@base44/vite-plugin":"^1.0.10"}}
