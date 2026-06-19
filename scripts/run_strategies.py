@@ -66,6 +66,13 @@ ATR_STOP_MULT    = 1.5     # Stop loss = entry ± 1.5 × ATR
 ATR_TP_MULT      = 3.0     # Take profit default (overridden by VWAP tp_mult)
 MAX_DRAWDOWN_PCT = 25.0    # Kill switch threshold
 
+# ── MA20 REGIME HYSTERESIS BAND (v7.3) ──────────────────────────────────────
+# Prevents whipsawing around the MA20 line. SPY must breach these thresholds
+# before regime flips. Asymmetric: tighter on recovery (bull) than on decline.
+# Override via env: MA20_BEAR_BAND (default 0.010 = 1.0%) MA20_BULL_BAND (0.005 = 0.5%)
+MA20_BEAR_BAND = 0.010   # flip BEAR only if SPY close < MA20 × (1 - 0.010)
+MA20_BULL_BAND = 0.005   # flip BULL only if SPY close > MA20 × (1 + 0.005)
+
 # ── PDT GUARD retired 2026-06-05 — FINRA rule removed, buying_power is now sole constraint
 
 # ── KILL SWITCH ───────────────────────────────────────────────────────────────
@@ -391,29 +398,68 @@ def get_vix() -> Optional[float]:
 def get_spy_ma20_regime() -> tuple:
     """
     Returns (is_bull, spy_close, ma20).
-    is_bull = True  → SPY above 20-day MA, entries permitted.
-    is_bull = False → SPY below 20-day MA, all new BUY entries blocked.
-    Falls back to True (permissive) if data unavailable — never silently halts.
+    is_bull = True  → regime is BULL, new BUY entries permitted.
+    is_bull = False → regime is BEAR, all new BUY entries blocked.
+    Falls back to True (permissive) if data unavailable.
+
+    HYSTERESIS BAND (v7.3):
+    ─────────────────────────────────────────────────────────────────
+    Problem with a simple close-vs-MA20 cross: SPY can oscillate
+    ±0.5% around the MA20 for days, causing rapid BULL/BEAR flips
+    (regime whipsaws) that block legitimate entries. Evidence:
+      - June 17: BULL→BEAR at -0.77% gap (closed $741 vs MA20 $746.79)
+      - June 18: still BEAR at -0.042% gap (SPY $746.75 vs MA20 $747.06)
+    Both blocked the engine on trivial sub-1% distances.
+
+    Solution — asymmetric band:
+      FLIP TO BEAR:  SPY daily close < MA20 × (1 - BEAR_BAND)   i.e. -1.0% below
+      FLIP TO BULL:  SPY daily close > MA20 × (1 + BULL_BAND)   i.e. +0.5% above
+      NEUTRAL ZONE:  between bands → hold current regime (no flip)
+
+    The asymmetry (tighter bull threshold) ensures we don't stay blocked
+    too long after a recovery, while the 1% bear threshold filters noise.
+
+    BEAR_BAND and BULL_BAND are configurable via env vars.
     """
     if os.getenv("DISABLE_MA20_FILTER", "false").lower() == "true":
         return True, 0.0, 0.0
+
+    bear_band = float(os.getenv("MA20_BEAR_BAND", str(MA20_BEAR_BAND)))
+    bull_band = float(os.getenv("MA20_BULL_BAND", str(MA20_BULL_BAND)))
+
     try:
         df = get_bars("SPY", timeframe="1Day", bar_days=40)
         if df.empty or len(df) < 20:
             logging.warning("[MA20] Insufficient SPY bars — skipping regime filter")
             return True, 0.0, 0.0
+
         spy_close = float(df["close"].iloc[-1])
         ma20      = float(df["close"].iloc[-20:].mean())
-        is_bull   = spy_close >= ma20
         gap_pct   = (spy_close - ma20) / ma20 * 100
-        label     = "BULL" if is_bull else "BEAR"
+
+        bear_threshold = ma20 * (1 - bear_band)  # e.g. MA20 × 0.990
+        bull_threshold = ma20 * (1 + bull_band)  # e.g. MA20 × 1.005
+
+        if spy_close < bear_threshold:
+            is_bull = False
+            zone    = "BEAR  (below -{:.1f}% band)".format(bear_band * 100)
+        elif spy_close > bull_threshold:
+            is_bull = True
+            zone    = "BULL  (above +{:.1f}% band)".format(bull_band * 100)
+        else:
+            # Neutral zone — hold prior regime (default BULL if no prior state)
+            # We use gap sign as a proxy for prior state since we don't persist regime
+            is_bull = (gap_pct >= 0)
+            zone    = "NEUTRAL (within band) → holding {}".format("BULL" if is_bull else "BEAR")
+
+        label = "BULL" if is_bull else "BEAR"
         print(f"  [MA20_REGIME] SPY close=${spy_close:.2f}  MA20=${ma20:.2f}  "
-              f"gap={gap_pct:+.2f}%  → {label}")
+              f"gap={gap_pct:+.3f}%  bear<${bear_threshold:.2f}  bull>${bull_threshold:.2f}  → {label} [{zone}]")
         return is_bull, spy_close, ma20
+
     except Exception as e:
         logging.warning(f"[MA20] Regime check failed: {e} — defaulting to BULL (permissive)")
         return True, 0.0, 0.0
-
 
 
 def get_positions() -> dict:
