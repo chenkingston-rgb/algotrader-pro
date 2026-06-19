@@ -340,16 +340,39 @@ def get_bars(symbol: str, timeframe: str = "1Day", bar_days: int = 300) -> pd.Da
     return df[["open", "high", "low", "close", "volume"]]
 
 def get_vix() -> Optional[float]:
+    """
+    Returns the real CBOE VIX index (implied volatility).
+    Primary source: Yahoo Finance ^VIX daily close (free, no API key).
+    Fallback:       SPY 10-day realized vol x 1.2 if Yahoo is unreachable.
+
+    Replaces the old realized-vol estimate which overstated VIX by ~50%
+    after sell-offs (e.g. June 2026: engine read 26.85, real VIX was 16.85).
+    """
+    import urllib.request as _ul, json as _json
+    # -- Primary: real CBOE ^VIX via Yahoo Finance --
+    for _host in ("query1", "query2"):
+        try:
+            _url = "https://" + _host + ".finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1d&range=5d"
+            _req = _ul.Request(_url, headers={"User-Agent": "Mozilla/5.0"})
+            with _ul.urlopen(_req, timeout=8) as _resp:
+                _yd = _json.loads(_resp.read().decode())
+            _closes = _yd["chart"]["result"][0]["indicators"]["quote"][0]["close"]
+            real_vix = next((v for v in reversed(_closes) if v is not None), None)
+            if real_vix and 5 < real_vix < 90:
+                print(f"  VIX (CBOE ^VIX via Yahoo): {real_vix:.2f}")
+                return round(real_vix, 2)
+        except Exception as _e:
+            print(f"  [WARN] VIX Yahoo failed: {_e}")
+    # -- Fallback: SPY 10-day realized vol x 1.2 --
+    print("  [WARN] Real ^VIX unavailable -- falling back to SPY realized vol estimate")
     try:
         df = get_bars("SPY", timeframe="1Day", bar_days=60)
         if len(df) < 22:
             return None
         log_returns  = np.log(df["close"] / df["close"].shift(1)).dropna()
-        # FIX-4 (v7.2): shortened window 21d→10d for faster geopolitical spike response.
-        # 10-day realized vol reacts ~2× faster to sudden fear events vs 21-day.
         realized_vol = log_returns.rolling(10).std().iloc[-1] * math.sqrt(252) * 100
         vix_est      = round(realized_vol * 1.2, 2)
-        print(f"  VIX estimate (SPY 10d realized vol × 1.2): {vix_est:.1f}")
+        print(f"  VIX fallback (SPY 10d realized x 1.2): {vix_est:.1f} -- may overestimate after sell-offs")
         return vix_est
     except Exception as e:
         print(f"  [WARN] Could not estimate VIX: {e}")
