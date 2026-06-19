@@ -1,5 +1,5 @@
 {
-  "run_timestamp": "2026-06-19T13:59:39.757389-04:00",
+  "run_timestamp": "2026-06-19T15:00:41.070825-04:00",
   "mode": "live",
   "strategy_mode": "daily",
   "equity": 28617.55,
@@ -115,7 +115,7 @@
   ],
   "signals": [
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -139,7 +139,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -163,7 +163,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -187,7 +187,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -211,7 +211,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -235,7 +235,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -259,7 +259,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -283,7 +283,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -307,7 +307,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -331,7 +331,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -355,7 +355,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -379,7 +379,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -403,7 +403,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -427,7 +427,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -451,7 +451,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -475,7 +475,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -499,7 +499,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -523,7 +523,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -547,7 +547,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -571,7 +571,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -595,7 +595,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -619,7 +619,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -643,7 +643,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -667,7 +667,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -691,7 +691,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -715,7 +715,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -739,7 +739,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -763,7 +763,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -787,7 +787,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -811,7 +811,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
@@ -835,7 +835,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -858,7 +858,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -881,7 +881,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -904,7 +904,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -927,7 +927,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -950,7 +950,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -973,7 +973,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -996,7 +996,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1019,7 +1019,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1042,7 +1042,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1065,7 +1065,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1088,7 +1088,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1111,7 +1111,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1134,7 +1134,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1157,7 +1157,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1180,7 +1180,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1203,7 +1203,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1226,7 +1226,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1249,7 +1249,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1272,7 +1272,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1295,7 +1295,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1318,7 +1318,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1341,7 +1341,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1364,7 +1364,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1387,7 +1387,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1410,7 +1410,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1433,7 +1433,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1456,7 +1456,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1479,7 +1479,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1502,7 +1502,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1525,7 +1525,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1548,7 +1548,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1571,7 +1571,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1594,7 +1594,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1617,7 +1617,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1640,7 +1640,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1663,7 +1663,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1686,7 +1686,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1709,7 +1709,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1732,7 +1732,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1755,7 +1755,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1778,7 +1778,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1801,7 +1801,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1824,7 +1824,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1847,7 +1847,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1870,7 +1870,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1893,7 +1893,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1916,7 +1916,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1939,7 +1939,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1962,7 +1962,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -1985,7 +1985,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2008,7 +2008,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2031,7 +2031,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2054,7 +2054,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2077,7 +2077,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2100,7 +2100,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2123,7 +2123,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2146,7 +2146,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2169,7 +2169,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2192,7 +2192,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2215,7 +2215,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2238,7 +2238,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2261,7 +2261,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2284,7 +2284,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2307,7 +2307,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2330,7 +2330,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2353,7 +2353,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2376,7 +2376,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2399,7 +2399,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2422,7 +2422,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2445,7 +2445,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2468,7 +2468,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2491,7 +2491,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2514,7 +2514,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2537,7 +2537,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2560,7 +2560,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2583,7 +2583,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2606,7 +2606,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2629,7 +2629,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2652,7 +2652,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2675,7 +2675,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2698,7 +2698,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2721,7 +2721,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2744,7 +2744,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2767,7 +2767,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2790,7 +2790,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2813,7 +2813,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2836,7 +2836,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2859,7 +2859,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
@@ -2882,7 +2882,7 @@
       }
     },
     {
-      "timestamp": "2026-06-19T13:59:39.757389-04:00",
+      "timestamp": "2026-06-19T15:00:41.070825-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
