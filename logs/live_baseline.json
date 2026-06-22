@@ -25,5 +25,6 @@
   ],
   "initialized_at": "2026-06-02T08:25:44.778442-04:00",
   "_note": "Deposits: equity jump >$500 AND >1% in one engine cycle = cash deposit, not trading P&L",
-  "peak_equity": 28757.05
+  "peak_equity": 28757.05,
+  "regime_label": "BULL"
 }
