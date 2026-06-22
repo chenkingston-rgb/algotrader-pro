@@ -1801,6 +1801,13 @@ def main():
         "trading_pnl": trading_pnl,
         "total_deposited": total_deposited,
         "deposit_count": deposit_count,
+        # MA20 regime fields — consumed by algotrader_pro_dashboard
+        "ma20_bear_block": _ma20_bear_block,
+        "ma20_spy_close": round(spy_close_now, 2) if spy_close_now else None,
+        "ma20_value": round(spy_ma20_now, 2) if spy_ma20_now else None,
+        "ma20_gap_pct": round((spy_close_now - spy_ma20_now) / spy_ma20_now * 100, 3)
+            if spy_close_now and spy_ma20_now else None,
+        "regime_label": "BULL" if spy_is_bull else "BEAR",
     }
 
     write_github_log(LOG_FILE, run_log)
@@ -1811,6 +1818,8 @@ def main():
         "orders_count": len(orders_placed),
         "symbols_traded": [o["symbol"] for o in orders_placed],
         "trading_pnl": trading_pnl, "total_deposited": total_deposited,
+        "ma20_bear_block": _ma20_bear_block,
+        "drawdown_pct": round(drawdown_pct, 2),
     })
     append_signals_history(all_signals)
     print(f"\nRun complete — {len(all_signals)} signals | {len(orders_placed)} orders")
