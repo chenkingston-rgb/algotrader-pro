@@ -1820,6 +1820,7 @@ def main():
     append_run_history({
         "timestamp": run_start.isoformat(), "mode": MODE,
         "strategy_mode": STRATEGY_MODE, "equity": round(equity, 2),
+        "last_equity": round(last_equity, 2),
         "vix": vix, "signals_count": len(all_signals),
         "orders_count": len(orders_placed),
         "symbols_traded": [o["symbol"] for o in orders_placed],
