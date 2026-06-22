@@ -395,7 +395,7 @@ def get_vix() -> Optional[float]:
 # To disable for testing: set env DISABLE_MA20_FILTER=true
 #
 # Returns: (is_bull: bool, spy_close: float, ma20: float)
-def get_spy_ma20_regime() -> tuple:
+def get_spy_ma20_regime(prior_is_bull: bool = True) -> tuple:
     """
     Returns (is_bull, spy_close, ma20).
     is_bull = True  → regime is BULL, new BUY entries permitted.
@@ -447,10 +447,10 @@ def get_spy_ma20_regime() -> tuple:
             is_bull = True
             zone    = "BULL  (above +{:.1f}% band)".format(bull_band * 100)
         else:
-            # Neutral zone — hold prior regime (default BULL if no prior state)
-            # We use gap sign as a proxy for prior state since we don't persist regime
-            is_bull = (gap_pct >= 0)
-            zone    = "NEUTRAL (within band) → holding {}".format("BULL" if is_bull else "BEAR")
+            # Neutral zone — hold prior confirmed regime read from live_baseline.json.
+            # Defaults to BULL (permissive) if no persisted state exists.
+            is_bull = prior_is_bull
+            zone    = "NEUTRAL (within band) → holding {} (persisted)".format("BULL" if is_bull else "BEAR")
 
         label = "BULL" if is_bull else "BEAR"
         print(f"  [MA20_REGIME] SPY close=${spy_close:.2f}  MA20=${ma20:.2f}  "
@@ -1556,7 +1556,12 @@ def main():
     # Core rule: if SPY is below its 20-day moving average the broad market is
     # in a downtrend. New BUY entries have negative expectancy in this regime.
     # We block ALL new buys. Existing positions keep their stops and can still sell.
-    spy_is_bull, spy_close_now, spy_ma20_now = get_spy_ma20_regime()
+    # Read persisted regime from live_baseline so neutral-zone logic holds correctly
+    _prior_regime_is_bull = live_baseline.get("regime_label", "BULL") == "BULL" if live_baseline else True
+    spy_is_bull, spy_close_now, spy_ma20_now = get_spy_ma20_regime(prior_is_bull=_prior_regime_is_bull)
+    # Persist confirmed regime into baseline so next run's neutral-zone inherits it
+    if not IS_PAPER and live_baseline is not None:
+        live_baseline["regime_label"] = "BULL" if spy_is_bull else "BEAR"
     _ma20_bear_block = not spy_is_bull
     if _ma20_bear_block:
         print(f"[MA20_REGIME] ⚠️  BEAR MARKET — SPY ${spy_close_now:.2f} < MA20 ${spy_ma20_now:.2f}. "
