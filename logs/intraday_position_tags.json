@@ -10,5 +10,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-22T11:45:36.145922-04:00",
     "entry_price": 58.79
+  },
+  "MU": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-22T12:15:45.682723-04:00",
+    "entry_price": 1192.99
   }
 }
