@@ -1,1 +1,8 @@
-{}
+{
+  "TXN": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-22T10:15:40.264832-04:00",
+    "entry_price": 333.47
+  }
+}
