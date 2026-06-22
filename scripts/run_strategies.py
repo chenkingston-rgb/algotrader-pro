@@ -1552,6 +1552,17 @@ def main():
 
     vix = get_vix()
 
+    # Fresh positions on every loop start (Rule: never stale)
+    positions     = get_positions()
+    position_tags = load_json_from_github(EOD_TAG_FILE)
+
+    # Live mode: deposit detection
+    live_baseline = {}
+    if not IS_PAPER:
+        live_baseline = load_json_from_github(LIVE_BASELINE_FILE)
+        live_baseline = detect_deposit(equity, live_baseline)
+
+
     # ── SPY MA20 REGIME GATE (v7.1) ─────────────────────────────────────────
     # Core rule: if SPY is below its 20-day moving average the broad market is
     # in a downtrend. New BUY entries have negative expectancy in this regime.
@@ -1567,16 +1578,6 @@ def main():
         print(f"[MA20_REGIME] ⚠️  BEAR MARKET — SPY ${spy_close_now:.2f} < MA20 ${spy_ma20_now:.2f}. "
               f"All new BUY entries blocked. Sells/stops still active.")
     
-    # Fresh positions on every loop start (Rule: never stale)
-    positions     = get_positions()
-    position_tags = load_json_from_github(EOD_TAG_FILE)
-
-    # Live mode: deposit detection
-    live_baseline = {}
-    if not IS_PAPER:
-        live_baseline = load_json_from_github(LIVE_BASELINE_FILE)
-        live_baseline = detect_deposit(equity, live_baseline)
-
     # ── Trailing drawdown (live) / per-run reset (paper) ────────────────────
     # Live: peak_equity persisted in live_baseline.json — survives across runs.
     # Paper: resets to current equity each run (paper mode has no persisted state).
