@@ -543,8 +543,12 @@ def is_in_stop_cooldown(symbol: str, cooldowns: dict, now_et: datetime) -> bool:
     if not expiry_str:
         return False
     try:
-        expiry = datetime.fromisoformat(expiry_str).astimezone(ET)
-        return now_et < expiry
+        # FIX v7.4a: compare in UTC to avoid pytz LMT offset mismatch
+        # datetime.fromisoformat returns fixed-offset tz; pytz tz objects
+        # use LMT on first construction causing -04:56 vs -04:00 skew.
+        expiry_utc = datetime.fromisoformat(expiry_str).astimezone(pytz.utc)
+        now_utc    = now_et.astimezone(pytz.utc)
+        return now_utc < expiry_utc
     except Exception:
         return False
 
@@ -568,7 +572,10 @@ def update_stop_cooldowns_from_fills(baseline: dict, now_et: datetime) -> dict:
         )
         if not r.ok:
             return cooldowns
-        for order in r.json():
+        raw = r.json()
+        if not isinstance(raw, list):
+            return cooldowns   # FIX v7.4a: guard against non-list API responses
+        for order in raw:
             if (order.get("order_type") in ("stop", "stop_limit")
                     and order.get("side") == "sell"
                     and order.get("status") == "filled"
@@ -635,8 +642,8 @@ def vix_size_multiplier(strategy: dict, vix: float) -> tuple:
 
 def atr_position_size(equity: float, price: float, atr: float,
                       vix_mult: float = 1.0) -> int:
-    if atr <= 0 or price <= 0:
-        return 0
+    if atr <= 0 or price <= 0 or vix_mult <= 0:
+        return 0   # FIX v7.4a: vix_mult=0 (blocked) must return 0, not 1
     dollar_risk    = equity * RISK_PCT * vix_mult
     shares_by_risk = dollar_risk / (ATR_STOP_MULT * atr)
     max_by_cap     = (equity * MAX_POSITION_PCT) / price
