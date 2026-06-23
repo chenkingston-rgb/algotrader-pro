@@ -134,7 +134,8 @@ INTRADAY_STRATEGIES = {
         "symbols":  ["SPY", "QQQ", "XLK", "XLE", "XLF"],
         "vix_type": "MOMENTUM",
         "vix_block": 28, "vix_reduce": 20, "vix_reduce_pct": 0.50,
-        "params": {"roc_period": 10, "roc_threshold": 0.3},
+        "params": {"roc_period": 10, "roc_threshold": 0.3,
+                   "atr_ext_mult": 1.0},  # FIX-C v7.4: block entry if bar moved >1x ATR from open
         "timeframe": "15Min", "bar_days": 20,
     },
 }
@@ -519,6 +520,75 @@ def close_position_order(symbol: str, qty: int) -> dict:
     r.raise_for_status()
     return r.json()
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STOP-COOLDOWN (v7.4)
+# After a bracket stop-loss fills, block re-entry on that symbol for
+# STOP_COOLDOWN_MINUTES (default 30). Prevents immediately chasing back
+# into a position that just proved the signal was wrong / timing was off.
+# Does NOT block entries that arrive after the cooldown expires —
+# respecting our rule that profitable re-entries are allowed.
+# ─────────────────────────────────────────────────────────────────────────────
+STOP_COOLDOWN_MINUTES = int(os.getenv("STOP_COOLDOWN_MINUTES", "30"))
+
+
+def load_stop_cooldowns(baseline: dict) -> dict:
+    """Return {symbol: iso_expiry_string} from live_baseline. Empty dict if absent."""
+    return dict(baseline.get("stop_cooldowns", {}))
+
+
+def is_in_stop_cooldown(symbol: str, cooldowns: dict, now_et: datetime) -> bool:
+    """True if symbol is still within its post-stop cooldown window."""
+    expiry_str = cooldowns.get(symbol)
+    if not expiry_str:
+        return False
+    try:
+        expiry = datetime.fromisoformat(expiry_str).astimezone(ET)
+        return now_et < expiry
+    except Exception:
+        return False
+
+
+def update_stop_cooldowns_from_fills(baseline: dict, now_et: datetime) -> dict:
+    """
+    Scan Alpaca closed orders in the last 60 min for stop-loss fills.
+    For each hit, write cooldown expiry = fill_time + STOP_COOLDOWN_MINUTES
+    into baseline["stop_cooldowns"] and return the updated dict.
+    Only bracket stop children (type=stop, side=sell, status=filled) are matched.
+    """
+    import datetime as _dt
+    cooldowns = load_stop_cooldowns(baseline)
+    cutoff_utc = (now_et.astimezone(pytz.utc) - _dt.timedelta(minutes=60)).isoformat()
+    try:
+        r = requests.get(
+            f"{ALPACA_BASE}/v2/orders",
+            headers=alpaca_headers(),
+            params={"status": "closed", "limit": 50, "after": cutoff_utc},
+            timeout=10,
+        )
+        if not r.ok:
+            return cooldowns
+        for order in r.json():
+            if (order.get("order_type") in ("stop", "stop_limit")
+                    and order.get("side") == "sell"
+                    and order.get("status") == "filled"
+                    and order.get("filled_at")):
+                sym      = order["symbol"]
+                fill_ts  = datetime.fromisoformat(
+                    order["filled_at"].replace("Z", "+00:00")).astimezone(ET)
+                expiry   = fill_ts + _dt.timedelta(minutes=STOP_COOLDOWN_MINUTES)
+                existing = cooldowns.get(sym)
+                if not existing or expiry.isoformat() > existing:
+                    cooldowns[sym] = expiry.isoformat()
+                    print(f"  [STOP_COOLDOWN] {sym} stop fill @ "
+                          f"{fill_ts.strftime('%H:%M ET')} "
+                          f"→ cooldown until {expiry.strftime('%H:%M ET')}")
+    except Exception as e:
+        logging.warning(f"[STOP_COOLDOWN] fill scan failed: {e}")
+    baseline["stop_cooldowns"] = cooldowns
+    return cooldowns
+
+
 # ─────────────────────────────────────────────
 # INDICATORS (pandas-based, for GitHub Actions main loop)
 # ─────────────────────────────────────────────
@@ -673,7 +743,22 @@ def signal_momentum_roc_15m(df: pd.DataFrame, p: dict) -> tuple:
 
     # BUY: ROC above threshold + accelerating + above MA50 + volume confirmed
     above_ma50 = (ma50 is None or float(c.iloc[-1]) >= ma50)  # permissive if MA50 unavailable
-    if r > p["roc_threshold"] and r > prev_r and above_ma50 and vol_ok:
+
+    # FIX-C (v7.4): ATR-extension guard
+    # Block entry if the current bar has already moved > atr_ext_mult x ATR from its open.
+    # Entering after a full-ATR spike means the stop (1.5x ATR below entry) is nearly
+    # guaranteed to be hit on mean-reversion, compressing R:R to near zero.
+    bar_open   = float(df["open"].iloc[-1]) if "open" in df.columns else float(c.iloc[-1])
+    bar_move   = float(c.iloc[-1]) - bar_open   # positive = up-bar
+    atr_val    = calc_atr(df).iloc[-1]
+    ext_mult   = float(p.get("atr_ext_mult", 1.0))
+    atr_ext_ok = (bar_move < atr_val * ext_mult)
+    inds["bar_open"]   = round(bar_open, 2)
+    inds["bar_move"]   = round(bar_move, 3)
+    inds["atr_val"]    = round(atr_val, 3)
+    inds["atr_ext_ok"] = atr_ext_ok
+
+    if r > p["roc_threshold"] and r > prev_r and above_ma50 and vol_ok and atr_ext_ok:
         return "buy", inds
 
     # SELL: ROC below negative threshold + decelerating (no trend/vol filter on sells)
@@ -1562,6 +1647,11 @@ def main():
         live_baseline = load_json_from_github(LIVE_BASELINE_FILE)
         live_baseline = detect_deposit(equity, live_baseline)
 
+    # ── Stop-cooldown: detect recent Alpaca stop fills → update baseline
+    _stop_cooldowns = (
+        update_stop_cooldowns_from_fills(live_baseline, datetime.now(ET))
+        if not IS_PAPER else {}
+    )
 
     # ── SPY MA20 REGIME GATE (v7.1) ─────────────────────────────────────────
     # Core rule: if SPY is below its 20-day moving average the broad market is
@@ -1667,6 +1757,11 @@ def main():
                 skip_reason = "already_in_position"
             elif signal == "buy" and symbol in sold_this_run:
                 skip_reason = "sold_this_run"   # BUG-001 guard
+            elif signal == "buy" and is_in_stop_cooldown(
+                    symbol, _stop_cooldowns, datetime.now(ET)):
+                _exp = _stop_cooldowns.get(symbol, "")[:16].replace("T", " ")
+                skip_reason = (f"stop_cooldown "
+                               f"(stopped out recently — re-entry blocked until {_exp} ET)")
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
