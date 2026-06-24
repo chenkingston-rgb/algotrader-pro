@@ -1,19 +1,5 @@
 [
   {
-    "timestamp": "2026-06-15T12:30:46.674628-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28438.6,
-    "vix": 26.19,
-    "signals_count": 38,
-    "orders_count": 1,
-    "symbols_traded": [
-      "RKLB"
-    ],
-    "trading_pnl": -104.94,
-    "total_deposited": 27768.78
-  },
-  {
     "timestamp": "2026-06-15T12:45:42.674098-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -2690,6 +2676,21 @@
     "trading_pnl": -53.36,
     "total_deposited": 27768.78,
     "ma20_bear_block": false,
+    "drawdown_pct": 0.93
+  },
+  {
+    "timestamp": "2026-06-24T11:45:37.958991-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28490.18,
+    "last_equity": 28490.18,
+    "vix": 18.08,
+    "signals_count": 38,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": -53.36,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": true,
     "drawdown_pct": 0.93
   }
 ]
