@@ -1,20 +1,5 @@
 [
   {
-    "timestamp": "2026-06-15T15:04:50.384474-04:00",
-    "mode": "live",
-    "strategy_mode": "daily",
-    "equity": 28452.47,
-    "vix": 25.55,
-    "signals_count": 120,
-    "orders_count": 2,
-    "symbols_traded": [
-      "UBER",
-      "QCOM"
-    ],
-    "trading_pnl": -91.07,
-    "total_deposited": 27768.78
-  },
-  {
     "timestamp": "2026-06-15T15:15:40.968887-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -2717,5 +2702,20 @@
     "total_deposited": 27768.78,
     "ma20_bear_block": true,
     "drawdown_pct": 1.07
+  },
+  {
+    "timestamp": "2026-06-24T14:00:48.311011-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28451.47,
+    "last_equity": 28490.18,
+    "vix": 20.05,
+    "signals_count": 38,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": -92.07,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": true,
+    "drawdown_pct": 1.06
   }
 ]
