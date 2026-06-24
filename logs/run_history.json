@@ -1,23 +1,5 @@
 [
   {
-    "timestamp": "2026-06-16T09:45:39.721407-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28521.46,
-    "vix": 25.48,
-    "signals_count": 40,
-    "orders_count": 5,
-    "symbols_traded": [
-      "IWM",
-      "XLF",
-      "ARM",
-      "CMG",
-      "MRVL"
-    ],
-    "trading_pnl": -22.08,
-    "total_deposited": 27768.78
-  },
-  {
     "timestamp": "2026-06-16T10:00:56.602048-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -2720,5 +2702,20 @@
     "total_deposited": 27768.78,
     "ma20_bear_block": true,
     "drawdown_pct": 1.01
+  },
+  {
+    "timestamp": "2026-06-24T14:45:36.010193-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28472.4,
+    "last_equity": 28490.18,
+    "vix": 19.22,
+    "signals_count": 38,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": -71.14,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": true,
+    "drawdown_pct": 0.99
   }
 ]
