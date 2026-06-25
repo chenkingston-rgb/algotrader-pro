@@ -1,19 +1,5 @@
 [
   {
-    "timestamp": "2026-06-16T11:15:47.409216-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28463.35,
-    "vix": 25.49,
-    "signals_count": 40,
-    "orders_count": 1,
-    "symbols_traded": [
-      "MRVL"
-    ],
-    "trading_pnl": -80.19,
-    "total_deposited": 27768.78
-  },
-  {
     "timestamp": "2026-06-16T11:30:55.723761-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -2730,5 +2716,22 @@
     "total_deposited": 27768.78,
     "ma20_bear_block": true,
     "drawdown_pct": 0.98
+  },
+  {
+    "timestamp": "2026-06-25T09:45:44.255252-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28511.04,
+    "last_equity": 28459.98,
+    "vix": 17.87,
+    "signals_count": 38,
+    "orders_count": 1,
+    "symbols_traded": [
+      "MRK"
+    ],
+    "trading_pnl": -32.5,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": true,
+    "drawdown_pct": 0.86
   }
 ]
