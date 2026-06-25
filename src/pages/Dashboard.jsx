@@ -20,7 +20,7 @@ import { useState, useEffect, useCallback } from "react";
 //    3. Cumulative P&L + Positions + Engine + Signals
 // ─────────────────────────────────────────────────────────────────────────────
 
-const FUNCTION_URL = "https://6a15a02a1ee419a7f5f9b72f.base44.app/api/functions/getLivePortfolio";
+const FUNCTION_URL = "https://69f60c0cd56ea2902b494394.base44.app/api/functions/getLivePortfolio";
 const REFRESH_MS   = 30_000;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
