@@ -9,30 +9,8 @@
   "drawdown_pct": 0.98,
   "peak_equity": 28757.05,
   "kill_switch_active": false,
-  "positions": [
-    "MRK"
-  ],
-  "position_details": [
-    {
-      "symbol": "MRK",
-      "qty": 23.0,
-      "side": "long",
-      "avg_entry_price": 120.84,
-      "current_price": 121.31,
-      "market_value": 2790.13,
-      "unrealized_pl": 10.74,
-      "unrealized_plpc": 0.386,
-      "cost_basis": 2779.39,
-      "strategy_type": "daily",
-      "entry_strategy": "unknown",
-      "watching_strategies": [
-        "rsi_macd_combo",
-        "macd_crossover",
-        "triple_ema",
-        "ema_crossover"
-      ]
-    }
-  ],
+  "positions": [],
+  "position_details": [],
   "signals": [
     {
       "timestamp": "2026-06-24T14:54:47.655307-04:00",
@@ -2833,5 +2811,6 @@
   "ma20_spy_close": 731.77,
   "ma20_value": 745.61,
   "ma20_gap_pct": -1.856,
-  "regime_label": "BEAR"
+  "regime_label": "BEAR",
+  "_stale_cleared": "2026-06-25T23:14 SGT \u2014 MRK sold Jun25 09:45, cleared stale carry"
 }
