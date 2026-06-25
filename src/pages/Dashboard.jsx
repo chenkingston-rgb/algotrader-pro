@@ -21,7 +21,7 @@ import { useState, useEffect, useCallback } from "react";
 // ─────────────────────────────────────────────────────────────────────────────
 
 const FUNCTION_URL = "https://69f60c0cd56ea2902b494394.base44.app/api/functions/getLivePortfolio";
-const REFRESH_MS   = 30_000;
+const REFRESH_MS   = 300_000; // 5 min — engine runs every 15min, 5min refresh is sufficient
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const pnlColor = (v) => (v == null || isNaN(v)) ? "text-slate-400" : (v >= 0 ? "text-emerald-400" : "text-red-400");
