@@ -1919,6 +1919,9 @@ def main():
     }
 
     write_github_log(LOG_FILE, run_log)
+    write_dashboard_payload(run_log, live_baseline, position_details,
+                            position_tags, spy_close_now or 0.0, spy_ma20_now or 0.0,
+                            equity, last_equity, buying_power)
     append_run_history({
         "timestamp": run_start.isoformat(), "mode": MODE,
         "strategy_mode": STRATEGY_MODE, "equity": round(equity, 2),
@@ -1932,6 +1935,98 @@ def main():
     })
     append_signals_history(all_signals)
     print(f"\nRun complete — {len(all_signals)} signals | {len(orders_placed)} orders")
+
+
+def write_dashboard_payload(run_log: dict, live_baseline: dict, position_details: list,
+                             position_tags: dict, spy_close: float, spy_ma20: float,
+                             equity: float, prev_close: float, buying_power: float) -> None:
+    """Write a pre-built dashboard_payload.json to GitHub so the dashboard
+    can fetch it directly via raw URL — zero Base44 integration credit cost."""
+    try:
+        from datetime import timezone as _tz
+        positions_out = []
+        total_upl = 0.0
+        total_exp = 0.0
+        for p in position_details:
+            upl = float(p.get("unrealized_pl", 0))
+            mv  = float(p.get("market_value", 0))
+            total_upl += upl
+            total_exp += mv
+            tag = position_tags.get(p["symbol"], {})
+            positions_out.append({
+                "symbol":          p["symbol"],
+                "qty":             p.get("qty", 0),
+                "avg_entry_price": p.get("avg_entry_price", 0),
+                "current_price":   p.get("current_price", 0),
+                "market_value":    round(mv, 2),
+                "unrealized_pl":   round(upl, 2),
+                "unrealized_plpc": p.get("unrealized_plpc", 0),
+                "strategy_type":   tag.get("strategy_type", p.get("strategy_type", "daily")),
+                "strategy_name":   tag.get("strategy",      p.get("entry_strategy", "unknown")),
+            })
+
+        pnl_today    = round(equity - prev_close, 2)
+        realized_today = round(pnl_today - total_upl, 2)
+
+        bl      = live_baseline or {}
+        peak_eq = bl.get("peak_equity",      equity)
+        start_eq= bl.get("start_equity",     equity)
+        tot_dep = bl.get("total_deposited",  0)
+        tpnl    = bl.get("total_trading_pnl",0)
+        drawdown= round((peak_eq - equity) / peak_eq * 100, 2) if peak_eq else 0
+
+        ma20_bear = run_log.get("ma20_bear_block", False)
+        regime    = run_log.get("regime_label", "UNKNOWN")
+        ma20_gap  = run_log.get("ma20_gap_pct",  0)
+        vix       = run_log.get("vix")
+        kill      = run_log.get("kill_switch_active", False)
+
+        # Run history from existing file (we just append to it elsewhere)
+        rh_raw   = read_github_log(RUN_HISTORY_FILE) or []
+        rh_list  = rh_raw if isinstance(rh_raw, list) else []
+        recent   = sorted([e for e in rh_list if e.get("timestamp")],
+                           key=lambda x: x["timestamp"], reverse=True)[:30]
+
+        # Signals — limit to 40 for payload size
+        signals  = run_log.get("signals", [])[:40]
+
+        payload = {
+            "generated_at":          datetime.now(ET).isoformat(),
+            "mode":                  run_log.get("mode", "live"),
+            "run_timestamp":         run_log.get("run_timestamp"),
+            "equity":                round(equity, 2),
+            "prev_close":            round(prev_close, 2),
+            "buying_power":          round(buying_power, 2),
+            "cash":                  round(buying_power, 2),   # buying_power ≈ cash when flat
+            "pnl_today":             pnl_today,
+            "pnl_today_pct":         round(pnl_today / prev_close * 100, 2) if prev_close else 0,
+            "realized_today":        realized_today,
+            "unrealized_today":      round(total_upl, 2),
+            "position_count":        len(positions_out),
+            "positions":             positions_out,
+            "total_unrealized":      round(total_upl, 2),
+            "total_exposure":        round(total_exp, 2),
+            "exposure_pct":          round(total_exp / equity * 100, 2) if equity else 0,
+            "ma20_bear_block":       ma20_bear,
+            "ma20_value":            run_log.get("ma20_value"),
+            "ma20_spy_close":        run_log.get("ma20_spy_close"),
+            "ma20_gap_pct":          ma20_gap,
+            "regime_label":          regime,
+            "vix":                   vix,
+            "drawdown_pct":          drawdown,
+            "kill_switch_active":    kill,
+            "peak_equity":           round(peak_eq, 2),
+            "start_equity":          round(start_eq, 2),
+            "total_deposited":       round(tot_dep, 2),
+            "cumulative_trading_pnl":round(tpnl + total_upl, 2),
+            "deposits":              bl.get("deposits", []),
+            "run_history":           recent,
+            "signals":               signals,
+        }
+        write_github_log("logs/dashboard_payload.json", payload)
+        print("  [DASH] dashboard_payload.json written to GitHub")
+    except Exception as e:
+        print(f"  [DASH] write_dashboard_payload failed (non-fatal): {e}")
 
 
 if __name__ == "__main__":
