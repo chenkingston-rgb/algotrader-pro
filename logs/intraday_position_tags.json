@@ -11,12 +11,6 @@
     "entry_time": "2026-06-29T09:45:32.191204-04:00",
     "entry_price": 183.48
   },
-  "LRCX": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-29T10:45:32.901414-04:00",
-    "entry_price": 394.46
-  },
   "XLV": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
