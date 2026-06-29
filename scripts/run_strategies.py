@@ -434,8 +434,20 @@ def get_spy_ma20_regime(prior_is_bull: bool = True) -> tuple:
             logging.warning("[MA20] Insufficient SPY bars — skipping regime filter")
             return True, 0.0, 0.0
 
-        spy_close = float(df["close"].iloc[-1])
-        ma20      = float(df["close"].iloc[-20:].mean())
+        # ── Drop today's partial intraday candle ─────────────────────────────
+        # Alpaca 1Day bars include today's partial session during market hours.
+        # A partial candle's "close" = current price, NOT a completed session close.
+        # This causes regime whipsaws on Monday mornings when SPY gaps up from
+        # a bearish Friday close — the partial candle appears BULL mid-session.
+        # Fix: exclude any bar whose date == today (ET) so we only compare
+        # completed daily closes, matching the nightly regime update contract.
+        today_et = datetime.now(ET_TZ).date()
+        df_completed = df[df.index.date < today_et] if hasattr(df.index, 'date') else df.iloc[:-1]
+        if df_completed.empty or len(df_completed) < 20:
+            # Fallback to all bars if filtering leaves too few (e.g. early morning data gap)
+            df_completed = df
+        spy_close = float(df_completed["close"].iloc[-1])
+        ma20      = float(df_completed["close"].iloc[-20:].mean())
         gap_pct   = (spy_close - ma20) / ma20 * 100
 
         bear_threshold = ma20 * (1 - bear_band)  # e.g. MA20 × 0.990
