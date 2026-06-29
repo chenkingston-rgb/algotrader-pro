@@ -16,5 +16,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-29T09:45:32.191204-04:00",
     "entry_price": 389.16
+  },
+  "XLV": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-29T09:45:32.191204-04:00",
+    "entry_price": 160.82
   }
 }
