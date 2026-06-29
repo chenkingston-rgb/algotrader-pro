@@ -20,8 +20,9 @@ import { useState, useEffect, useCallback } from "react";
 //    3. Cumulative P&L + Positions + Engine + Signals
 // ─────────────────────────────────────────────────────────────────────────────
 
-const FUNCTION_URL = "https://69f60c0cd56ea2902b494394.base44.app/api/functions/getLivePortfolio";
-const REFRESH_MS   = 300_000; // 5 min — engine runs every 15min, 5min refresh is sufficient
+// Data read directly from GitHub raw — zero Base44 integration credits
+const DATA_URL = "https://raw.githubusercontent.com/chenkingston-rgb/algotrader-pro/main/logs/dashboard_payload.json";
+const REFRESH_MS   = 300_000; // 5 min — engine writes every 15min, polling more often wastes nothing but is pointless
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const pnlColor = (v) => (v == null || isNaN(v)) ? "text-slate-400" : (v >= 0 ? "text-emerald-400" : "text-red-400");
@@ -277,7 +278,11 @@ export default function Dashboard() {
 
   const fetchData = useCallback(async () => {
     try {
-      const r = await fetch(FUNCTION_URL, { method: "GET" });
+      // Fetch pre-built payload from GitHub raw — no Base44 function call
+      const r = await fetch(`${DATA_URL}?t=${Date.now()}`, {
+        method: "GET",
+        headers: { "Cache-Control": "no-cache" },
+      });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const raw = await r.json();
       if (raw.error) throw new Error(raw.error);
