@@ -4,5 +4,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-29T09:45:32.191204-04:00",
     "entry_price": 32.84
+  },
+  "IWM": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-29T09:45:32.191204-04:00",
+    "entry_price": 299.11
   }
 }
