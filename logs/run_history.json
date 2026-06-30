@@ -1,17 +1,5 @@
 [
   {
-    "timestamp": "2026-06-19T12:15:33.745401-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28617.55,
-    "vix": 16.78,
-    "signals_count": 38,
-    "orders_count": 0,
-    "symbols_traded": [],
-    "trading_pnl": 74.01,
-    "total_deposited": 27768.78
-  },
-  {
     "timestamp": "2026-06-19T12:30:41.967175-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -3005,5 +2993,24 @@
     "total_deposited": 27768.78,
     "ma20_bear_block": false,
     "drawdown_pct": 0.83
+  },
+  {
+    "timestamp": "2026-06-30T10:00:48.948491-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28526.99,
+    "last_equity": 28540.85,
+    "vix": 17.46,
+    "signals_count": 38,
+    "orders_count": 3,
+    "symbols_traded": [
+      "AMD",
+      "SPY",
+      "XLI"
+    ],
+    "trading_pnl": -16.55,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": false,
+    "drawdown_pct": 0.8
   }
 ]
