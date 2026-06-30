@@ -1,22 +1,5 @@
 [
   {
-    "timestamp": "2026-06-22T09:45:45.518738-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28719.65,
-    "vix": 16.8,
-    "signals_count": 38,
-    "orders_count": 2,
-    "symbols_traded": [
-      "IWM",
-      "QCOM"
-    ],
-    "trading_pnl": 176.11,
-    "total_deposited": 27768.78,
-    "ma20_bear_block": false,
-    "drawdown_pct": 0.0
-  },
-  {
     "timestamp": "2026-06-22T10:00:55.670863-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -3095,5 +3078,20 @@
     "total_deposited": 27768.78,
     "ma20_bear_block": false,
     "drawdown_pct": 0.59
+  },
+  {
+    "timestamp": "2026-06-30T13:55:13.198348-04:00",
+    "mode": "live",
+    "strategy_mode": "daily",
+    "equity": 28584.73,
+    "last_equity": 28540.85,
+    "vix": 16.69,
+    "signals_count": 120,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": 41.19,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": false,
+    "drawdown_pct": 0.6
   }
 ]
