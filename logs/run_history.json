@@ -1,22 +1,5 @@
 [
   {
-    "timestamp": "2026-06-22T12:30:47.493381-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28704.0,
-    "last_equity": 28617.55,
-    "vix": 17.47,
-    "signals_count": 38,
-    "orders_count": 1,
-    "symbols_traded": [
-      "IONQ"
-    ],
-    "trading_pnl": 160.46,
-    "total_deposited": 27768.78,
-    "ma20_bear_block": false,
-    "drawdown_pct": 0.18
-  },
-  {
     "timestamp": "2026-06-22T12:45:41.228766-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -3088,6 +3071,21 @@
     "orders_count": 0,
     "symbols_traded": [],
     "trading_pnl": 51.17,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": false,
+    "drawdown_pct": 0.56
+  },
+  {
+    "timestamp": "2026-06-30T15:30:39.699339-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28595.43,
+    "last_equity": 28540.85,
+    "vix": 16.42,
+    "signals_count": 40,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": 51.89,
     "total_deposited": 27768.78,
     "ma20_bear_block": false,
     "drawdown_pct": 0.56
