@@ -28,5 +28,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-06-30T11:00:47.424087-04:00",
     "entry_price": 248.32
+  },
+  "HOOD": {
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-30T11:00:47.424087-04:00",
+    "entry_price": 100.4
   }
 }
