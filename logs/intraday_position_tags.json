@@ -1,14 +1,14 @@
 {
-  "SNOW": {
-    "strategy": "bollinger_bands_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-30T09:45:30.948753-04:00",
-    "entry_price": 248.4
-  },
   "XLI": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
     "entry_time": "2026-06-30T09:45:30.948753-04:00",
     "entry_price": 183.62
+  },
+  "AMD": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-06-30T09:45:30.948753-04:00",
+    "entry_price": 551.96
   }
 }
