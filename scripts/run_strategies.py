@@ -1498,7 +1498,7 @@ def run_all_strategies(symbol: str, candles: list) -> None:
 # ─────────────────────────────────────────────
 INTRADAY_STRATEGY_NAMES = set(INTRADAY_STRATEGIES.keys())
 EOD_EXIT_HOUR  = 15
-EOD_EXIT_MIN   = 30
+EOD_EXIT_MIN   = 0   # BUG-011: cron ends 19:00 UTC = 3:00pm ET; was 30, now 0
 EOD_TAG_FILE   = "logs/intraday_position_tags.json"
 LIVE_BASELINE_FILE = "logs/live_baseline.json"
 
@@ -1789,9 +1789,9 @@ def main():
                 # silently preventing the execution block from ever being reached.
                 if strategy_type == "intraday":
                     now_et_check = datetime.now(ET)
-                    eod_cutoff   = now_et_check.replace(hour=15, minute=15, second=0, microsecond=0)
+                    eod_cutoff   = now_et_check.replace(hour=14, minute=45, second=0, microsecond=0)
                     if now_et_check >= eod_cutoff:
-                        skip_reason = f"late_day_block (after 15:15 ET — intraday only)"
+                        skip_reason = f"late_day_block (after 14:45 ET — intraday only, EOD sweep at 15:00 ET)"
                 # Kill switch — block all new entries when trailing drawdown >= threshold
                 if not skip_reason and _kill_switch_active:
                     skip_reason = (f"kill_switch_active "
