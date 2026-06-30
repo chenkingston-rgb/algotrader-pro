@@ -11,12 +11,6 @@
     "entry_time": "2026-06-30T10:45:32.951584-04:00",
     "entry_price": 730.14
   },
-  "MU": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-06-30T10:45:32.951584-04:00",
-    "entry_price": 1150.1
-  },
   "SNOW": {
     "strategy": "bollinger_bands_15m",
     "strategy_type": "intraday",
