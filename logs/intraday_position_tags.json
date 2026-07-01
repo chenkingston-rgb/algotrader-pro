@@ -1,1 +1,8 @@
-{}
+{
+  "XLK": {
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-01T10:00:47.264007-04:00",
+    "entry_price": 187.71
+  }
+}
