@@ -1994,7 +1994,7 @@ def write_dashboard_payload(run_log: dict, live_baseline: dict, position_details
         kill      = run_log.get("kill_switch_active", False)
 
         # Run history from existing file (we just append to it elsewhere)
-        rh_raw   = read_github_log(RUN_HISTORY_FILE) or []
+        rh_raw   = load_json_from_github(HISTORY_FILE) or []
         rh_list  = rh_raw if isinstance(rh_raw, list) else []
         recent   = sorted([e for e in rh_list if e.get("timestamp")],
                            key=lambda x: x["timestamp"], reverse=True)[:30]
