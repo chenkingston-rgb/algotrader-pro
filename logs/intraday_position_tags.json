@@ -10,5 +10,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-07-01T10:15:31.794579-04:00",
     "entry_price": 105.42
+  },
+  "PANW": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-01T10:15:31.794579-04:00",
+    "entry_price": 351.32
   }
 }
