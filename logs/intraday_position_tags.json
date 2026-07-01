@@ -1,8 +1,1 @@
-{
-  "SPY": {
-    "strategy": "bollinger_bands_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-07-01T09:45:32.877504-04:00",
-    "entry_price": 743.31
-  }
-}
+{}
