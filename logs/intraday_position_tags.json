@@ -1,8 +1,1 @@
-{
-  "BAC": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-07-01T11:30:44.119690-04:00",
-    "entry_price": 58.1
-  }
-}
+{}
