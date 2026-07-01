@@ -1,20 +1,5 @@
 [
   {
-    "timestamp": "2026-06-22T15:00:52.019578-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28688.68,
-    "last_equity": 28617.55,
-    "vix": 17.29,
-    "signals_count": 40,
-    "orders_count": 0,
-    "symbols_traded": [],
-    "trading_pnl": 145.14,
-    "total_deposited": 27768.78,
-    "ma20_bear_block": false,
-    "drawdown_pct": 0.24
-  },
-  {
     "timestamp": "2026-06-22T15:15:37.132730-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -3105,5 +3090,24 @@
     "total_deposited": 27768.78,
     "ma20_bear_block": false,
     "drawdown_pct": 0.4
+  },
+  {
+    "timestamp": "2026-07-01T12:29:41.053138-04:00",
+    "mode": "live",
+    "strategy_mode": "daily",
+    "equity": 28644.0,
+    "last_equity": 28590.03,
+    "vix": 16.02,
+    "signals_count": 120,
+    "orders_count": 3,
+    "symbols_traded": [
+      "HOOD",
+      "SPY",
+      "SOFI"
+    ],
+    "trading_pnl": 100.46,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": false,
+    "drawdown_pct": 0.39
   }
 ]
