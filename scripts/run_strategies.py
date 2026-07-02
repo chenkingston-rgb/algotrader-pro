@@ -1500,6 +1500,7 @@ INTRADAY_STRATEGY_NAMES = set(INTRADAY_STRATEGIES.keys())
 EOD_EXIT_HOUR  = 15
 EOD_EXIT_MIN   = 0   # BUG-011: cron ends 19:00 UTC = 3:00pm ET; was 30, now 0
 EOD_TAG_FILE   = "logs/intraday_position_tags.json"
+STRATEGY_LOG_FILE = "logs/strategy_trade_log.json"  # v7.5: permanent, strategy-tagged trade outcomes
 LIVE_BASELINE_FILE = "logs/live_baseline.json"
 
 
@@ -1566,6 +1567,100 @@ def run_eod_exit(positions, position_tags, all_signals, orders_placed, run_start
             del position_tags[sym]
         except Exception as e:
             print(f"  [WARN] EOD exit failed for {sym}: {e}")
+    return position_tags
+
+
+def get_last_sell_fill(symbol: str, after_iso: str) -> dict:
+    """Find the most recent FILLED sell order for symbol after a given timestamp.
+    Used to reconstruct exit details for positions closed by a broker-side
+    bracket stop/take-profit fill that happened outside our own script call."""
+    try:
+        r = requests.get(f"{ALPACA_BASE}/v2/orders", headers=alpaca_headers(),
+                          params={"status": "closed", "symbols": symbol, "side": "sell",
+                                  "after": after_iso, "limit": 10, "direction": "desc"},
+                          timeout=10)
+        r.raise_for_status()
+        for o in r.json():
+            if o.get("status") == "filled" and o.get("filled_avg_price"):
+                return o
+    except Exception as e:
+        print(f"  [WARN] get_last_sell_fill failed for {symbol}: {e}")
+    return None
+
+
+def reconcile_closed_trades(positions: dict, position_tags: dict) -> dict:
+    """v7.5: Detect tagged positions that have since closed — most importantly,
+    broker-side bracket stop-loss / take-profit fills that happen between runs
+    and never pass through our own sell-signal code path. Reconstructs the full
+    trade record (entry + exit + pnl + hold time + exit reason + entry context)
+    and appends it to a permanent, strategy-tagged trade log so we can analyze
+    real strategy performance (win rate by strategy, by exit reason, by entry
+    conditions like extension/ATR/VIX) over weeks and months — not just the
+    last few hours that fit in the rolling signals_history window."""
+    closed_trades = []
+    for sym in list(position_tags.keys()):
+        if sym in positions:
+            continue  # still open — nothing to reconcile
+        tag = position_tags[sym]
+        entry_time  = tag.get("entry_time")
+        entry_price = tag.get("entry_price")
+        if not entry_time or entry_price is None:
+            del position_tags[sym]
+            continue
+        fill = get_last_sell_fill(sym, entry_time)
+        if not fill:
+            continue  # exit not confirmed yet — retry next run, leave tag in place
+        try:
+            exit_price = float(fill.get("filled_avg_price") or 0)
+            qty        = float(fill.get("filled_qty") or 0)
+        except (TypeError, ValueError):
+            continue
+        if exit_price <= 0 or qty <= 0:
+            continue
+        exit_time = fill.get("filled_at") or fill.get("updated_at")
+        pnl       = (exit_price - entry_price) * qty
+        pnl_pct   = (exit_price - entry_price) / entry_price * 100
+        try:
+            hold_minutes = (
+                datetime.fromisoformat(exit_time.replace("Z", "+00:00")) -
+                datetime.fromisoformat(entry_time.replace("Z", "+00:00"))
+            ).total_seconds() / 60
+        except Exception:
+            hold_minutes = None
+        order_type  = fill.get("type")
+        order_class = fill.get("order_class")
+        if order_type == "stop":
+            exit_reason = "stop_loss"
+        elif order_type == "limit" and order_class == "bracket":
+            exit_reason = "take_profit"
+        else:
+            exit_reason = "signal_or_manual"
+        closed_trades.append({
+            "symbol": sym,
+            "strategy": tag.get("strategy", "unknown"),
+            "strategy_type": tag.get("strategy_type", "unknown"),
+            "entry_time": entry_time, "entry_price": entry_price,
+            "exit_time": exit_time, "exit_price": round(exit_price, 4),
+            "qty": qty, "pnl": round(pnl, 2), "pnl_pct": round(pnl_pct, 3),
+            "hold_minutes": round(hold_minutes, 1) if hold_minutes is not None else None,
+            "exit_reason": exit_reason,
+            "entry_vix": tag.get("entry_vix"),
+            "entry_atr": tag.get("entry_atr"),
+            "entry_stop_price": tag.get("stop_price"),
+            "entry_tp_price": tag.get("tp_price"),
+            "entry_indicators": tag.get("entry_indicators", {}),
+            "logged_at": datetime.now(timezone.utc).isoformat(),
+        })
+        del position_tags[sym]
+
+    if closed_trades:
+        log = load_json_from_github(STRATEGY_LOG_FILE)
+        if not isinstance(log, list):
+            log = []
+        log.extend(closed_trades)
+        write_github_log(STRATEGY_LOG_FILE, log)
+        print(f"  [TRADE LOG] Reconciled {len(closed_trades)} closed trade(s) -> {STRATEGY_LOG_FILE} "
+              f"({len(log)} total)")
     return position_tags
 
 
@@ -1659,6 +1754,7 @@ def main():
     # Fresh positions on every loop start (Rule: never stale)
     positions     = get_positions()
     position_tags = load_json_from_github(EOD_TAG_FILE)
+    position_tags = reconcile_closed_trades(positions, position_tags)  # v7.5: log stop/tp fills before this run's logic
 
     # Live mode: deposit detection
     live_baseline = {}
@@ -1822,12 +1918,16 @@ def main():
                             "stop_price": round(stop_price, 2), "tp_price": round(tp_price, 2),
                             "order_id": order_id, "timestamp": run_start.isoformat(),
                         })
-                        # Tag intraday entries for EOD exit
+                        # Tag intraday entries for EOD exit + long-term trade log (v7.5)
                         if strategy_type == "intraday":
                             position_tags[symbol] = {
                                 "strategy": strat_name, "strategy_type": "intraday",
                                 "entry_time": run_start.isoformat(),
                                 "entry_price": round(price, 2),
+                                "entry_vix": vix, "entry_atr": round(atr, 4),
+                                "stop_price": round(stop_price, 2),
+                                "tp_price": round(tp_price, 2),
+                                "entry_indicators": inds,
                             }
                             write_github_log(EOD_TAG_FILE, position_tags)
                         # Immediate in-memory cache update (BUG-001)
