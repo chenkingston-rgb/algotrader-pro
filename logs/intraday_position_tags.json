@@ -16,5 +16,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-07-02T10:15:34.209027-04:00",
     "entry_price": 45.08
+  },
+  "GLD": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-02T10:45:31.005499-04:00",
+    "entry_price": 377.75
   }
 }
