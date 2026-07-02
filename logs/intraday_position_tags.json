@@ -4,5 +4,11 @@
     "strategy_type": "intraday",
     "entry_time": "2026-07-02T09:45:31.558303-04:00",
     "entry_price": 55.32
+  },
+  "XLI": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-02T09:45:31.558303-04:00",
+    "entry_price": 184.99
   }
 }
