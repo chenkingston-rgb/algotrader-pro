@@ -1,1 +1,24 @@
-{}
+{
+  "PYPL": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-03T09:45:33.735974-04:00",
+    "entry_price": 45.45,
+    "entry_vix": 15.89,
+    "entry_atr": 0.1382,
+    "stop_price": 45.24,
+    "tp_price": 45.86,
+    "entry_indicators": {
+      "roc": 0.81,
+      "roc_prev": 0.644,
+      "threshold": 0.3,
+      "ma50": 44.86,
+      "price_vs_ma50": 1.322,
+      "vol_ratio": 4.62,
+      "bar_open": 45.33,
+      "bar_move": 0.125,
+      "atr_val": 0.138,
+      "atr_ext_ok": "True"
+    }
+  }
+}
