@@ -2,9 +2,9 @@
   "PYPL": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
-    "entry_time": "2026-07-03T10:15:31.581238-04:00",
+    "entry_time": "2026-07-03T10:30:43.009493-04:00",
     "entry_price": 45.45,
-    "entry_vix": 15.92,
+    "entry_vix": 15.95,
     "entry_atr": 0.1382,
     "stop_price": 45.24,
     "tp_price": 45.86,
