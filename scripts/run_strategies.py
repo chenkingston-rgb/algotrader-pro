@@ -1741,6 +1741,26 @@ def main():
         print(f"[FATAL] Cannot reach Alpaca API: {e}")
         sys.exit(1)
 
+    # BUG-012 (v7.6): Weekday-only check in the GitHub Actions workflow does not
+    # account for market holidays (e.g. July 3 observed-Friday close for July 4th).
+    # On a holiday, orders never fill (stay "accepted") but the workflow keeps
+    # firing every 15 min, stacking duplicate unfilled bracket buy orders that
+    # could all execute at once on the next real open. Verify against Alpaca's
+    # actual trading calendar before doing anything else.
+    try:
+        today_str = run_start.strftime("%Y-%m-%d")
+        cal_r = requests.get(f"{ALPACA_BASE}/v2/calendar",
+                              headers=alpaca_headers(),
+                              params={"start": today_str, "end": today_str}, timeout=10)
+        cal_days = cal_r.json() if cal_r.ok else []
+        if not cal_days:
+            print(f"[HOLIDAY_GUARD] {today_str} is not a scheduled trading day "
+                  f"(market holiday or non-trading date) — exiting without placing any orders.")
+            sys.exit(0)
+    except Exception as e:
+        print(f"[WARN] Holiday calendar check failed ({e}) — proceeding cautiously, "
+              f"relying on workflow-level weekday/time gate only.")
+
     equity       = float(account["equity"])
     buying_power = float(account["buying_power"])
     last_equity  = float(account.get("last_equity", equity))
