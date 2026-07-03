@@ -24,9 +24,9 @@
   "XLI": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
-    "entry_time": "2026-07-03T10:15:31.581238-04:00",
+    "entry_time": "2026-07-03T10:30:43.009493-04:00",
     "entry_price": 183.9,
-    "entry_vix": 15.92,
+    "entry_vix": 15.95,
     "entry_atr": 0.4786,
     "stop_price": 183.18,
     "tp_price": 185.34,
