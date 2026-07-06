@@ -64,27 +64,5 @@
       "atr_val": 1.723,
       "atr_ext_ok": "True"
     }
-  },
-  "AMD": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-07-06T10:15:42.802032-04:00",
-    "entry_price": 568.74,
-    "entry_vix": 16.3,
-    "entry_atr": 9.5503,
-    "stop_price": 554.41,
-    "tp_price": 597.39,
-    "entry_indicators": {
-      "roc": 11.071,
-      "roc_prev": 10.168,
-      "threshold": 0.3,
-      "ma50": 533.81,
-      "price_vs_ma50": 6.544,
-      "vol_ratio": 1.23,
-      "bar_open": 559.91,
-      "bar_move": 8.83,
-      "atr_val": 9.55,
-      "atr_ext_ok": "True"
-    }
   }
 }
