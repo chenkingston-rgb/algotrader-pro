@@ -59,5 +59,27 @@
       "bb_upper": 129.24,
       "ma_filter": 127.25
     }
+  },
+  "SPY": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-06T09:45:36.198050-04:00",
+    "entry_price": 748.64,
+    "entry_vix": 16.49,
+    "entry_atr": 1.8073,
+    "stop_price": 745.93,
+    "tp_price": 754.06,
+    "entry_indicators": {
+      "roc": 0.861,
+      "roc_prev": 0.519,
+      "threshold": 0.3,
+      "ma50": 745.92,
+      "price_vs_ma50": 0.364,
+      "vol_ratio": 1.42,
+      "bar_open": 748.22,
+      "bar_move": 0.42,
+      "atr_val": 1.807,
+      "atr_ext_ok": "True"
+    }
   }
 }
