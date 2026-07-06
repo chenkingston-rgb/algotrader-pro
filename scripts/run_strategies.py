@@ -135,7 +135,9 @@ INTRADAY_STRATEGIES = {
         "vix_type": "MOMENTUM",
         "vix_block": 28, "vix_reduce": 20, "vix_reduce_pct": 0.50,
         "params": {"roc_period": 10, "roc_threshold": 0.3,
-                   "atr_ext_mult": 1.0},  # FIX-C v7.4: block entry if bar moved >1x ATR from open
+                   "atr_ext_mult": 1.0,    # FIX-C v7.4: block entry if bar moved >1x ATR from open
+                   "roc_max_extension": 2.0},  # FIX-D v7.7: block entry if ROC already >2.0%
+                                                # (blow-off top, not a fresh breakout)
         "timeframe": "15Min", "bar_days": 20,
     },
 }
@@ -777,7 +779,18 @@ def signal_momentum_roc_15m(df: pd.DataFrame, p: dict) -> tuple:
     inds["atr_val"]    = round(atr_val, 3)
     inds["atr_ext_ok"] = atr_ext_ok
 
-    if r > p["roc_threshold"] and r > prev_r and above_ma50 and vol_ok and atr_ext_ok:
+    # FIX-D (v7.7): Rolling blow-off guard. The single-bar ATR-extension guard
+    # (FIX-C) only checks the CURRENT bar's move, so it misses multi-candle
+    # blow-off tops where the cumulative ROC move (over the full lookback window)
+    # is already extreme before entry. Data validation (Jul 6): 8 of 8 normal
+    # momentum entries clustered at ROC 0.75-1.04%; the 2 outliers at ROC 6.74%
+    # (INTC) and 11.07% (AMD) both lost money on immediate mean-reversion.
+    # Cap set with ~2x headroom above the highest normal historical entry.
+    roc_not_extended = r <= p.get("roc_max_extension", 2.0)
+    inds["roc_max_extension"] = p.get("roc_max_extension", 2.0)
+    inds["roc_not_extended"] = roc_not_extended
+
+    if r > p["roc_threshold"] and r > prev_r and above_ma50 and vol_ok and atr_ext_ok and roc_not_extended:
         return "buy", inds
 
     # SELL: ROC below negative threshold + decelerating (no trend/vol filter on sells)
