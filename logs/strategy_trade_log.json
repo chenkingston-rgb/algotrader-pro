@@ -1,1 +1,33 @@
-[]
+[
+  {
+    "symbol": "INTC",
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-06T10:15:42.802032-04:00",
+    "entry_price": 126.73,
+    "exit_time": "2026-07-06T15:17:01.887Z",
+    "exit_price": 124.1305,
+    "qty": 22.0,
+    "pnl": -57.19,
+    "pnl_pct": -2.051,
+    "hold_minutes": 61.3,
+    "exit_reason": "stop_loss",
+    "entry_vix": 16.3,
+    "entry_atr": 1.7234,
+    "entry_stop_price": 124.14,
+    "entry_tp_price": 131.9,
+    "entry_indicators": {
+      "roc": 6.738,
+      "roc_prev": 5.513,
+      "threshold": 0.3,
+      "ma50": 124.37,
+      "price_vs_ma50": 1.899,
+      "vol_ratio": 1.45,
+      "bar_open": 125.08,
+      "bar_move": 1.65,
+      "atr_val": 1.723,
+      "atr_ext_ok": "True"
+    },
+    "logged_at": "2026-07-06T15:30:56.163549+00:00"
+  }
+]
