@@ -42,5 +42,27 @@
       "atr_val": 0.479,
       "atr_ext_ok": "True"
     }
+  },
+  "INTC": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-06T10:15:42.802032-04:00",
+    "entry_price": 126.73,
+    "entry_vix": 16.3,
+    "entry_atr": 1.7234,
+    "stop_price": 124.14,
+    "tp_price": 131.9,
+    "entry_indicators": {
+      "roc": 6.738,
+      "roc_prev": 5.513,
+      "threshold": 0.3,
+      "ma50": 124.37,
+      "price_vs_ma50": 1.899,
+      "vol_ratio": 1.45,
+      "bar_open": 125.08,
+      "bar_move": 1.65,
+      "atr_val": 1.723,
+      "atr_ext_ok": "True"
+    }
   }
 }
