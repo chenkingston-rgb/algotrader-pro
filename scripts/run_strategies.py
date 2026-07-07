@@ -145,6 +145,7 @@ INTRADAY_STRATEGIES = {
 STRATEGIES            = DAILY_STRATEGIES if STRATEGY_MODE == "daily" else INTRADAY_STRATEGIES
 LOG_FILE              = f"logs/{STRATEGY_MODE}_latest.json"
 HISTORY_FILE          = "logs/run_history.json"
+DAILY_EQUITY_FILE     = "logs/daily_equity_history.json"  # v7.8: never-truncated, 1 row/day, for all-time chart
 SIGNALS_HISTORY_FILE  = "logs/signals_history.json"
 MAX_SIGNALS_HISTORY   = 500   # rolling window kept in repo
 
@@ -248,6 +249,51 @@ def append_run_history(run_summary: dict):
         print(f"  [LOG] Appended to {HISTORY_FILE} ({len(history)} entries) ✓")
     else:
         print(f"  [WARN] Failed to append history: {put_r.status_code} {put_r.text[:200]}")
+
+
+def append_daily_equity_history(date_str: str, equity: float, last_equity: float):
+    """
+    v7.8: Upsert today's row in logs/daily_equity_history.json — ONE entry per
+    calendar day (ET), never truncated. run_history.json is capped at the last
+    200 runs (~1.5 weeks) by design to keep the file small for the hourly view;
+    this file exists specifically so the dashboard can render a true all-time
+    equity curve at daily granularity. Each run overwrites *today's* row with
+    the latest equity so intraday moves show up; once a day ends, its row is
+    frozen (never touched again by subsequent days' runs).
+    """
+    if not GITHUB_TOKEN or not GITHUB_REPOSITORY:
+        return
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept":        "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    api_url = f"https://api.github.com/repos/{GITHUB_REPOSITORY}/contents/{DAILY_EQUITY_FILE}"
+    history = []
+    get_r = requests.get(api_url, headers=headers, timeout=10)
+    if get_r.ok:
+        try:
+            existing = json.loads(base64.b64decode(get_r.json()["content"]).decode())
+            history = existing if isinstance(existing, list) else []
+        except Exception:
+            history = []
+    sha = get_r.json().get("sha") if get_r.ok else None
+    row = {"date": date_str, "equity": round(equity, 2), "last_equity": round(last_equity, 2)}
+    if history and history[-1].get("date") == date_str:
+        history[-1] = row
+    else:
+        history.append(row)
+    content_b64 = base64.b64encode(
+        json.dumps(history, indent=2, default=str).encode()
+    ).decode()
+    payload = {"message": f"[bot] Upsert {DAILY_EQUITY_FILE} [skip render]", "content": content_b64}
+    if sha:
+        payload["sha"] = sha
+    put_r = requests.put(api_url, headers=headers, json=payload, timeout=15)
+    if put_r.ok:
+        print(f"  [LOG] Upserted {DAILY_EQUITY_FILE} ({len(history)} days total) ✓")
+    else:
+        print(f"  [WARN] Failed to update daily equity history: {put_r.status_code} {put_r.text[:200]}")
 
 
 def append_signals_history(new_signals: list):
@@ -2079,6 +2125,7 @@ def main():
         "drawdown_pct": round(drawdown_pct, 2),
     })
     append_signals_history(all_signals)
+    append_daily_equity_history(run_start.astimezone(ET).strftime("%Y-%m-%d"), equity, last_equity)
     print(f"\nRun complete — {len(all_signals)} signals | {len(orders_placed)} orders")
 
 
