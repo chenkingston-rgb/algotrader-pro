@@ -29,5 +29,31 @@
       "atr_ext_ok": "True"
     },
     "logged_at": "2026-07-06T15:30:56.163549+00:00"
+  },
+  {
+    "symbol": "SPY",
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-07T10:00:52.665017-04:00",
+    "entry_price": 748.9,
+    "exit_time": "2026-07-07T14:15:24.578Z",
+    "exit_price": 746.64,
+    "qty": 3.0,
+    "pnl": -6.78,
+    "pnl_pct": -0.302,
+    "hold_minutes": 14.5,
+    "exit_reason": "stop_loss",
+    "entry_vix": 15.85,
+    "entry_atr": 0.9375,
+    "entry_stop_price": 746.66,
+    "entry_tp_price": 753.4,
+    "entry_indicators": {
+      "price": 748.9,
+      "bb_lower": 748.97,
+      "bb_mid": 750.87,
+      "bb_upper": 752.78,
+      "ma_filter": 747.63
+    },
+    "logged_at": "2026-07-07T14:15:35.052994+00:00"
   }
 ]
