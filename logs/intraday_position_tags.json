@@ -22,5 +22,22 @@
       "roc_max_extension": 2.0,
       "roc_not_extended": "True"
     }
+  },
+  "GLD": {
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-07T11:30:47.147881-04:00",
+    "entry_price": 380.14,
+    "entry_vix": 16.49,
+    "entry_atr": 0.7458,
+    "stop_price": 379.0,
+    "tp_price": 382.42,
+    "entry_indicators": {
+      "price": 380.14,
+      "bb_lower": 380.27,
+      "bb_mid": 381.61,
+      "bb_upper": 382.95,
+      "ma_filter": 380.11
+    }
   }
 }
