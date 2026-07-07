@@ -55,5 +55,38 @@
       "ma_filter": 747.63
     },
     "logged_at": "2026-07-07T14:15:35.052994+00:00"
+  },
+  {
+    "symbol": "XLE",
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-07T10:45:32.065228-04:00",
+    "entry_price": 54.24,
+    "exit_time": "2026-07-07T16:10:53.32Z",
+    "exit_price": 53.8945,
+    "qty": 53.0,
+    "pnl": -18.31,
+    "pnl_pct": -0.637,
+    "hold_minutes": 85.4,
+    "exit_reason": "stop_loss",
+    "entry_vix": 16.38,
+    "entry_atr": 0.2265,
+    "entry_stop_price": 53.9,
+    "entry_tp_price": 54.92,
+    "entry_indicators": {
+      "roc": 1.897,
+      "roc_prev": 1.85,
+      "threshold": 0.3,
+      "ma50": 53.27,
+      "price_vs_ma50": 1.813,
+      "vol_ratio": 1.88,
+      "bar_open": 54.21,
+      "bar_move": 0.03,
+      "atr_val": 0.227,
+      "atr_ext_ok": "True",
+      "roc_max_extension": 2.0,
+      "roc_not_extended": "True"
+    },
+    "logged_at": "2026-07-07T16:15:36.102920+00:00"
   }
 ]
