@@ -1,1 +1,26 @@
-{}
+{
+  "XLV": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-07T10:15:33.664524-04:00",
+    "entry_price": 164.78,
+    "entry_vix": 16.07,
+    "entry_atr": 0.6495,
+    "stop_price": 163.81,
+    "tp_price": 166.73,
+    "entry_indicators": {
+      "roc": 1.625,
+      "roc_prev": 1.58,
+      "threshold": 0.3,
+      "ma50": 162.48,
+      "price_vs_ma50": 1.421,
+      "vol_ratio": 1.37,
+      "bar_open": 164.84,
+      "bar_move": -0.055,
+      "atr_val": 0.649,
+      "atr_ext_ok": "True",
+      "roc_max_extension": 2.0,
+      "roc_not_extended": "True"
+    }
+  }
+}
