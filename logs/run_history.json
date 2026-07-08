@@ -1,25 +1,5 @@
 [
   {
-    "timestamp": "2026-06-29T10:00:43.893587-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28457.6,
-    "last_equity": 28513.72,
-    "vix": 18.0,
-    "signals_count": 38,
-    "orders_count": 4,
-    "symbols_traded": [
-      "DDOG",
-      "HOOD",
-      "CMG",
-      "CMG"
-    ],
-    "trading_pnl": -85.94,
-    "total_deposited": 27768.78,
-    "ma20_bear_block": false,
-    "drawdown_pct": 1.04
-  },
-  {
     "timestamp": "2026-06-29T10:15:33.723033-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -3214,6 +3194,21 @@
     "last_equity": 28817.6,
     "vix": 18.29,
     "signals_count": 120,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": 274.06,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": false,
+    "drawdown_pct": 0.3
+  },
+  {
+    "timestamp": "2026-07-08T12:15:34.197554-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28817.6,
+    "last_equity": 28817.6,
+    "vix": 18.16,
+    "signals_count": 38,
     "orders_count": 0,
     "symbols_traded": [],
     "trading_pnl": 274.06,
