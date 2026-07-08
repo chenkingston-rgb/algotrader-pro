@@ -1,29 +1,5 @@
 [
   {
-    "timestamp": "2026-06-29T09:45:32.191204-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28513.72,
-    "last_equity": 28513.72,
-    "vix": 18.27,
-    "signals_count": 38,
-    "orders_count": 8,
-    "symbols_traded": [
-      "CMG",
-      "IWM",
-      "XLK",
-      "CMG",
-      "LRCX",
-      "XLV",
-      "HOOD",
-      "DDOG"
-    ],
-    "trading_pnl": -29.82,
-    "total_deposited": 27768.78,
-    "ma20_bear_block": false,
-    "drawdown_pct": 0.85
-  },
-  {
     "timestamp": "2026-06-29T10:00:43.893587-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -3223,6 +3199,21 @@
     "last_equity": 28817.6,
     "vix": 18.32,
     "signals_count": 38,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": 274.06,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": false,
+    "drawdown_pct": 0.3
+  },
+  {
+    "timestamp": "2026-07-08T12:03:28.947539-04:00",
+    "mode": "live",
+    "strategy_mode": "daily",
+    "equity": 28817.6,
+    "last_equity": 28817.6,
+    "vix": 18.29,
+    "signals_count": 120,
     "orders_count": 0,
     "symbols_traded": [],
     "trading_pnl": 274.06,
