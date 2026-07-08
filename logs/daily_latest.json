@@ -1,11 +1,11 @@
 {
-  "run_timestamp": "2026-07-08T12:03:28.947539-04:00",
+  "run_timestamp": "2026-07-08T12:40:55.096733-04:00",
   "mode": "live",
   "strategy_mode": "daily",
   "equity": 28817.6,
   "last_equity": 28817.6,
   "buying_power": 115270.4,
-  "vix": 18.29,
+  "vix": 17.57,
   "drawdown_pct": 0.3,
   "peak_equity": 28903.5,
   "kill_switch_active": false,
@@ -13,13 +13,13 @@
   "position_details": [],
   "signals": [
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "SPY",
       "signal": "hold",
-      "price": 740.97,
+      "price": 743.19,
       "atr": 9.3754,
       "qty": 0,
       "stop_price": null,
@@ -27,23 +27,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 49.76,
-        "macd": 1.8145,
-        "macd_sig": 1.7876,
-        "macd_hist": 0.0269
+        "rsi": 51.35,
+        "macd": 1.9915,
+        "macd_sig": 1.823,
+        "macd_hist": 0.1685
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "QQQ",
       "signal": "hold",
-      "price": 703.22,
+      "price": 707.2,
       "atr": 15.8506,
       "qty": 0,
       "stop_price": null,
@@ -51,23 +51,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 45.2,
-        "macd": 0.3847,
-        "macd_sig": 3.4965,
-        "macd_hist": -3.1117
+        "rsi": 46.44,
+        "macd": 0.7022,
+        "macd_sig": 3.56,
+        "macd_hist": -2.8577
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "IWM",
       "signal": "hold",
-      "price": 291.25,
+      "price": 292.88,
       "atr": 4.9808,
       "qty": 0,
       "stop_price": null,
@@ -75,23 +75,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 47.74,
-        "macd": 2.8944,
-        "macd_sig": 3.7297,
-        "macd_hist": -0.8353
+        "rsi": 49.93,
+        "macd": 3.0244,
+        "macd_sig": 3.7557,
+        "macd_hist": -0.7313
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "GLD",
       "signal": "hold",
-      "price": 370.11,
+      "price": 371.6,
       "atr": 7.7296,
       "qty": 0,
       "stop_price": null,
@@ -99,23 +99,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 37.99,
-        "macd": -8.816,
-        "macd_sig": -9.931,
-        "macd_hist": 1.1151
+        "rsi": 38.78,
+        "macd": -8.6975,
+        "macd_sig": -9.9073,
+        "macd_hist": 1.2098
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "XLK",
       "signal": "hold",
-      "price": 178.11,
+      "price": 179.88,
       "atr": 5.8644,
       "qty": 0,
       "stop_price": null,
@@ -123,23 +123,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 45.14,
-        "macd": 0.1898,
-        "macd_sig": 1.6622,
-        "macd_hist": -1.4724
+        "rsi": 46.83,
+        "macd": 0.331,
+        "macd_sig": 1.6905,
+        "macd_hist": -1.3595
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "XLE",
       "signal": "hold",
-      "price": 55.91,
+      "price": 55.24,
       "atr": 1.0971,
       "qty": 0,
       "stop_price": null,
@@ -147,23 +147,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 53.69,
-        "macd": -0.8436,
-        "macd_sig": -1.0357,
-        "macd_hist": 0.192
+        "rsi": 50.25,
+        "macd": -0.8971,
+        "macd_sig": -1.0463,
+        "macd_hist": 0.1493
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "XLF",
       "signal": "hold",
-      "price": 55.14,
+      "price": 55.21,
       "atr": 0.7917,
       "qty": 0,
       "stop_price": null,
@@ -171,23 +171,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 63.14,
-        "macd": 0.8849,
-        "macd_sig": 0.7234,
-        "macd_hist": 0.1614
+        "rsi": 63.85,
+        "macd": 0.8901,
+        "macd_sig": 0.7245,
+        "macd_hist": 0.1656
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "PANW",
       "signal": "hold",
-      "price": 319.61,
+      "price": 321.55,
       "atr": 17.653,
       "qty": 0,
       "stop_price": null,
@@ -195,23 +195,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 58.46,
-        "macd": 23.0042,
-        "macd_sig": 21.826,
-        "macd_hist": 1.1782
+        "rsi": 59.31,
+        "macd": 23.1589,
+        "macd_sig": 21.857,
+        "macd_hist": 1.302
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "INTC",
       "signal": "hold",
-      "price": 104.93,
+      "price": 106.99,
       "atr": 10.4484,
       "qty": 0,
       "stop_price": null,
@@ -219,23 +219,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 40.61,
-        "macd": 1.2673,
-        "macd_sig": 4.7052,
-        "macd_hist": -3.4379
+        "rsi": 41.62,
+        "macd": 1.4316,
+        "macd_sig": 4.7381,
+        "macd_hist": -3.3064
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "AMD",
       "signal": "hold",
-      "price": 503.49,
+      "price": 510.47,
       "atr": 38.8823,
       "qty": 0,
       "stop_price": null,
@@ -243,23 +243,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 49.19,
-        "macd": 16.4837,
-        "macd_sig": 23.1458,
-        "macd_hist": -6.6621
+        "rsi": 50.27,
+        "macd": 17.0405,
+        "macd_sig": 23.2572,
+        "macd_hist": -6.2167
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "MRVL",
       "signal": "hold",
-      "price": 226.38,
+      "price": 229.14,
       "atr": 24.6345,
       "qty": 0,
       "stop_price": null,
@@ -267,23 +267,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 42.7,
-        "macd": 2.5897,
-        "macd_sig": 13.4092,
-        "macd_hist": -10.8195
+        "rsi": 43.25,
+        "macd": 2.8091,
+        "macd_sig": 13.4531,
+        "macd_hist": -10.644
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "HOOD",
       "signal": "hold",
-      "price": 110.04,
+      "price": 110.59,
       "atr": 6.5745,
       "qty": 0,
       "stop_price": null,
@@ -291,23 +291,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 60.71,
-        "macd": 6.8425,
-        "macd_sig": 6.0554,
-        "macd_hist": 0.7871
+        "rsi": 61.33,
+        "macd": 6.8868,
+        "macd_sig": 6.0642,
+        "macd_hist": 0.8226
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "AMAT",
       "signal": "hold",
-      "price": 563.48,
+      "price": 570.08,
       "atr": 51.9065,
       "qty": 0,
       "stop_price": null,
@@ -315,23 +315,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 49.22,
-        "macd": 30.1855,
-        "macd_sig": 43.5775,
-        "macd_hist": -13.3921
+        "rsi": 50.01,
+        "macd": 30.712,
+        "macd_sig": 43.6828,
+        "macd_hist": -12.9709
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "SNOW",
       "signal": "hold",
-      "price": 260.43,
+      "price": 259.3,
       "atr": 11.1392,
       "qty": 0,
       "stop_price": null,
@@ -339,23 +339,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 67.31,
-        "macd": 14.1499,
-        "macd_sig": 14.0532,
-        "macd_hist": 0.0967
+        "rsi": 66.3,
+        "macd": 14.0597,
+        "macd_sig": 14.0352,
+        "macd_hist": 0.0245
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "LRCX",
       "signal": "hold",
-      "price": 327.67,
+      "price": 333.0,
       "atr": 29.5764,
       "qty": 0,
       "stop_price": null,
@@ -363,23 +363,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 44.28,
-        "macd": 7.348,
-        "macd_sig": 17.7284,
-        "macd_hist": -10.3803
+        "rsi": 45.43,
+        "macd": 7.7728,
+        "macd_sig": 17.8133,
+        "macd_hist": -10.0405
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "BAC",
       "signal": "hold",
-      "price": 58.57,
+      "price": 58.54,
       "atr": 1.199,
       "qty": 0,
       "stop_price": null,
@@ -387,23 +387,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 62.74,
-        "macd": 1.5457,
-        "macd_sig": 1.4915,
-        "macd_hist": 0.0542
+        "rsi": 62.53,
+        "macd": 1.5433,
+        "macd_sig": 1.4911,
+        "macd_hist": 0.0523
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "V",
       "signal": "hold",
-      "price": 348.02,
+      "price": 347.77,
       "atr": 8.9088,
       "qty": 0,
       "stop_price": null,
@@ -411,23 +411,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 60.64,
-        "macd": 7.8552,
-        "macd_sig": 5.8594,
-        "macd_hist": 1.9958
+        "rsi": 60.38,
+        "macd": 7.8353,
+        "macd_sig": 5.8554,
+        "macd_hist": 1.9798
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "MS",
       "signal": "hold",
-      "price": 216.36,
+      "price": 217.61,
       "atr": 5.6534,
       "qty": 0,
       "stop_price": null,
@@ -435,23 +435,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 53.15,
-        "macd": 3.112,
-        "macd_sig": 4.0431,
-        "macd_hist": -0.9312
+        "rsi": 54.57,
+        "macd": 3.2117,
+        "macd_sig": 4.0631,
+        "macd_hist": -0.8514
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "SOFI",
       "signal": "hold",
-      "price": 17.2,
+      "price": 17.35,
       "atr": 0.9166,
       "qty": 0,
       "stop_price": null,
@@ -459,23 +459,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 48.08,
-        "macd": 0.3074,
-        "macd_sig": 0.3172,
-        "macd_hist": -0.0098
+        "rsi": 49.23,
+        "macd": 0.319,
+        "macd_sig": 0.3195,
+        "macd_hist": -0.0005
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "XLV",
       "signal": "hold",
-      "price": 163.22,
+      "price": 163.32,
       "atr": 2.8131,
       "qty": 0,
       "stop_price": null,
@@ -483,47 +483,47 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 66.76,
-        "macd": 3.6055,
-        "macd_sig": 2.809,
-        "macd_hist": 0.7965
+        "rsi": 67.05,
+        "macd": 3.6134,
+        "macd_sig": 2.8106,
+        "macd_hist": 0.8029
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "AAPL",
       "signal": "hold",
-      "price": 310.37,
-      "atr": 8.2977,
+      "price": 312.14,
+      "atr": 8.3431,
       "qty": 0,
       "stop_price": null,
       "tp_price": null,
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 60.93,
-        "macd": 2.7006,
-        "macd_sig": 0.4255,
-        "macd_hist": 2.275
+        "rsi": 62.11,
+        "macd": 2.8418,
+        "macd_sig": 0.4538,
+        "macd_hist": 2.388
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "MRK",
       "signal": "hold",
-      "price": 126.72,
+      "price": 125.86,
       "atr": 3.3988,
       "qty": 0,
       "stop_price": null,
@@ -531,23 +531,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 58.1,
-        "macd": 3.0285,
-        "macd_sig": 2.5042,
-        "macd_hist": 0.5243
+        "rsi": 56.46,
+        "macd": 2.9595,
+        "macd_sig": 2.4904,
+        "macd_hist": 0.4691
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "XLY",
       "signal": "hold",
-      "price": 114.63,
+      "price": 114.99,
       "atr": 2.3115,
       "qty": 0,
       "stop_price": null,
@@ -555,23 +555,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 44.38,
-        "macd": -0.1516,
-        "macd_sig": -0.2536,
-        "macd_hist": 0.102
+        "rsi": 45.25,
+        "macd": -0.1229,
+        "macd_sig": -0.2479,
+        "macd_hist": 0.1249
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "XLI",
       "signal": "hold",
-      "price": 179.42,
+      "price": 180.22,
       "atr": 3.4056,
       "qty": 0,
       "stop_price": null,
@@ -579,23 +579,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 50.07,
-        "macd": 2.248,
-        "macd_sig": 2.4466,
-        "macd_hist": -0.1986
+        "rsi": 51.48,
+        "macd": 2.3119,
+        "macd_sig": 2.4594,
+        "macd_hist": -0.1475
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "ARKK",
       "signal": "hold",
-      "price": 78.95,
+      "price": 79.49,
       "atr": 2.7407,
       "qty": 0,
       "stop_price": null,
@@ -603,47 +603,47 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 50.18,
-        "macd": 1.0287,
-        "macd_sig": 0.8238,
-        "macd_hist": 0.2048
+        "rsi": 51.51,
+        "macd": 1.0717,
+        "macd_sig": 0.8324,
+        "macd_hist": 0.2393
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "DIS",
       "signal": "hold",
-      "price": 96.93,
-      "atr": 2.2161,
+      "price": 97.61,
+      "atr": 2.2374,
       "qty": 0,
       "stop_price": null,
       "tp_price": null,
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 41.85,
-        "macd": -1.2538,
-        "macd_sig": -0.9986,
-        "macd_hist": -0.2552
+        "rsi": 43.55,
+        "macd": -1.1996,
+        "macd_sig": -0.9878,
+        "macd_hist": -0.2118
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "GOOGL",
       "signal": "hold",
-      "price": 360.31,
+      "price": 361.24,
       "atr": 10.3886,
       "qty": 0,
       "stop_price": null,
@@ -651,23 +651,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 49.32,
-        "macd": -1.997,
-        "macd_sig": -3.6926,
-        "macd_hist": 1.6955
+        "rsi": 49.91,
+        "macd": -1.9228,
+        "macd_sig": -3.6777,
+        "macd_hist": 1.7549
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "NKE",
       "signal": "hold",
-      "price": 42.4,
+      "price": 42.74,
       "atr": 1.5209,
       "qty": 0,
       "stop_price": null,
@@ -675,23 +675,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 45.44,
-        "macd": -0.4605,
-        "macd_sig": -0.5336,
-        "macd_hist": 0.0732
+        "rsi": 46.82,
+        "macd": -0.4341,
+        "macd_sig": -0.5284,
+        "macd_hist": 0.0942
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "PYPL",
       "signal": "hold",
-      "price": 43.9,
+      "price": 44.16,
       "atr": 1.4631,
       "qty": 0,
       "stop_price": null,
@@ -699,23 +699,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 50.59,
-        "macd": 0.2393,
-        "macd_sig": -0.1304,
-        "macd_hist": 0.3696
+        "rsi": 51.81,
+        "macd": 0.26,
+        "macd_sig": -0.1262,
+        "macd_hist": 0.3862
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "rsi_macd_combo",
       "strategy_type": "daily",
       "vix_type": "COMBO",
       "symbol": "UBER",
       "signal": "hold",
-      "price": 72.71,
+      "price": 73.18,
       "atr": 2.6485,
       "qty": 0,
       "stop_price": null,
@@ -723,23 +723,23 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "rsi": 49.99,
-        "macd": 0.3089,
-        "macd_sig": 0.134,
-        "macd_hist": 0.175
+        "rsi": 51.04,
+        "macd": 0.3468,
+        "macd_sig": 0.1415,
+        "macd_hist": 0.2053
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "SPY",
       "signal": "hold",
-      "price": 740.97,
+      "price": 744.03,
       "atr": 9.3754,
       "qty": 0,
       "stop_price": null,
@@ -747,22 +747,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 1.8145,
-        "macd_sig": 1.7876,
-        "macd_hist": 0.0269
+        "macd": 2.0586,
+        "macd_sig": 1.8364,
+        "macd_hist": 0.2221
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "QQQ",
       "signal": "hold",
-      "price": 703.22,
+      "price": 708.16,
       "atr": 15.8506,
       "qty": 0,
       "stop_price": null,
@@ -770,22 +770,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 0.3847,
-        "macd_sig": 3.4965,
-        "macd_hist": -3.1117
+        "macd": 0.7792,
+        "macd_sig": 3.5753,
+        "macd_hist": -2.7962
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "IWM",
       "signal": "hold",
-      "price": 291.25,
+      "price": 292.88,
       "atr": 4.9808,
       "qty": 0,
       "stop_price": null,
@@ -793,22 +793,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 2.8944,
-        "macd_sig": 3.7297,
-        "macd_hist": -0.8353
+        "macd": 3.0244,
+        "macd_sig": 3.7557,
+        "macd_hist": -0.7313
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "GLD",
       "signal": "hold",
-      "price": 370.11,
+      "price": 371.6,
       "atr": 7.7296,
       "qty": 0,
       "stop_price": null,
@@ -816,22 +816,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": -8.816,
-        "macd_sig": -9.931,
-        "macd_hist": 1.1151
+        "macd": -8.6975,
+        "macd_sig": -9.9073,
+        "macd_hist": 1.2098
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLK",
       "signal": "hold",
-      "price": 178.11,
+      "price": 179.88,
       "atr": 5.8644,
       "qty": 0,
       "stop_price": null,
@@ -839,22 +839,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 0.1898,
-        "macd_sig": 1.6622,
-        "macd_hist": -1.4724
+        "macd": 0.331,
+        "macd_sig": 1.6905,
+        "macd_hist": -1.3595
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLE",
       "signal": "hold",
-      "price": 55.91,
+      "price": 55.24,
       "atr": 1.0971,
       "qty": 0,
       "stop_price": null,
@@ -862,22 +862,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": -0.8436,
-        "macd_sig": -1.0357,
-        "macd_hist": 0.192
+        "macd": -0.8971,
+        "macd_sig": -1.0463,
+        "macd_hist": 0.1493
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLF",
       "signal": "hold",
-      "price": 55.14,
+      "price": 55.21,
       "atr": 0.7917,
       "qty": 0,
       "stop_price": null,
@@ -885,22 +885,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 0.8849,
-        "macd_sig": 0.7234,
-        "macd_hist": 0.1614
+        "macd": 0.8901,
+        "macd_sig": 0.7245,
+        "macd_hist": 0.1656
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "PANW",
       "signal": "hold",
-      "price": 319.61,
+      "price": 321.55,
       "atr": 17.653,
       "qty": 0,
       "stop_price": null,
@@ -908,22 +908,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 23.0042,
-        "macd_sig": 21.826,
-        "macd_hist": 1.1782
+        "macd": 23.1589,
+        "macd_sig": 21.857,
+        "macd_hist": 1.302
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "INTC",
       "signal": "hold",
-      "price": 104.93,
+      "price": 106.99,
       "atr": 10.4484,
       "qty": 0,
       "stop_price": null,
@@ -931,22 +931,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 1.2673,
-        "macd_sig": 4.7052,
-        "macd_hist": -3.4379
+        "macd": 1.4316,
+        "macd_sig": 4.7381,
+        "macd_hist": -3.3064
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "AMD",
       "signal": "hold",
-      "price": 503.49,
+      "price": 510.47,
       "atr": 38.8823,
       "qty": 0,
       "stop_price": null,
@@ -954,22 +954,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 16.4837,
-        "macd_sig": 23.1458,
-        "macd_hist": -6.6621
+        "macd": 17.0405,
+        "macd_sig": 23.2572,
+        "macd_hist": -6.2167
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "MRVL",
       "signal": "hold",
-      "price": 226.38,
+      "price": 229.14,
       "atr": 24.6345,
       "qty": 0,
       "stop_price": null,
@@ -977,22 +977,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 2.5897,
-        "macd_sig": 13.4092,
-        "macd_hist": -10.8195
+        "macd": 2.8091,
+        "macd_sig": 13.4531,
+        "macd_hist": -10.644
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "HOOD",
       "signal": "hold",
-      "price": 110.04,
+      "price": 110.59,
       "atr": 6.5745,
       "qty": 0,
       "stop_price": null,
@@ -1000,22 +1000,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 6.8425,
-        "macd_sig": 6.0554,
-        "macd_hist": 0.7871
+        "macd": 6.8868,
+        "macd_sig": 6.0642,
+        "macd_hist": 0.8226
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "AMAT",
       "signal": "hold",
-      "price": 563.48,
+      "price": 570.08,
       "atr": 51.9065,
       "qty": 0,
       "stop_price": null,
@@ -1023,22 +1023,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 30.1855,
-        "macd_sig": 43.5775,
-        "macd_hist": -13.3921
+        "macd": 30.712,
+        "macd_sig": 43.6828,
+        "macd_hist": -12.9709
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "SNOW",
       "signal": "hold",
-      "price": 260.43,
+      "price": 259.3,
       "atr": 11.1392,
       "qty": 0,
       "stop_price": null,
@@ -1046,22 +1046,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 14.1499,
-        "macd_sig": 14.0532,
-        "macd_hist": 0.0967
+        "macd": 14.0597,
+        "macd_sig": 14.0352,
+        "macd_hist": 0.0245
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "LRCX",
       "signal": "hold",
-      "price": 327.67,
+      "price": 333.0,
       "atr": 29.5764,
       "qty": 0,
       "stop_price": null,
@@ -1069,22 +1069,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 7.348,
-        "macd_sig": 17.7284,
-        "macd_hist": -10.3803
+        "macd": 7.7728,
+        "macd_sig": 17.8133,
+        "macd_hist": -10.0405
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "BAC",
       "signal": "hold",
-      "price": 58.57,
+      "price": 58.54,
       "atr": 1.199,
       "qty": 0,
       "stop_price": null,
@@ -1092,22 +1092,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 1.5457,
-        "macd_sig": 1.4915,
-        "macd_hist": 0.0542
+        "macd": 1.5433,
+        "macd_sig": 1.4911,
+        "macd_hist": 0.0523
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "V",
       "signal": "hold",
-      "price": 348.02,
+      "price": 347.77,
       "atr": 8.9088,
       "qty": 0,
       "stop_price": null,
@@ -1115,22 +1115,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 7.8552,
-        "macd_sig": 5.8594,
-        "macd_hist": 1.9958
+        "macd": 7.8353,
+        "macd_sig": 5.8554,
+        "macd_hist": 1.9798
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "MS",
       "signal": "hold",
-      "price": 216.36,
+      "price": 217.61,
       "atr": 5.6534,
       "qty": 0,
       "stop_price": null,
@@ -1138,22 +1138,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 3.112,
-        "macd_sig": 4.0431,
-        "macd_hist": -0.9312
+        "macd": 3.2117,
+        "macd_sig": 4.0631,
+        "macd_hist": -0.8514
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "SOFI",
       "signal": "sell",
-      "price": 17.2,
+      "price": 17.35,
       "atr": 0.9166,
       "qty": 0,
       "stop_price": null,
@@ -1161,22 +1161,22 @@
       "executed": false,
       "skip_reason": "no_position_to_sell",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 0.3074,
-        "macd_sig": 0.3172,
-        "macd_hist": -0.0098
+        "macd": 0.319,
+        "macd_sig": 0.3195,
+        "macd_hist": -0.0005
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLV",
       "signal": "hold",
-      "price": 163.22,
+      "price": 163.32,
       "atr": 2.8131,
       "qty": 0,
       "stop_price": null,
@@ -1184,45 +1184,45 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 3.6055,
-        "macd_sig": 2.809,
-        "macd_hist": 0.7965
+        "macd": 3.6134,
+        "macd_sig": 2.8106,
+        "macd_hist": 0.8029
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "AAPL",
       "signal": "hold",
-      "price": 310.37,
-      "atr": 8.2977,
+      "price": 312.14,
+      "atr": 8.3431,
       "qty": 0,
       "stop_price": null,
       "tp_price": null,
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 2.7006,
-        "macd_sig": 0.4255,
-        "macd_hist": 2.275
+        "macd": 2.8418,
+        "macd_sig": 0.4538,
+        "macd_hist": 2.388
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "MRK",
       "signal": "hold",
-      "price": 126.72,
+      "price": 125.86,
       "atr": 3.3988,
       "qty": 0,
       "stop_price": null,
@@ -1230,22 +1230,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 3.0285,
-        "macd_sig": 2.5042,
-        "macd_hist": 0.5243
+        "macd": 2.9595,
+        "macd_sig": 2.4904,
+        "macd_hist": 0.4691
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLY",
       "signal": "hold",
-      "price": 114.63,
+      "price": 114.99,
       "atr": 2.3115,
       "qty": 0,
       "stop_price": null,
@@ -1253,22 +1253,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": -0.1516,
-        "macd_sig": -0.2536,
-        "macd_hist": 0.102
+        "macd": -0.1229,
+        "macd_sig": -0.2479,
+        "macd_hist": 0.1249
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLI",
       "signal": "sell",
-      "price": 179.42,
+      "price": 180.22,
       "atr": 3.4056,
       "qty": 0,
       "stop_price": null,
@@ -1276,22 +1276,22 @@
       "executed": false,
       "skip_reason": "no_position_to_sell",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 2.248,
-        "macd_sig": 2.4466,
-        "macd_hist": -0.1986
+        "macd": 2.3119,
+        "macd_sig": 2.4594,
+        "macd_hist": -0.1475
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "ARKK",
       "signal": "hold",
-      "price": 78.95,
+      "price": 79.49,
       "atr": 2.7407,
       "qty": 0,
       "stop_price": null,
@@ -1299,45 +1299,45 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 1.0287,
-        "macd_sig": 0.8238,
-        "macd_hist": 0.2048
+        "macd": 1.0717,
+        "macd_sig": 0.8324,
+        "macd_hist": 0.2393
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "DIS",
       "signal": "hold",
-      "price": 96.93,
-      "atr": 2.2161,
+      "price": 97.61,
+      "atr": 2.2374,
       "qty": 0,
       "stop_price": null,
       "tp_price": null,
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": -1.2538,
-        "macd_sig": -0.9986,
-        "macd_hist": -0.2552
+        "macd": -1.1996,
+        "macd_sig": -0.9878,
+        "macd_hist": -0.2118
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "GOOGL",
       "signal": "hold",
-      "price": 360.31,
+      "price": 361.24,
       "atr": 10.3886,
       "qty": 0,
       "stop_price": null,
@@ -1345,22 +1345,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": -1.997,
-        "macd_sig": -3.6926,
-        "macd_hist": 1.6955
+        "macd": -1.9228,
+        "macd_sig": -3.6777,
+        "macd_hist": 1.7549
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "NKE",
       "signal": "hold",
-      "price": 42.4,
+      "price": 42.74,
       "atr": 1.5209,
       "qty": 0,
       "stop_price": null,
@@ -1368,22 +1368,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": -0.4605,
-        "macd_sig": -0.5336,
-        "macd_hist": 0.0732
+        "macd": -0.4341,
+        "macd_sig": -0.5284,
+        "macd_hist": 0.0942
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "PYPL",
       "signal": "hold",
-      "price": 43.9,
+      "price": 44.16,
       "atr": 1.4631,
       "qty": 0,
       "stop_price": null,
@@ -1391,22 +1391,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 0.2393,
-        "macd_sig": -0.1304,
-        "macd_hist": 0.3696
+        "macd": 0.26,
+        "macd_sig": -0.1262,
+        "macd_hist": 0.3862
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "macd_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "UBER",
       "signal": "hold",
-      "price": 72.71,
+      "price": 73.18,
       "atr": 2.6485,
       "qty": 0,
       "stop_price": null,
@@ -1414,22 +1414,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "macd": 0.3089,
-        "macd_sig": 0.134,
-        "macd_hist": 0.175
+        "macd": 0.3468,
+        "macd_sig": 0.1415,
+        "macd_hist": 0.2053
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "SPY",
       "signal": "hold",
-      "price": 740.97,
+      "price": 744.03,
       "atr": 9.3754,
       "qty": 0,
       "stop_price": null,
@@ -1437,22 +1437,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 743.93,
-        "ema_mid": 742.44,
-        "ema_slow": 731.91
+        "ema_fast": 744.61,
+        "ema_mid": 742.72,
+        "ema_slow": 732.02
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "QQQ",
       "signal": "hold",
-      "price": 703.22,
+      "price": 708.16,
       "atr": 15.8506,
       "qty": 0,
       "stop_price": null,
@@ -1460,22 +1460,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 715.31,
-        "ema_mid": 718.08,
-        "ema_slow": 700.44
+        "ema_fast": 716.41,
+        "ema_mid": 718.53,
+        "ema_slow": 700.62
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "IWM",
       "signal": "hold",
-      "price": 291.25,
+      "price": 292.88,
       "atr": 4.9808,
       "qty": 0,
       "stop_price": null,
@@ -1483,22 +1483,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 296.17,
-        "ema_mid": 294.23,
-        "ema_slow": 285.97
+        "ema_fast": 296.54,
+        "ema_mid": 294.38,
+        "ema_slow": 286.03
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "GLD",
       "signal": "hold",
-      "price": 370.11,
+      "price": 371.6,
       "atr": 7.7296,
       "qty": 0,
       "stop_price": null,
@@ -1506,22 +1506,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 375.12,
-        "ema_mid": 382.43,
-        "ema_slow": 400.28
+        "ema_fast": 375.45,
+        "ema_mid": 382.57,
+        "ema_slow": 400.34
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLK",
       "signal": "hold",
-      "price": 178.11,
+      "price": 179.88,
       "atr": 5.8644,
       "qty": 0,
       "stop_price": null,
@@ -1529,22 +1529,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 182.19,
-        "ema_mid": 183.46,
-        "ema_slow": 176.98
+        "ema_fast": 182.59,
+        "ema_mid": 183.62,
+        "ema_slow": 177.05
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLE",
       "signal": "hold",
-      "price": 55.91,
+      "price": 55.24,
       "atr": 1.0971,
       "qty": 0,
       "stop_price": null,
@@ -1552,22 +1552,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 54.26,
-        "ema_mid": 54.9,
-        "ema_slow": 56.2
+        "ema_fast": 54.11,
+        "ema_mid": 54.84,
+        "ema_slow": 56.17
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLF",
       "signal": "hold",
-      "price": 55.14,
+      "price": 55.21,
       "atr": 0.7917,
       "qty": 0,
       "stop_price": null,
@@ -1575,22 +1575,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 55.01,
-        "ema_mid": 54.03,
+        "ema_fast": 55.02,
+        "ema_mid": 54.04,
         "ema_slow": 52.88
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "PANW",
       "signal": "hold",
-      "price": 319.61,
+      "price": 321.55,
       "atr": 17.653,
       "qty": 0,
       "stop_price": null,
@@ -1598,22 +1598,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 330.13,
-        "ema_mid": 307.62,
-        "ema_slow": 265.08
+        "ema_fast": 330.56,
+        "ema_mid": 307.8,
+        "ema_slow": 265.15
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "INTC",
       "signal": "hold",
-      "price": 104.93,
+      "price": 106.99,
       "atr": 10.4484,
       "qty": 0,
       "stop_price": null,
@@ -1621,22 +1621,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 119.25,
-        "ema_mid": 121.22,
-        "ema_slow": 108.55
+        "ema_fast": 119.71,
+        "ema_mid": 121.4,
+        "ema_slow": 108.63
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "AMD",
       "signal": "hold",
-      "price": 503.49,
+      "price": 510.47,
       "atr": 38.8823,
       "qty": 0,
       "stop_price": null,
@@ -1644,22 +1644,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 526.72,
-        "ema_mid": 517.78,
-        "ema_slow": 455.66
+        "ema_fast": 528.27,
+        "ema_mid": 518.42,
+        "ema_slow": 455.91
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "MRVL",
       "signal": "hold",
-      "price": 226.38,
+      "price": 229.14,
       "atr": 24.6345,
       "qty": 0,
       "stop_price": null,
@@ -1667,22 +1667,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 252.38,
-        "ema_mid": 259.86,
-        "ema_slow": 225.34
+        "ema_fast": 252.99,
+        "ema_mid": 260.11,
+        "ema_slow": 225.44
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "HOOD",
       "signal": "hold",
-      "price": 110.04,
+      "price": 110.59,
       "atr": 6.5745,
       "qty": 0,
       "stop_price": null,
@@ -1690,22 +1690,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 108.69,
-        "ema_mid": 101.52,
-        "ema_slow": 92.32
+        "ema_fast": 108.82,
+        "ema_mid": 101.57,
+        "ema_slow": 92.34
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "AMAT",
       "signal": "hold",
-      "price": 563.48,
+      "price": 570.08,
       "atr": 51.9065,
       "qty": 0,
       "stop_price": null,
@@ -1713,22 +1713,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 601.19,
-        "ema_mid": 584.38,
-        "ema_slow": 512.33
+        "ema_fast": 602.65,
+        "ema_mid": 584.98,
+        "ema_slow": 512.56
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "SNOW",
       "signal": "hold",
-      "price": 260.43,
+      "price": 259.3,
       "atr": 11.1392,
       "qty": 0,
       "stop_price": null,
@@ -1736,22 +1736,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 255.78,
-        "ema_mid": 242.58,
-        "ema_slow": 215.14
+        "ema_fast": 255.53,
+        "ema_mid": 242.47,
+        "ema_slow": 215.1
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "LRCX",
       "signal": "hold",
-      "price": 327.67,
+      "price": 333.0,
       "atr": 29.5764,
       "qty": 0,
       "stop_price": null,
@@ -1759,22 +1759,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 357.79,
-        "ema_mid": 360.09,
-        "ema_slow": 326.72
+        "ema_fast": 358.97,
+        "ema_mid": 360.57,
+        "ema_slow": 326.91
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "BAC",
       "signal": "hold",
-      "price": 58.57,
+      "price": 58.54,
       "atr": 1.199,
       "qty": 0,
       "stop_price": null,
@@ -1782,22 +1782,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 58.6,
+        "ema_fast": 58.59,
         "ema_mid": 57.08,
         "ema_slow": 54.74
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "V",
       "signal": "hold",
-      "price": 348.02,
+      "price": 347.77,
       "atr": 8.9088,
       "qty": 0,
       "stop_price": null,
@@ -1805,22 +1805,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 347.94,
-        "ema_mid": 338.76,
-        "ema_slow": 329.44
+        "ema_fast": 347.88,
+        "ema_mid": 338.74,
+        "ema_slow": 329.43
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "MS",
       "signal": "hold",
-      "price": 216.36,
+      "price": 217.61,
       "atr": 5.6534,
       "qty": 0,
       "stop_price": null,
@@ -1828,22 +1828,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 217.28,
-        "ema_mid": 215.26,
-        "ema_slow": 205.06
+        "ema_fast": 217.56,
+        "ema_mid": 215.38,
+        "ema_slow": 205.1
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "SOFI",
       "signal": "hold",
-      "price": 17.2,
+      "price": 17.35,
       "atr": 0.9166,
       "qty": 0,
       "stop_price": null,
@@ -1851,22 +1851,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 17.82,
-        "ema_mid": 17.53,
+        "ema_fast": 17.86,
+        "ema_mid": 17.55,
         "ema_slow": 17.43
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLV",
       "signal": "hold",
-      "price": 163.22,
+      "price": 163.32,
       "atr": 2.8131,
       "qty": 0,
       "stop_price": null,
@@ -1874,45 +1874,45 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 161.13,
-        "ema_mid": 157.01,
+        "ema_fast": 161.15,
+        "ema_mid": 157.02,
         "ema_slow": 152.86
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "AAPL",
       "signal": "hold",
-      "price": 310.37,
-      "atr": 8.2977,
+      "price": 312.14,
+      "atr": 8.3431,
       "qty": 0,
       "stop_price": null,
       "tp_price": null,
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 302.82,
-        "ema_mid": 298.47,
-        "ema_slow": 291.76
+        "ema_fast": 303.21,
+        "ema_mid": 298.63,
+        "ema_slow": 291.83
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "MRK",
       "signal": "hold",
-      "price": 126.72,
+      "price": 125.86,
       "atr": 3.3988,
       "qty": 0,
       "stop_price": null,
@@ -1920,22 +1920,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 126.61,
-        "ema_mid": 123.27,
-        "ema_slow": 119.52
+        "ema_fast": 126.41,
+        "ema_mid": 123.19,
+        "ema_slow": 119.49
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLY",
       "signal": "sell",
-      "price": 114.63,
+      "price": 114.99,
       "atr": 2.3115,
       "qty": 0,
       "stop_price": null,
@@ -1943,22 +1943,22 @@
       "executed": false,
       "skip_reason": "no_position_to_sell",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 116.44,
-        "ema_mid": 116.51,
-        "ema_slow": 117.22
+        "ema_fast": 116.52,
+        "ema_mid": 116.54,
+        "ema_slow": 117.23
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLI",
       "signal": "hold",
-      "price": 179.42,
+      "price": 180.22,
       "atr": 3.4056,
       "qty": 0,
       "stop_price": null,
@@ -1966,22 +1966,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 182.24,
-        "ema_mid": 180.29,
-        "ema_slow": 176.29
+        "ema_fast": 182.42,
+        "ema_mid": 180.36,
+        "ema_slow": 176.32
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "ARKK",
       "signal": "hold",
-      "price": 78.95,
+      "price": 79.49,
       "atr": 2.7407,
       "qty": 0,
       "stop_price": null,
@@ -1989,45 +1989,45 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 80.38,
-        "ema_mid": 79.24,
-        "ema_slow": 77.66
+        "ema_fast": 80.5,
+        "ema_mid": 79.29,
+        "ema_slow": 77.68
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "DIS",
       "signal": "hold",
-      "price": 96.93,
-      "atr": 2.2161,
+      "price": 97.61,
+      "atr": 2.2374,
       "qty": 0,
       "stop_price": null,
       "tp_price": null,
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 97.91,
-        "ema_mid": 99.32,
-        "ema_slow": 100.95
+        "ema_fast": 98.06,
+        "ema_mid": 99.38,
+        "ema_slow": 100.97
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "GOOGL",
       "signal": "hold",
-      "price": 360.31,
+      "price": 361.24,
       "atr": 10.3886,
       "qty": 0,
       "stop_price": null,
@@ -2035,22 +2035,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 359.86,
-        "ema_mid": 360.5,
-        "ema_slow": 358.32
+        "ema_fast": 360.07,
+        "ema_mid": 360.59,
+        "ema_slow": 358.35
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "NKE",
       "signal": "hold",
-      "price": 42.4,
+      "price": 42.74,
       "atr": 1.5209,
       "qty": 0,
       "stop_price": null,
@@ -2058,22 +2058,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 42.78,
-        "ema_mid": 43.14,
-        "ema_slow": 44.91
+        "ema_fast": 42.85,
+        "ema_mid": 43.17,
+        "ema_slow": 44.92
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "PYPL",
       "signal": "hold",
-      "price": 43.9,
+      "price": 44.16,
       "atr": 1.4631,
       "qty": 0,
       "stop_price": null,
@@ -2081,22 +2081,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 44.32,
-        "ema_mid": 43.75,
-        "ema_slow": 44.58
+        "ema_fast": 44.37,
+        "ema_mid": 43.77,
+        "ema_slow": 44.59
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "triple_ema",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "UBER",
       "signal": "hold",
-      "price": 72.71,
+      "price": 73.18,
       "atr": 2.6485,
       "qty": 0,
       "stop_price": null,
@@ -2104,22 +2104,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 73.22,
-        "ema_mid": 72.75,
-        "ema_slow": 73.15
+        "ema_fast": 73.32,
+        "ema_mid": 72.79,
+        "ema_slow": 73.16
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "SPY",
       "signal": "hold",
-      "price": 740.97,
+      "price": 744.03,
       "atr": 9.3754,
       "qty": 0,
       "stop_price": null,
@@ -2127,22 +2127,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 743.34,
-        "ema_slow": 741.52,
-        "diff": 1.8145
+        "ema_fast": 743.81,
+        "ema_slow": 741.75,
+        "diff": 2.0586
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "QQQ",
       "signal": "hold",
-      "price": 703.22,
+      "price": 708.16,
       "atr": 15.8506,
       "qty": 0,
       "stop_price": null,
@@ -2150,22 +2150,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 717.26,
-        "ema_slow": 716.87,
-        "diff": 0.3847
+        "ema_fast": 718.02,
+        "ema_slow": 717.24,
+        "diff": 0.7792
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "IWM",
       "signal": "hold",
-      "price": 291.25,
+      "price": 292.88,
       "atr": 4.9808,
       "qty": 0,
       "stop_price": null,
@@ -2173,22 +2173,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 295.95,
-        "ema_slow": 293.05,
-        "diff": 2.8944
+        "ema_fast": 296.2,
+        "ema_slow": 293.17,
+        "diff": 3.0244
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "GLD",
       "signal": "hold",
-      "price": 370.11,
+      "price": 371.6,
       "atr": 7.7296,
       "qty": 0,
       "stop_price": null,
@@ -2196,22 +2196,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 376.84,
-        "ema_slow": 385.66,
-        "diff": -8.816
+        "ema_fast": 377.07,
+        "ema_slow": 385.77,
+        "diff": -8.6975
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLK",
       "signal": "hold",
-      "price": 178.11,
+      "price": 179.88,
       "atr": 5.8644,
       "qty": 0,
       "stop_price": null,
@@ -2219,22 +2219,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 183.11,
-        "ema_slow": 182.92,
-        "diff": 0.1898
+        "ema_fast": 183.38,
+        "ema_slow": 183.05,
+        "diff": 0.331
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLE",
       "signal": "hold",
-      "price": 55.91,
+      "price": 55.24,
       "atr": 1.0971,
       "qty": 0,
       "stop_price": null,
@@ -2242,22 +2242,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 54.35,
-        "ema_slow": 55.19,
-        "diff": -0.8436
+        "ema_fast": 54.25,
+        "ema_slow": 55.14,
+        "diff": -0.8971
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLF",
       "signal": "hold",
-      "price": 55.14,
+      "price": 55.21,
       "atr": 0.7917,
       "qty": 0,
       "stop_price": null,
@@ -2265,22 +2265,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 54.65,
+        "ema_fast": 54.66,
         "ema_slow": 53.77,
-        "diff": 0.8849
+        "diff": 0.8901
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "PANW",
       "signal": "hold",
-      "price": 319.61,
+      "price": 321.55,
       "atr": 17.653,
       "qty": 0,
       "stop_price": null,
@@ -2288,22 +2288,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 322.92,
-        "ema_slow": 299.92,
-        "diff": 23.0042
+        "ema_fast": 323.22,
+        "ema_slow": 300.06,
+        "diff": 23.1589
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "INTC",
       "signal": "hold",
-      "price": 104.93,
+      "price": 106.99,
       "atr": 10.4484,
       "qty": 0,
       "stop_price": null,
@@ -2311,22 +2311,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 121.29,
-        "ema_slow": 120.02,
-        "diff": 1.2673
+        "ema_fast": 121.61,
+        "ema_slow": 120.17,
+        "diff": 1.4316
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "AMD",
       "signal": "hold",
-      "price": 503.49,
+      "price": 510.47,
       "atr": 38.8823,
       "qty": 0,
       "stop_price": null,
@@ -2334,22 +2334,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 526.55,
-        "ema_slow": 510.06,
-        "diff": 16.4837
+        "ema_fast": 527.62,
+        "ema_slow": 510.58,
+        "diff": 17.0405
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "MRVL",
       "signal": "hold",
-      "price": 226.38,
+      "price": 229.14,
       "atr": 24.6345,
       "qty": 0,
       "stop_price": null,
@@ -2357,22 +2357,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 258.91,
-        "ema_slow": 256.32,
-        "diff": 2.5897
+        "ema_fast": 259.33,
+        "ema_slow": 256.52,
+        "diff": 2.8091
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "HOOD",
       "signal": "hold",
-      "price": 110.04,
+      "price": 110.59,
       "atr": 6.5745,
       "qty": 0,
       "stop_price": null,
@@ -2380,22 +2380,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 106.23,
-        "ema_slow": 99.39,
-        "diff": 6.8425
+        "ema_fast": 106.32,
+        "ema_slow": 99.43,
+        "diff": 6.8868
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "AMAT",
       "signal": "hold",
-      "price": 563.48,
+      "price": 570.08,
       "atr": 51.9065,
       "qty": 0,
       "stop_price": null,
@@ -2403,22 +2403,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 602.2,
-        "ema_slow": 572.01,
-        "diff": 30.1855
+        "ema_fast": 603.21,
+        "ema_slow": 572.5,
+        "diff": 30.712
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "SNOW",
       "signal": "hold",
-      "price": 260.43,
+      "price": 259.3,
       "atr": 11.1392,
       "qty": 0,
       "stop_price": null,
@@ -2426,22 +2426,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 251.61,
-        "ema_slow": 237.46,
-        "diff": 14.1499
+        "ema_fast": 251.44,
+        "ema_slow": 237.38,
+        "diff": 14.0597
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "LRCX",
       "signal": "hold",
-      "price": 327.67,
+      "price": 333.0,
       "atr": 29.5764,
       "qty": 0,
       "stop_price": null,
@@ -2449,22 +2449,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 362.94,
-        "ema_slow": 355.59,
-        "diff": 7.348
+        "ema_fast": 363.75,
+        "ema_slow": 355.98,
+        "diff": 7.7728
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "BAC",
       "signal": "hold",
-      "price": 58.57,
+      "price": 58.54,
       "atr": 1.199,
       "qty": 0,
       "stop_price": null,
@@ -2472,22 +2472,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
         "ema_fast": 58.13,
         "ema_slow": 56.58,
-        "diff": 1.5457
+        "diff": 1.5433
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "V",
       "signal": "hold",
-      "price": 348.02,
+      "price": 347.77,
       "atr": 8.9088,
       "qty": 0,
       "stop_price": null,
@@ -2495,22 +2495,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 344.42,
-        "ema_slow": 336.56,
-        "diff": 7.8552
+        "ema_fast": 344.38,
+        "ema_slow": 336.55,
+        "diff": 7.8353
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "MS",
       "signal": "hold",
-      "price": 216.36,
+      "price": 217.61,
       "atr": 5.6534,
       "qty": 0,
       "stop_price": null,
@@ -2518,22 +2518,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 216.97,
-        "ema_slow": 213.86,
-        "diff": 3.112
+        "ema_fast": 217.17,
+        "ema_slow": 213.95,
+        "diff": 3.2117
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "SOFI",
       "signal": "hold",
-      "price": 17.2,
+      "price": 17.35,
       "atr": 0.9166,
       "qty": 0,
       "stop_price": null,
@@ -2541,22 +2541,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 17.75,
-        "ema_slow": 17.44,
-        "diff": 0.3074
+        "ema_fast": 17.77,
+        "ema_slow": 17.45,
+        "diff": 0.319
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLV",
       "signal": "hold",
-      "price": 163.22,
+      "price": 163.32,
       "atr": 2.8131,
       "qty": 0,
       "stop_price": null,
@@ -2564,45 +2564,45 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 159.57,
-        "ema_slow": 155.97,
-        "diff": 3.6055
+        "ema_fast": 159.59,
+        "ema_slow": 155.98,
+        "diff": 3.6134
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "AAPL",
       "signal": "hold",
-      "price": 310.37,
-      "atr": 8.2977,
+      "price": 312.14,
+      "atr": 8.3431,
       "qty": 0,
       "stop_price": null,
       "tp_price": null,
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 300.4,
-        "ema_slow": 297.7,
-        "diff": 2.7006
+        "ema_fast": 300.67,
+        "ema_slow": 297.83,
+        "diff": 2.8418
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "MRK",
       "signal": "hold",
-      "price": 126.72,
+      "price": 125.86,
       "atr": 3.3988,
       "qty": 0,
       "stop_price": null,
@@ -2610,22 +2610,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 125.42,
-        "ema_slow": 122.39,
-        "diff": 3.0285
+        "ema_fast": 125.29,
+        "ema_slow": 122.33,
+        "diff": 2.9595
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLY",
       "signal": "sell",
-      "price": 114.63,
+      "price": 114.99,
       "atr": 2.3115,
       "qty": 0,
       "stop_price": null,
@@ -2633,22 +2633,22 @@
       "executed": false,
       "skip_reason": "no_position_to_sell",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 116.42,
-        "ema_slow": 116.57,
-        "diff": -0.1516
+        "ema_fast": 116.48,
+        "ema_slow": 116.6,
+        "diff": -0.1229
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "XLI",
       "signal": "hold",
-      "price": 179.42,
+      "price": 180.22,
       "atr": 3.4056,
       "qty": 0,
       "stop_price": null,
@@ -2656,22 +2656,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 181.77,
-        "ema_slow": 179.52,
-        "diff": 2.248
+        "ema_fast": 181.9,
+        "ema_slow": 179.58,
+        "diff": 2.3119
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "ARKK",
       "signal": "hold",
-      "price": 78.95,
+      "price": 79.49,
       "atr": 2.7407,
       "qty": 0,
       "stop_price": null,
@@ -2679,45 +2679,45 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 79.97,
-        "ema_slow": 78.94,
-        "diff": 1.0287
+        "ema_fast": 80.05,
+        "ema_slow": 78.98,
+        "diff": 1.0717
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "DIS",
       "signal": "hold",
-      "price": 96.93,
-      "atr": 2.2161,
+      "price": 97.61,
+      "atr": 2.2374,
       "qty": 0,
       "stop_price": null,
       "tp_price": null,
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 98.43,
-        "ema_slow": 99.68,
-        "diff": -1.2538
+        "ema_fast": 98.54,
+        "ema_slow": 99.73,
+        "diff": -1.1996
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "GOOGL",
       "signal": "hold",
-      "price": 360.31,
+      "price": 361.24,
       "atr": 10.3886,
       "qty": 0,
       "stop_price": null,
@@ -2725,22 +2725,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 359.21,
-        "ema_slow": 361.21,
-        "diff": -1.997
+        "ema_fast": 359.35,
+        "ema_slow": 361.28,
+        "diff": -1.9228
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "NKE",
       "signal": "hold",
-      "price": 42.4,
+      "price": 42.74,
       "atr": 1.5209,
       "qty": 0,
       "stop_price": null,
@@ -2748,22 +2748,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 42.85,
-        "ema_slow": 43.31,
-        "diff": -0.4605
+        "ema_fast": 42.9,
+        "ema_slow": 43.34,
+        "diff": -0.4341
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "PYPL",
       "signal": "hold",
-      "price": 43.9,
+      "price": 44.16,
       "atr": 1.4631,
       "qty": 0,
       "stop_price": null,
@@ -2771,22 +2771,22 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 44.01,
-        "ema_slow": 43.77,
-        "diff": 0.2393
+        "ema_fast": 44.05,
+        "ema_slow": 43.79,
+        "diff": 0.26
       }
     },
     {
-      "timestamp": "2026-07-08T12:03:28.947539-04:00",
+      "timestamp": "2026-07-08T12:40:55.096733-04:00",
       "strategy": "ema_crossover",
       "strategy_type": "daily",
       "vix_type": "TREND",
       "symbol": "UBER",
       "signal": "hold",
-      "price": 72.71,
+      "price": 73.18,
       "atr": 2.6485,
       "qty": 0,
       "stop_price": null,
@@ -2794,12 +2794,12 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 18.29,
+      "vix": 17.57,
       "vix_reason": "vix_clear",
       "indicators": {
-        "ema_fast": 73.03,
-        "ema_slow": 72.72,
-        "diff": 0.3089
+        "ema_fast": 73.1,
+        "ema_slow": 72.75,
+        "diff": 0.3468
       }
     }
   ],
