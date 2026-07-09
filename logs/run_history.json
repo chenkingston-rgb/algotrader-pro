@@ -1,23 +1,5 @@
 [
   {
-    "timestamp": "2026-06-30T11:00:47.424087-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28515.13,
-    "last_equity": 28540.85,
-    "vix": 17.02,
-    "signals_count": 38,
-    "orders_count": 2,
-    "symbols_traded": [
-      "SNOW",
-      "HOOD"
-    ],
-    "trading_pnl": -28.41,
-    "total_deposited": 27768.78,
-    "ma20_bear_block": false,
-    "drawdown_pct": 0.84
-  },
-  {
     "timestamp": "2026-06-30T11:15:33.720480-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -3184,6 +3166,21 @@
     "orders_count": 0,
     "symbols_traded": [],
     "trading_pnl": 296.55,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": false,
+    "drawdown_pct": 0.22
+  },
+  {
+    "timestamp": "2026-07-09T12:45:34.449508-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28839.0,
+    "last_equity": 28817.6,
+    "vix": 16.04,
+    "signals_count": 38,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": 295.46,
     "total_deposited": 27768.78,
     "ma20_bear_block": false,
     "drawdown_pct": 0.22
