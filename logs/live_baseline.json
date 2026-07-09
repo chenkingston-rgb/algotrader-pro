@@ -1,8 +1,8 @@
 {
   "start_equity": 776.15,
-  "last_known_equity": 28840.11,
+  "last_known_equity": 28839.0,
   "total_deposited": 27768.78,
-  "total_trading_pnl": 296.57,
+  "total_trading_pnl": 295.46,
   "deposits": [
     {
       "timestamp": "2026-06-04T09:45:33.443259-04:00",
