@@ -1,27 +1,5 @@
 [
   {
-    "timestamp": "2026-06-30T09:45:30.948753-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28518.38,
-    "last_equity": 28540.85,
-    "vix": 17.69,
-    "signals_count": 40,
-    "orders_count": 6,
-    "symbols_traded": [
-      "SNOW",
-      "ARKK",
-      "HOOD",
-      "XLI",
-      "AMD",
-      "SNOW"
-    ],
-    "trading_pnl": -25.16,
-    "total_deposited": 27768.78,
-    "ma20_bear_block": false,
-    "drawdown_pct": 0.83
-  },
-  {
     "timestamp": "2026-06-30T10:00:48.948491-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -3207,5 +3185,20 @@
     "total_deposited": 27768.78,
     "ma20_bear_block": false,
     "drawdown_pct": 0.24
+  },
+  {
+    "timestamp": "2026-07-09T11:49:47.954537-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28831.42,
+    "last_equity": 28817.6,
+    "vix": 16.23,
+    "signals_count": 38,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": 287.88,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": false,
+    "drawdown_pct": 0.25
   }
 ]
