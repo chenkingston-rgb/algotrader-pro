@@ -1,1 +1,26 @@
-{}
+{
+  "SPY": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-09T09:45:33.014583-04:00",
+    "entry_price": 748.24,
+    "entry_vix": 16.71,
+    "entry_atr": 1.4078,
+    "stop_price": 746.0,
+    "tp_price": 752.73,
+    "entry_indicators": {
+      "roc": 0.467,
+      "roc_prev": 0.292,
+      "threshold": 0.3,
+      "ma50": 745.44,
+      "price_vs_ma50": 0.375,
+      "vol_ratio": 2.11,
+      "bar_open": 747.29,
+      "bar_move": 0.95,
+      "atr_val": 1.408,
+      "atr_ext_ok": "True",
+      "roc_max_extension": 2.0,
+      "roc_not_extended": "True"
+    }
+  }
+}
