@@ -1,20 +1,5 @@
 [
   {
-    "timestamp": "2026-06-29T14:45:31.842466-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28557.61,
-    "last_equity": 28513.72,
-    "vix": 17.72,
-    "signals_count": 40,
-    "orders_count": 0,
-    "symbols_traded": [],
-    "trading_pnl": 14.07,
-    "total_deposited": 27768.78,
-    "ma20_bear_block": false,
-    "drawdown_pct": 0.69
-  },
-  {
     "timestamp": "2026-06-29T15:00:44.206192-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -3209,5 +3194,22 @@
     "total_deposited": 27768.78,
     "ma20_bear_block": false,
     "drawdown_pct": 0.27
+  },
+  {
+    "timestamp": "2026-07-09T10:45:40.231230-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28828.01,
+    "last_equity": 28817.6,
+    "vix": 16.64,
+    "signals_count": 38,
+    "orders_count": 1,
+    "symbols_traded": [
+      "XLF"
+    ],
+    "trading_pnl": 284.47,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": false,
+    "drawdown_pct": 0.26
   }
 ]
