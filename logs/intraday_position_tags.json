@@ -1,1 +1,19 @@
-{}
+{
+  "ARKK": {
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-10T10:15:32.094277-04:00",
+    "entry_price": 80.76,
+    "entry_vix": 15.49,
+    "entry_atr": 0.4052,
+    "stop_price": 80.16,
+    "tp_price": 81.98,
+    "entry_indicators": {
+      "price": 80.76,
+      "bb_lower": 81.0,
+      "bb_mid": 81.49,
+      "bb_upper": 81.98,
+      "ma_filter": 80.64
+    }
+  }
+}
