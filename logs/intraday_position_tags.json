@@ -1,1 +1,26 @@
-{}
+{
+  "AMAT": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-10T10:45:33.046643-04:00",
+    "entry_price": 596.46,
+    "entry_vix": 15.55,
+    "entry_atr": 7.1171,
+    "stop_price": 585.78,
+    "tp_price": 617.81,
+    "entry_indicators": {
+      "roc": 0.514,
+      "roc_prev": -1.151,
+      "threshold": 0.3,
+      "ma50": 592.89,
+      "price_vs_ma50": 0.602,
+      "vol_ratio": 1.36,
+      "bar_open": 589.72,
+      "bar_move": 6.745,
+      "atr_val": 7.117,
+      "atr_ext_ok": "True",
+      "roc_max_extension": 2.0,
+      "roc_not_extended": "True"
+    }
+  }
+}
