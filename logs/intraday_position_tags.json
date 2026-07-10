@@ -1,1 +1,19 @@
-{}
+{
+  "IWM": {
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-10T10:30:42.535514-04:00",
+    "entry_price": 295.77,
+    "entry_vix": 15.56,
+    "entry_atr": 0.7809,
+    "stop_price": 294.6,
+    "tp_price": 298.11,
+    "entry_indicators": {
+      "price": 295.77,
+      "bb_lower": 295.8,
+      "bb_mid": 297.18,
+      "bb_upper": 298.56,
+      "ma_filter": 295.69
+    }
+  }
+}
