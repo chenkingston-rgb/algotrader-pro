@@ -88,5 +88,31 @@
       "roc_not_extended": "True"
     },
     "logged_at": "2026-07-07T16:15:36.102920+00:00"
+  },
+  {
+    "symbol": "IWM",
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-10T10:30:42.535514-04:00",
+    "entry_price": 295.77,
+    "exit_time": "2026-07-10T14:32:59.017Z",
+    "exit_price": 294.4101,
+    "qty": 9.0,
+    "pnl": -12.24,
+    "pnl_pct": -0.46,
+    "hold_minutes": 2.3,
+    "exit_reason": "stop_loss",
+    "entry_vix": 15.56,
+    "entry_atr": 0.7809,
+    "entry_stop_price": 294.6,
+    "entry_tp_price": 298.11,
+    "entry_indicators": {
+      "price": 295.77,
+      "bb_lower": 295.8,
+      "bb_mid": 297.18,
+      "bb_upper": 298.56,
+      "ma_filter": 295.69
+    },
+    "logged_at": "2026-07-10T14:45:33.819691+00:00"
   }
 ]
