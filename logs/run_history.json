@@ -1,25 +1,5 @@
 [
   {
-    "timestamp": "2026-07-02T09:45:31.558303-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28903.5,
-    "last_equity": 28587.0,
-    "vix": 16.14,
-    "signals_count": 38,
-    "orders_count": 4,
-    "symbols_traded": [
-      "HOOD",
-      "SOFI",
-      "XLF",
-      "XLI"
-    ],
-    "trading_pnl": 359.96,
-    "total_deposited": 27768.78,
-    "ma20_bear_block": false,
-    "drawdown_pct": 0.0
-  },
-  {
     "timestamp": "2026-07-02T10:00:49.294985-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -3156,6 +3136,21 @@
     "equity": 28788.3,
     "last_equity": 28864.47,
     "vix": 16.24,
+    "signals_count": 38,
+    "orders_count": 0,
+    "symbols_traded": [],
+    "trading_pnl": 244.76,
+    "total_deposited": 27768.78,
+    "ma20_bear_block": false,
+    "drawdown_pct": 0.4
+  },
+  {
+    "timestamp": "2026-07-13T11:37:20.627372-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 28788.3,
+    "last_equity": 28864.47,
+    "vix": 16.21,
     "signals_count": 38,
     "orders_count": 0,
     "symbols_traded": [],
