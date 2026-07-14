@@ -70,5 +70,22 @@
       "roc_max_extension": 2.0,
       "roc_not_extended": "True"
     }
+  },
+  "XLE": {
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-14T11:30:49.870082-04:00",
+    "entry_price": 56.4,
+    "entry_vix": 16.3,
+    "entry_atr": 0.2126,
+    "stop_price": 56.08,
+    "tp_price": 57.04,
+    "entry_indicators": {
+      "price": 56.4,
+      "bb_lower": 56.46,
+      "bb_mid": 56.78,
+      "bb_upper": 57.1,
+      "ma_filter": 56.07
+    }
   }
 }
