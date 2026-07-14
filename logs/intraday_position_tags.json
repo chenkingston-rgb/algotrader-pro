@@ -1,1 +1,26 @@
-{}
+{
+  "QQQ": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-14T10:40:53.827027-04:00",
+    "entry_price": 719.62,
+    "entry_vix": 16.69,
+    "entry_atr": 2.5993,
+    "stop_price": 715.72,
+    "tp_price": 727.42,
+    "entry_indicators": {
+      "roc": 1.225,
+      "roc_prev": 0.807,
+      "threshold": 0.3,
+      "ma50": 717.25,
+      "price_vs_ma50": 0.331,
+      "vol_ratio": 1.59,
+      "bar_open": 717.17,
+      "bar_move": 2.45,
+      "atr_val": 2.599,
+      "atr_ext_ok": "True",
+      "roc_max_extension": 2.0,
+      "roc_not_extended": "True"
+    }
+  }
+}
