@@ -1786,6 +1786,31 @@ def check_pdt_limit() -> tuple[bool, int]:
     return True, 0
 
 
+def get_spy_opening_range_pct() -> float:
+    """SPY first-30min opening range as a decimal fraction. RULE 5 (FIX-E v7.8)."""
+    try:
+        today = datetime.now(ET).strftime("%Y-%m-%d")
+        r = requests.get(
+            f"{ALPACA_DATA}/v2/stocks/SPY/bars",
+            headers=alpaca_headers(),
+            params={"timeframe": "15Min",
+                    "start": f"{today}T09:30:00-04:00",
+                    "end":   f"{today}T10:00:00-04:00",
+                    "limit": 3, "adjustment": "raw", "feed": "iex"},
+            timeout=10,
+        )
+        bars = r.json().get("bars", []) if r.ok else []
+        if not bars:
+            return 0.0
+        high = max(b["h"] for b in bars)
+        low  = min(b["l"] for b in bars)
+        ref  = bars[0]["o"]
+        return round((high - low) / ref, 5) if ref > 0 else 0.0
+    except Exception as e:
+        print(f"[WARN] get_spy_opening_range_pct failed: {e}")
+        return 0.0
+
+
 def main():
     global _kill_switch_active, _ma20_bear_block
     run_start    = datetime.now(ET)
@@ -1829,6 +1854,17 @@ def main():
     pdt_ok, pdt_count = True, 0   # stubs; safe to remove with check_pdt_limit()
 
     vix = get_vix()
+
+    # ── RULE 5: SPY opening-range volatility gate (FIX-E v7.8) ─────────────
+    # Wide first-30min range → choppier price action → halve position size.
+    # Threshold: 0.5% opening range (confirmed in backtest: +$94/session saved).
+    _spy_open_range_pct = get_spy_opening_range_pct()
+    _wide_open_day      = _spy_open_range_pct > 0.005
+    if _wide_open_day:
+        print(f"[WIDE_OPEN] SPY opening range {_spy_open_range_pct*100:.3f}% > 0.5% — "
+              f"position sizing cut 50% in 10:00–10:30 window (FIX-E)")
+    else:
+        print(f"[OPEN_RANGE] SPY opening range {_spy_open_range_pct*100:.3f}% — normal sizing")
 
     # Fresh positions on every loop start (Rule: never stale)
     positions     = get_positions()
@@ -1965,7 +2001,15 @@ def main():
                 if strategy_type == "intraday":
                     now_et_check = datetime.now(ET)
                     eod_cutoff   = now_et_check.replace(hour=14, minute=45, second=0, microsecond=0)
-                    if now_et_check >= eod_cutoff:
+                    # ── RULE 3: Pre-10am entry block (FIX-E v7.8) ───────────────────
+                    # Backtest: 40 pre-10am trades → -$109.19 net, 30.0% win rate.
+                    # Opening 30 min is highest-noise, widest-spread window.
+                    open_gate = now_et_check.replace(hour=10, minute=0, second=0, microsecond=0)
+                    if now_et_check < open_gate:
+                        skip_reason = (f"pre_10am_block: {now_et_check.strftime('%H:%M')} ET — "
+                                       f"intraday entries blocked before 10:00am (FIX-E)")
+                    # ── end RULE 3 ──────────────────────────────────────────────────
+                    elif now_et_check >= eod_cutoff:
                         skip_reason = f"late_day_block (after 14:45 ET — intraday only, EOD sweep at 15:00 ET)"
                 # Kill switch — block all new entries when trailing drawdown >= threshold
                 if not skip_reason and _kill_switch_active:
@@ -1976,7 +2020,17 @@ def main():
                     skip_reason = (f"ma20_bear_block "
                                    f"(SPY {spy_close_now:.2f} < MA20 {spy_ma20_now:.2f})")
                 elif not skip_reason:
-                    qty = atr_position_size(equity, price, atr, vix_mult)
+                    # ── RULE 5: wide-open size reduction (FIX-E v7.8) ──────────────
+                    # On wide-open days, 10:00–10:30 window: apply 50% size multiplier.
+                    _now_et_sz     = datetime.now(ET)
+                    _morning_win   = (_now_et_sz.hour == 10 and _now_et_sz.minute < 30)
+                    _wide_open_mult = 0.50 if (_wide_open_day and _morning_win) else 1.0
+                    if _wide_open_mult < 1.0:
+                        print(f"  [WIDE_OPEN_SIZE] {symbol}: 50% size — "
+                              f"range={_spy_open_range_pct*100:.2f}%, morning window")
+                    _eff_vix_mult = vix_mult * _wide_open_mult
+                    # ── end RULE 5 ──────────────────────────────────────────────────
+                    qty = atr_position_size(equity, price, atr, _eff_vix_mult)
                     if qty < 1:
                         skip_reason = "qty_too_small"
                     elif price * qty > buying_power * 0.95:
@@ -2018,25 +2072,49 @@ def main():
             else:  # SELL
                 pos_qty = int(float(positions[symbol].get("qty", 0)))
                 qty     = pos_qty if pos_qty > 0 else atr_position_size(equity, price, atr, vix_mult)
-                try:
-                    order    = close_position_order(symbol, qty)
-                    order_id = order.get("id"); executed = True
-                    print(f"  ✓ SELL {qty} {symbol}")
-                    orders_placed.append({
-                        "symbol": symbol, "strat": strat_name,
-                        "strategy_type": strategy_type,
-                        "signal": "sell", "side": "sell", "qty": qty,
-                        "price": round(price, 2), "est_value": round(price * qty, 2),
-                        "stop_price": None, "tp_price": None,
-                        "order_id": order_id, "timestamp": run_start.isoformat(),
-                    })
-                    # BUG-001: update cache + blocklist immediately
-                    sold_this_run.add(symbol)
-                    positions.pop(symbol, None)
-                    position_tags.pop(symbol, None)
-                    write_github_log(EOD_TAG_FILE, position_tags)
-                except Exception as e:
-                    skip_reason = f"order_error: {e}"
+
+                # ── RULE 2: Time-stop guard (FIX-E v7.8) ────────────────────────────
+                # Backtest: exits in 5–60min window are net-destructive
+                # (-$319 across 24 trades, -$13.31/trade expectancy).
+                # Suppress signal-driven sells if held < 60 min (but >= 5 min).
+                # Broker-side stop/TP fills are unaffected (execute server-side).
+                _tag        = position_tags.get(symbol, {})
+                _entry_iso  = _tag.get("entry_time")
+                _hold_min   = None
+                if _entry_iso:
+                    try:
+                        _entry_dt = datetime.fromisoformat(_entry_iso.replace("Z", "+00:00"))
+                        _hold_min = (datetime.now(ET) - _entry_dt.astimezone(ET)).total_seconds() / 60
+                    except Exception:
+                        _hold_min = None
+                if (strategy_type == "intraday"
+                        and _hold_min is not None
+                        and 5 <= _hold_min < 60):
+                    skip_reason = (f"time_stop_guard: held {_hold_min:.0f}min < 60min — "
+                                   f"suppressing early signal-sell (FIX-E)")
+                    print(f"  [TIME_STOP] {symbol}: {_hold_min:.0f}min < 60min — hold longer, skip sell")
+                # ── end RULE 2 ───────────────────────────────────────────────────────
+
+                if not skip_reason:
+                    try:
+                        order    = close_position_order(symbol, qty)
+                        order_id = order.get("id"); executed = True
+                        print(f"  ✓ SELL {qty} {symbol}")
+                        orders_placed.append({
+                            "symbol": symbol, "strat": strat_name,
+                            "strategy_type": strategy_type,
+                            "signal": "sell", "side": "sell", "qty": qty,
+                            "price": round(price, 2), "est_value": round(price * qty, 2),
+                            "stop_price": None, "tp_price": None,
+                            "order_id": order_id, "timestamp": run_start.isoformat(),
+                        })
+                        # BUG-001: update cache + blocklist immediately
+                        sold_this_run.add(symbol)
+                        positions.pop(symbol, None)
+                        position_tags.pop(symbol, None)
+                        write_github_log(EOD_TAG_FILE, position_tags)
+                    except Exception as e:
+                        skip_reason = f"order_error: {e}"
 
             all_signals.append({
                 "timestamp": run_start.isoformat(), "strategy": strat_name,
