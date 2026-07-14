@@ -2021,10 +2021,13 @@ def main():
                                    f"(SPY {spy_close_now:.2f} < MA20 {spy_ma20_now:.2f})")
                 elif not skip_reason:
                     # ── RULE 5: wide-open size reduction (FIX-E v7.8) ──────────────
-                    # On wide-open days, 10:00–10:30 window: apply 50% size multiplier.
-                    _now_et_sz     = datetime.now(ET)
-                    _morning_win   = (_now_et_sz.hour == 10 and _now_et_sz.minute < 30)
-                    _wide_open_mult = 0.50 if (_wide_open_day and _morning_win) else 1.0
+                    # On wide-open days, 10:00–10:30 window, INTRADAY only: 50% size.
+                    # Daily/swing strategies are explicitly exempt — they hold overnight
+                    # and are already sized for multi-day risk, not opening-range noise.
+                    _now_et_sz      = datetime.now(ET)
+                    _morning_win    = (_now_et_sz.hour == 10 and _now_et_sz.minute < 30)
+                    _intraday_r5    = (strategy_type == "intraday")
+                    _wide_open_mult = 0.50 if (_wide_open_day and _morning_win and _intraday_r5) else 1.0
                     if _wide_open_mult < 1.0:
                         print(f"  [WIDE_OPEN_SIZE] {symbol}: 50% size — "
                               f"range={_spy_open_range_pct*100:.2f}%, morning window")
