@@ -1,10 +1,10 @@
 {
-  "run_timestamp": "2026-07-14T14:45:15.375341-04:00",
+  "run_timestamp": "2026-07-14T14:45:32.240281-04:00",
   "mode": "live",
   "strategy_mode": "intraday",
-  "equity": 29741.97,
+  "equity": 29740.91,
   "last_equity": 29801.07,
-  "buying_power": 106408.78,
+  "buying_power": 106406.85,
   "vix": 16.37,
   "drawdown_pct": 0.2,
   "peak_equity": 29801.07,
@@ -21,9 +21,9 @@
       "side": "long",
       "avg_entry_price": 228.02,
       "current_price": 227.5,
-      "market_value": 2957.5,
-      "unrealized_pl": -6.75,
-      "unrealized_plpc": -0.228,
+      "market_value": 2957.57,
+      "unrealized_pl": -6.68,
+      "unrealized_plpc": -0.225,
       "cost_basis": 2964.25,
       "strategy_type": "daily",
       "entry_strategy": "unknown",
@@ -37,10 +37,10 @@
       "qty": 4.0,
       "side": "long",
       "avg_entry_price": 719.29,
-      "current_price": 720.45,
-      "market_value": 2881.8,
-      "unrealized_pl": 4.62,
-      "unrealized_plpc": 0.161,
+      "current_price": 720.44,
+      "market_value": 2881.76,
+      "unrealized_pl": 4.58,
+      "unrealized_plpc": 0.159,
       "cost_basis": 2877.18,
       "strategy_type": "intraday",
       "entry_strategy": "momentum_roc_15m",
@@ -69,7 +69,7 @@
   ],
   "signals": [
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -94,7 +94,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -119,7 +119,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -144,7 +144,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -169,7 +169,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -194,7 +194,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -219,7 +219,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -244,7 +244,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -269,7 +269,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -294,7 +294,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -319,7 +319,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -344,7 +344,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -369,7 +369,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -394,7 +394,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -419,7 +419,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -444,7 +444,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -469,7 +469,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -494,7 +494,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -519,7 +519,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -544,7 +544,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -569,7 +569,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -601,7 +601,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -633,7 +633,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -665,7 +665,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -697,7 +697,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -729,7 +729,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -761,7 +761,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -793,7 +793,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -825,7 +825,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -857,7 +857,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -889,7 +889,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -921,7 +921,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -953,7 +953,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -985,7 +985,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1017,7 +1017,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1049,7 +1049,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1081,7 +1081,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1113,7 +1113,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1145,7 +1145,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1177,7 +1177,7 @@
       }
     },
     {
-      "timestamp": "2026-07-14T14:45:15.375341-04:00",
+      "timestamp": "2026-07-14T14:45:32.240281-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1210,7 +1210,7 @@
     }
   ],
   "orders_placed": [],
-  "trading_pnl": 185.32,
+  "trading_pnl": 184.26,
   "total_deposited": 28781.89,
   "deposit_count": 4,
   "ma20_bear_block": false,
