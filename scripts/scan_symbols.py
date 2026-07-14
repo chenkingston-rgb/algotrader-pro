@@ -191,6 +191,40 @@ def apply_hard_filters(symbol: str, bars: list) -> dict | None:
 
 
 # ── Trend pool scoring ────────────────────────────────────────────────────────
+def compute_illiq_filter(bars: list) -> bool:
+    """Return True (PASS) if symbol is liquid enough to trade.
+    Amihud illiquidity > 5e-8 → reject (too thin, wide spread risk).  FIX-F v7.9"""
+    if len(bars) < 22:
+        return True  # not enough data — pass through (don't reject on data gaps)
+    closes  = [b["c"] for b in bars[-22:]]
+    volumes = [b["v"] for b in bars[-22:]]
+    illiq_vals = []
+    for i in range(1, len(closes)):
+        prev = closes[i-1]
+        if prev <= 0 or volumes[i] <= 0 or closes[i] <= 0:
+            continue
+        ret    = abs(closes[i] / prev - 1)
+        dvol   = closes[i] * volumes[i]
+        illiq_vals.append(ret / dvol)
+    if not illiq_vals:
+        return True
+    avg_illiq = sum(illiq_vals) / len(illiq_vals)
+    return avg_illiq <= 1e-8   # True = liquid enough (calibrated vs US large/mid-cap)
+
+
+def compute_carhart_mom(bars: list) -> float:
+    """Carhart (1997) 12m-1m momentum.
+    Returns 12-week return minus 1-week return as a percentage delta.
+    Proxy for the UMD factor; uses weekly approximations (63d/5d) since
+    we operate on daily bars without a full calendar year.  FIX-F v7.9"""
+    closes = [b["c"] for b in bars]
+    if len(closes) < 64:
+        return 0.0
+    ret_12w = (closes[-1] / closes[-63] - 1) * 100 if len(closes) >= 63 else 0.0
+    ret_1w  = (closes[-1] / closes[-5]  - 1) * 100 if len(closes) >= 5  else 0.0
+    return round(ret_12w - ret_1w, 4)
+
+
 def score_trend(symbol: str, bars: list) -> dict | None:
     """
     Trend candidates: ADX > 20, strong momentum.
@@ -202,8 +236,16 @@ def score_trend(symbol: str, bars: list) -> dict | None:
     adx = compute_adx14(bars)
     if adx < 20.0:          # must be trending for MACD/EMA strategies
         return None
-    score = 0.40 * base["ret_4w_pct"] + 0.40 * base["ret_12w_pct"] + 0.20 * adx
-    return {**base, "adx14": adx, "score": round(score, 4), "pool": "TREND"}
+    # ── Carhart momentum layer (FIX-F v7.9) ────────────────────────────────────
+    # Adds 12m-1m momentum signal to the trend score.
+    # Weight shift: carhart gets 0.20, adx drops from 0.20→0.15, ret_12w 0.40→0.30, ret_4w 0.40→0.35
+    carhart = compute_carhart_mom(bars)
+    score = (0.35 * base["ret_4w_pct"]
+           + 0.30 * base["ret_12w_pct"]
+           + 0.15 * adx
+           + 0.20 * carhart)
+    return {**base, "adx14": adx, "carhart_mom": round(carhart, 4),
+            "score": round(score, 4), "pool": "TREND"}
 
 
 # ── Mean-reversion pool scoring ───────────────────────────────────────────────
@@ -295,6 +337,10 @@ def main():
     for sym, bars in all_bars.items():
         if sym in CORE_SYMBOLS:
             continue
+        # ── FIX-F v7.9: Pre-screen for liquidity (Amihud illiq > 5e-8 → skip) ──
+        if not compute_illiq_filter(bars):
+            logging.info(f"[ILLIQ_FILTER] {sym}: rejected (Amihud illiq > 1e-8 — thin liquidity)")
+            continue
         t = score_trend(sym, bars)
         if t:
             trend_picks.append(t)
@@ -315,7 +361,7 @@ def main():
 
     output = {
         "generated_at":       run_time.isoformat(),
-        "scan_type":          "weekly_v2",
+        "scan_type":          "weekly_v3_carhart",  # FIX-F v7.9: Carhart momentum + illiq filter
         "universe_size":      len(SCAN_UNIVERSE),
         "trend_candidates":   len(trend_picks),
         "meanrev_candidates": len(meanrev_picks),
