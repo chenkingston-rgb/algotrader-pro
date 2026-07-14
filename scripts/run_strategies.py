@@ -1786,6 +1786,34 @@ def check_pdt_limit() -> tuple[bool, int]:
     return True, 0
 
 
+
+def compute_high52w_ratio(df: pd.DataFrame) -> float:
+    """high52w (George & Hwang 2004): close / 252-day max close.
+    Returns ratio in [0,1]. Values < 0.75 = >25% below 52w high (weak momentum).
+    Returns None if fewer than 252 bars available.  FIX-F v7.9"""
+    if len(df) < 252:
+        return None
+    close = df["close"]
+    ratio = float(close.iloc[-1] / close.rolling(252).max().iloc[-1])
+    return round(ratio, 4)
+
+
+def compute_illiq_score(df: pd.DataFrame) -> float:
+    """Amihud (2002) illiquidity: 21d avg of |daily_ret| / dollar_volume.
+    Lower = more liquid. Typical large-cap US: 1e-10 to 5e-9.
+    Threshold for block: > 1e-8 (calibrated vs real US large/mid-cap universe).
+    Returns None if insufficient data.  FIX-F v7.9"""
+    if len(df) < 22 or "volume" not in df.columns:
+        return None
+    close  = df["close"].tail(22)
+    volume = df["volume"].tail(22)
+    ret    = close.pct_change().abs()
+    dvol   = close * volume
+    illiq  = (ret / dvol.replace(0, float("nan"))).dropna()
+    if len(illiq) < 5:
+        return None
+    return float(illiq.rolling(21).mean().iloc[-1])
+
 def get_spy_opening_range_pct() -> float:
     """SPY first-30min opening range as a decimal fraction. RULE 5 (FIX-E v7.8)."""
     try:
@@ -1995,10 +2023,33 @@ def main():
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
+                # ── FIX-F v7.9: Factor quality filters (high52w + illiq) ──────────────
+                # FILTER 1 — high52w (George & Hwang 2004): block daily entries on
+                # symbols trading >25% below their 252-day high. These names show
+                # structural weakness, not mean-reversion setup. ETFs exempt.
+                _HIGH52W_EXEMPT = frozenset(["SPY","QQQ","IWM","GLD",
+                                             "XLK","XLE","XLF","XLV","XLI","XLY","SMH","ARKK"])
+                if strategy_type == "daily" and symbol not in _HIGH52W_EXEMPT:
+                    _h52 = compute_high52w_ratio(df)
+                    if _h52 is not None and _h52 < 0.75:
+                        skip_reason = (f"high52w_block: {symbol} at {_h52:.3f} of 52w high "
+                                       f"(<0.75 threshold, structural weakness, FIX-F)")
+                        print(f"  [HIGH52W] {symbol}: ratio={_h52:.3f} < 0.75 — blocked")
+                # FILTER 2 — Amihud illiq: block entries on illiquid names (thin market).
+                # Threshold 5e-8 flags stocks with abnormally wide price impact per dollar.
+                # Affects both daily and intraday; ETFs always pass (illiq ≈ 1e-12).
+                if not skip_reason:
+                    _illiq = compute_illiq_score(df)
+                    if _illiq is not None and _illiq > 1e-8:
+                        skip_reason = (f"illiq_block: {symbol} illiq={_illiq:.2e} "
+                                       f"> 1e-8 threshold (thin liquidity, FIX-F)")
+                        print(f"  [ILLIQ] {symbol}: illiq={_illiq:.2e} > 5e-8 — blocked")
+                # ── end FIX-F factor filters ─────────────────────────────────────────
+
                 # FIX-2c (v7.3): late-day gate is now INSIDE the buy block (not a competing elif)
                 # Previously the elif at L1595 matched intraday buys before 3:15pm but did nothing,
                 # silently preventing the execution block from ever being reached.
-                if strategy_type == "intraday":
+                if not skip_reason and strategy_type == "intraday":
                     now_et_check = datetime.now(ET)
                     eod_cutoff   = now_et_check.replace(hour=14, minute=45, second=0, microsecond=0)
                     # ── RULE 3: Pre-10am entry block (FIX-E v7.8) ───────────────────
