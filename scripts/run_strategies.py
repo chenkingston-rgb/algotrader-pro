@@ -1789,13 +1789,22 @@ def check_pdt_limit() -> tuple[bool, int]:
 
 def compute_high52w_ratio(df: pd.DataFrame) -> float:
     """high52w (George & Hwang 2004): close / 252-day max close.
-    Returns ratio in [0,1]. Values < 0.75 = >25% below 52w high (weak momentum).
+    Returns ratio in [0,1]. Values < 0.75 = >25% below 52w high.
     Returns None if fewer than 252 bars available.  FIX-F v7.9"""
     if len(df) < 252:
         return None
     close = df["close"]
     ratio = float(close.iloc[-1] / close.rolling(252).max().iloc[-1])
     return round(ratio, 4)
+
+
+def compute_ret12w(df: pd.DataFrame) -> float | None:
+    """12-week (63-bar) return for trend-direction confirmation.
+    Returns None if < 64 bars.  FIX-F v7.9 rev1"""
+    if len(df) < 64:
+        return None
+    close = df["close"]
+    return float(close.iloc[-1] / close.iloc[-63] - 1)
 
 
 def compute_illiq_score(df: pd.DataFrame) -> float:
@@ -2023,27 +2032,33 @@ def main():
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
-                # ── FIX-F v7.9: Factor quality filters (high52w + illiq) ──────────────
-                # FILTER 1 — high52w (George & Hwang 2004): block daily entries on
-                # symbols trading >25% below their 252-day high. These names show
-                # structural weakness, not mean-reversion setup. ETFs exempt.
+                # ── FIX-F v7.9 rev1: high52w DUAL-CONDITION + illiq ─────────────────
+                # FILTER 1 — high52w DUAL-CONDITION (George & Hwang 2004, corrected):
+                # Block ONLY when BOTH: (a) h52w < 0.75 AND (b) ret12w < 0%
+                # Single h52w blocks high-beta winners on cyclical pullbacks
+                # (e.g. HOOD: h52w=0.744 but ret12w=+43% — should NOT be blocked).
+                # Dual condition = structural deterioration, not a temporary dip.
+                # ETFs are always exempt.
                 _HIGH52W_EXEMPT = frozenset(["SPY","QQQ","IWM","GLD",
                                              "XLK","XLE","XLF","XLV","XLI","XLY","SMH","ARKK"])
                 if strategy_type == "daily" and symbol not in _HIGH52W_EXEMPT:
-                    _h52 = compute_high52w_ratio(df)
-                    if _h52 is not None and _h52 < 0.75:
-                        skip_reason = (f"high52w_block: {symbol} at {_h52:.3f} of 52w high "
-                                       f"(<0.75 threshold, structural weakness, FIX-F)")
-                        print(f"  [HIGH52W] {symbol}: ratio={_h52:.3f} < 0.75 — blocked")
-                # FILTER 2 — Amihud illiq: block entries on illiquid names (thin market).
-                # Threshold 5e-8 flags stocks with abnormally wide price impact per dollar.
+                    _h52  = compute_high52w_ratio(df)
+                    _r12w = compute_ret12w(df)
+                    if _h52 is not None and _h52 < 0.75 and _r12w is not None and _r12w < 0.0:
+                        skip_reason = (f"high52w_block: {symbol} h52w={_h52:.3f} "
+                                       f"AND ret12w={_r12w*100:+.1f}% (structural weakness, FIX-F)")
+                        print(f"  [HIGH52W] {symbol}: h52w={_h52:.3f} AND ret12w={_r12w*100:+.1f}% — blocked")
+                    elif _h52 is not None and _h52 < 0.75:
+                        print(f"  [HIGH52W] {symbol}: h52w={_h52:.3f} but ret12w={((_r12w or 0)*100):+.1f}% — allowed (rising)")
+                # FILTER 2 — Amihud illiq: block entries on genuinely illiquid names.
+                # Threshold 1e-8 is calibrated against real US large/mid-cap universe.
                 # Affects both daily and intraday; ETFs always pass (illiq ≈ 1e-12).
                 if not skip_reason:
                     _illiq = compute_illiq_score(df)
                     if _illiq is not None and _illiq > 1e-8:
                         skip_reason = (f"illiq_block: {symbol} illiq={_illiq:.2e} "
                                        f"> 1e-8 threshold (thin liquidity, FIX-F)")
-                        print(f"  [ILLIQ] {symbol}: illiq={_illiq:.2e} > 5e-8 — blocked")
+                        print(f"  [ILLIQ] {symbol}: illiq={_illiq:.2e} > 1e-8 — blocked")
                 # ── end FIX-F factor filters ─────────────────────────────────────────
 
                 # FIX-2c (v7.3): late-day gate is now INSIDE the buy block (not a competing elif)
