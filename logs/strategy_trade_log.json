@@ -312,5 +312,38 @@
       "roc_not_extended": "True"
     },
     "logged_at": "2026-07-15T14:45:36.228357+00:00"
+  },
+  {
+    "symbol": "GLD",
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-15T10:15:34.121400-04:00",
+    "entry_price": 372.96,
+    "exit_time": "2026-07-15T15:11:08.265Z",
+    "exit_price": 371.8204,
+    "qty": 7.0,
+    "pnl": -7.98,
+    "pnl_pct": -0.306,
+    "hold_minutes": 55.6,
+    "exit_reason": "stop_loss",
+    "entry_vix": 16.0,
+    "entry_atr": 0.6771,
+    "entry_stop_price": 371.84,
+    "entry_tp_price": 375.2,
+    "entry_indicators": {
+      "roc": 0.499,
+      "roc_prev": 0.126,
+      "threshold": 0.3,
+      "ma50": 371.27,
+      "price_vs_ma50": 0.455,
+      "vol_ratio": 1.88,
+      "bar_open": 372.74,
+      "bar_move": 0.22,
+      "atr_val": 0.677,
+      "atr_ext_ok": "True",
+      "roc_max_extension": 2.0,
+      "roc_not_extended": "True"
+    },
+    "logged_at": "2026-07-15T15:15:34.785361+00:00"
   }
 ]
