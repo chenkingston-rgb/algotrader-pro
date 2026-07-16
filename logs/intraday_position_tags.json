@@ -24,5 +24,11 @@
       "imax20": 0.947,
       "strev21": -0.0212
     }
+  },
+  "AMZN": {
+    "trail_order_id": "",
+    "trail_price": 3.437,
+    "entry_atr": 6.8744,
+    "strategy_type": "daily"
   }
 }
