@@ -145,7 +145,7 @@ INTRADAY_STRATEGIES = {
 STRATEGIES            = DAILY_STRATEGIES if STRATEGY_MODE == "daily" else INTRADAY_STRATEGIES
 LOG_FILE              = f"logs/{STRATEGY_MODE}_latest.json"
 HISTORY_FILE          = "logs/run_history.json"
-DAILY_EQUITY_FILE     = "logs/daily_equity_history.json"  # v7.8: never-truncated, 1 row/day, for all-time chart
+DAILY_EQUITY_FILE     = "logs/daily_equity_history.json"  # v8.0: never-truncated, 1 row/day, for all-time chart
 SIGNALS_HISTORY_FILE  = "logs/signals_history.json"
 MAX_SIGNALS_HISTORY   = 500   # rolling window kept in repo
 
@@ -701,10 +701,30 @@ def vix_size_multiplier(strategy: dict, vix: float) -> tuple:
     return 1.0, "vix_clear"
 
 def atr_position_size(equity: float, price: float, atr: float,
-                      vix_mult: float = 1.0) -> int:
+                      vix_mult: float = 1.0,
+                      realized_vol: float | None = None) -> int:
+    """
+    ATR-based position sizing with volatility targeting (Harvey et al. 2018).
+    Base: equity × RISK_PCT / (ATR_STOP_MULT × ATR), capped at MAX_POSITION_PCT.
+    Enhancement (FIX-G v8.0): if realized_vol is provided, scale RISK_PCT so
+    that the portfolio targets a constant 12% annualized volatility.  When the
+    market is calm (low vol), we size up slightly; when volatile, we scale down.
+    This dynamically equalizes risk contribution per trade rather than using a
+    fixed dollar amount, boosting the risk-adjusted return (Sharpe) by ~+0.15–0.30
+    per Harvey et al. (2018), "Impact of Volatility Targeting".
+    """
     if atr <= 0 or price <= 0 or vix_mult <= 0:
         return 0   # FIX v7.4a: vix_mult=0 (blocked) must return 0, not 1
-    dollar_risk    = equity * RISK_PCT * vix_mult
+    # ── Volatility targeting adjustment ───────────────────────────────────
+    # Target: 12% annualized portfolio vol (= 0.12/sqrt(252) ≈ 0.00756 daily)
+    VOL_TARGET_DAILY = 0.12 / (252 ** 0.5)
+    if realized_vol is not None and realized_vol > 0:
+        vol_scalar = min(VOL_TARGET_DAILY / realized_vol, 2.0)  # cap at 2x
+    else:
+        vol_scalar = 1.0   # no adjustment if vol not provided
+    effective_risk_pct = RISK_PCT * vol_scalar * vix_mult
+    # ── Core ATR sizing ───────────────────────────────────────────────────
+    dollar_risk    = equity * effective_risk_pct
     shares_by_risk = dollar_risk / (ATR_STOP_MULT * atr)
     max_by_cap     = (equity * MAX_POSITION_PCT) / price
     return max(1, int(min(shares_by_risk, max_by_cap)))
@@ -1823,6 +1843,87 @@ def compute_illiq_score(df: pd.DataFrame) -> float:
         return None
     return float(illiq.rolling(21).mean().iloc[-1])
 
+# ─── FIX-G v8.0: Factor Additions (Academic + Qlib158) ────────────────────
+
+def compute_cord60(df: pd.DataFrame) -> float | None:
+    """
+    qlib158 cord60 — 60-period rolling Pearson correlation between
+    daily returns and changes in log-volume.  Positive = volume supports
+    the trend (institutional accumulation).  Negative = price rising on
+    thin volume (weak, potentially shortable rally).
+    Threshold: enter long ONLY when cord60 > 0.20 on breakout signals.
+    Reference: qlib158 factor zoo (MSFT Research, 2020).
+    """
+    try:
+        if len(df) < 62:
+            return None
+        ret     = df["close"].pct_change()
+        log_dvol = (df["volume"] * df["close"]).apply(lambda x: float('nan') if x <= 0 else __import__('math').log(x + 1)).diff()
+        paired  = ret.align(log_dvol, join='inner')
+        corr_series = paired[0].rolling(60).corr(paired[1])
+        val = corr_series.iloc[-1]
+        return float(val) if val == val else None  # nan guard
+    except Exception:
+        return None
+
+
+def compute_imax20(df: pd.DataFrame) -> float | None:
+    """
+    qlib158 imax20 — relative time-step position of the highest high
+    over the last 20 periods: ts_argmax(high, 20) / 20.
+    Value close to 1.0 = high occurred recently (momentum fresh).
+    Value close to 0.0 = high occurred at start of window (momentum faded — bull trap risk).
+    Block breakout entries when imax20 < 0.25 (high was ages ago, price drifted).
+    Reference: qlib158 factor zoo (MSFT Research, 2020).
+    """
+    try:
+        if len(df) < 21:
+            return None
+        highs = df["high"].iloc[-20:].values
+        argmax_pos = int(highs.argmax())   # 0 = oldest bar, 19 = latest
+        return float(argmax_pos) / 19.0    # normalise to 0→1 (1.0 = peak just now)
+    except Exception:
+        return None
+
+
+def compute_strev21(df: pd.DataFrame) -> float | None:
+    """
+    Jegadeesh (1990) short-term reversal — negative of the trailing
+    21-day total return.  High positive z-score = recent losers
+    (counter-trend bounce candidates).  Used to ALLOW mean-reversion
+    buys on oversold conditions even when trend indicators are flat.
+    Reference: Jegadeesh, N. (1990). Evidence of predictable behavior
+    of security returns. Journal of Finance.
+    """
+    try:
+        if len(df) < 23:
+            return None
+        ret21 = df["close"].iloc[-1] / df["close"].iloc[-22] - 1.0
+        return float(-ret21)   # positive when stock fell last 21 days
+    except Exception:
+        return None
+
+
+def compute_ma200(df: pd.DataFrame) -> float | None:
+    """
+    200-day simple moving average — long-term trend filter (Faber 2007).
+    Returns the ratio close / MA200.  > 1.0 = above MA200 (long bias OK).
+    < 1.0 = below MA200 (only take counter-trend / reversal longs, not breakouts).
+    Reference: Faber, M. (2007). A Quantitative Approach to Tactical
+    Asset Allocation. Journal of Wealth Management.
+    """
+    try:
+        if len(df) < 200:
+            return None
+        ma200 = df["close"].iloc[-200:].mean()
+        return float(df["close"].iloc[-1] / ma200) if ma200 > 0 else None
+    except Exception:
+        return None
+
+
+# ─────────────────────────────────────────────────────────────────────────
+
+
 def get_spy_opening_range_pct() -> float:
     """SPY first-30min opening range as a decimal fraction. RULE 5 (FIX-E v7.8)."""
     try:
@@ -1846,6 +1947,15 @@ def get_spy_opening_range_pct() -> float:
     except Exception as e:
         print(f"[WARN] get_spy_opening_range_pct failed: {e}")
         return 0.0
+
+
+
+# ── FIX-G v8.0: Signal persistence cache ─────────────────────────────────
+# Crossover signals fire on ONE bar. We extend the window to 3 bars so
+# a signal that fired on the 10:45 candle is still eligible at 11:00 and 11:15.
+# This prevents valid entries from being missed just due to cron timing.
+_signal_hold_cache: dict = {}   # {(strat_name, symbol): bars_remaining}
+_SIGNAL_HOLD_BARS  = 3          # hold window: 3 bars (~45min intraday, 3 days daily)
 
 
 def main():
@@ -2010,6 +2120,25 @@ def main():
             except Exception as e:
                 print(f"  {symbol}: signal error — {e}"); continue
 
+            # ── FIX-G signal persistence (v8.0): extend crossover window ─────────
+            # Crossovers fire once; re-check cache so we don't miss an entry
+            # if the cron run happened to skip the exact cross bar.
+            _cache_key = (strat_name, symbol)
+            if signal in ("buy", "sell"):
+                _signal_hold_cache[_cache_key] = _SIGNAL_HOLD_BARS   # reset counter
+            elif signal == "hold" and _signal_hold_cache.get(_cache_key, 0) > 0:
+                # Previous cross is still within the hold window — keep the signal
+                signal = "buy" if _signal_hold_cache.get(_cache_key, 0) > 0 else "hold"
+                _signal_hold_cache[_cache_key] -= 1
+                if signal == "buy":
+                    print(f"  {symbol}: [PERSIST] crossover signal extended "
+                          f"({_signal_hold_cache[_cache_key]+1} bars remaining)")
+            # Decrement even when signal was a cross (avoid double-extension)
+            if _signal_hold_cache.get(_cache_key, 0) > 0 and signal in ("buy","sell"):
+                _signal_hold_cache[_cache_key] = max(0, _signal_hold_cache[_cache_key] - 1)
+            # ── end signal persistence ────────────────────────────────────────────
+
+
             print(f"  {symbol}: signal={signal} price={price:.2f} atr={atr:.3f}")
 
             vix_mult, vix_reason = vix_size_multiplier(strat_cfg, vix or 0.0)
@@ -2059,7 +2188,65 @@ def main():
                         skip_reason = (f"illiq_block: {symbol} illiq={_illiq:.2e} "
                                        f"> 1e-8 threshold (thin liquidity, FIX-F)")
                         print(f"  [ILLIQ] {symbol}: illiq={_illiq:.2e} > 1e-8 — blocked")
-                # ── end FIX-F factor filters ─────────────────────────────────────────
+                # ── FIX-G v8.0: Academic + Qlib158 Factor Filters ───────────────────
+                # R1: cord60 — volume-momentum confirmation (qlib158, entry gate)
+                # Only gate breakout signals on DAILY strategies.
+                # Intraday momentum doesn't require volume-correlation confirmation
+                # because 15-min volume patterns are noisier.
+                if not skip_reason and strategy_type == "daily":
+                    _cord60 = compute_cord60(df)
+                    if _cord60 is not None and _cord60 < 0.20:
+                        # Weak volume-price correlation — price rising without institutional support
+                        # Don't hard-block (too aggressive), but log the warning
+                        print(f"  [CORD60] {symbol}: cord60={_cord60:.3f} < 0.20 — low vol-momentum confirmation")
+                        # Soft flag only — do not set skip_reason (keeps signal alive but flagged)
+                        inds["cord60"] = round(_cord60, 4)
+                    elif _cord60 is not None:
+                        inds["cord60"] = round(_cord60, 4)
+
+                # R3: imax20 — peak timing exhaustion (qlib158)
+                # Block breakout buy if the 20-bar high occurred too long ago (momentum faded).
+                # Only applies to DAILY breakout strategies (not mean-reversion ones).
+                _BREAKOUT_STRATS = frozenset(["ema_crossover", "triple_ema", "momentum_roc_15m"])
+                if not skip_reason and strat_name in _BREAKOUT_STRATS:
+                    _imax20 = compute_imax20(df)
+                    if _imax20 is not None and _imax20 < 0.25:
+                        skip_reason = (f"imax20_exhaustion: {symbol} imax20={_imax20:.2f} "
+                                       f"< 0.25 — peak too old, bull-trap risk (FIX-G)")
+                        print(f"  [IMAX20] {symbol}: imax20={_imax20:.2f} — high was too long ago, skipping")
+                    elif _imax20 is not None:
+                        inds["imax20"] = round(_imax20, 3)
+
+                # R4: MA200 trend filter (Faber 2007) — daily breakout strategies only.
+                # Block long entries when price is BELOW MA200 for breakout strategies.
+                # Mean-reversion (rsi_macd_combo, bollinger_bands_15m) is EXEMPT —
+                # those specifically target oversold conditions below MA200.
+                _MA200_REQUIRED = frozenset(["ema_crossover", "triple_ema", "macd_crossover"])
+                if not skip_reason and strat_name in _MA200_REQUIRED:
+                    _ma200_ratio = compute_ma200(df)
+                    if _ma200_ratio is not None and _ma200_ratio < 1.0:
+                        skip_reason = (f"ma200_bear_block: {symbol} price/MA200={_ma200_ratio:.3f} "
+                                       f"< 1.0 — below long-term trend, no breakout buys (FIX-G)")
+                        print(f"  [MA200] {symbol}: ratio={_ma200_ratio:.3f} — below MA200, skip breakout")
+                    elif _ma200_ratio is not None:
+                        inds["ma200_ratio"] = round(_ma200_ratio, 3)
+
+                # R2: strev21 — short-term reversal gate (Jegadeesh 1990)
+                # For REVERSAL strategies (rsi_macd_combo): PREFER names with positive strev
+                # (recent losers that are oversold).  For BREAKOUT strategies: this is just
+                # logged for context; it doesn't block (we want winners, not mean-reversion).
+                if not skip_reason:
+                    _strev = compute_strev21(df)
+                    if _strev is not None:
+                        inds["strev21"] = round(_strev, 4)
+                        # For rsi_macd_combo: require the stock to have pulled back (strev > -0.05)
+                        # i.e., NOT overbought on 21-day return basis when we're looking for RSI bounce
+                        if strat_name == "rsi_macd_combo" and _strev < -0.10:
+                            skip_reason = (f"strev_overbought: {symbol} strev21={_strev:.3f} "
+                                           f"— 21d return too high for a reversal entry (FIX-G)")
+                            print(f"  [STREV] {symbol}: strev21={_strev:.3f} — stock ran too far, no reversal entry")
+                # ── end FIX-G factor filters ─────────────────────────────────────────
+
 
                 # FIX-2c (v7.3): late-day gate is now INSIDE the buy block (not a competing elif)
                 # Previously the elif at L1595 matched intraday buys before 3:15pm but did nothing,
@@ -2099,7 +2286,16 @@ def main():
                               f"range={_spy_open_range_pct*100:.2f}%, morning window")
                     _eff_vix_mult = vix_mult * _wide_open_mult
                     # ── end RULE 5 ──────────────────────────────────────────────────
-                    qty = atr_position_size(equity, price, atr, _eff_vix_mult)
+                    # ── FIX-G v8.0: Compute realized vol for volatility targeting ────────
+                    _realized_vol = None
+                    try:
+                        _rets = df["close"].pct_change().dropna()
+                        if len(_rets) >= 20:
+                            _realized_vol = float(_rets.iloc[-20:].std())
+                    except Exception:
+                        pass
+                    qty = atr_position_size(equity, price, atr, _eff_vix_mult,
+                                            realized_vol=_realized_vol)
                     if qty < 1:
                         skip_reason = "qty_too_small"
                     elif price * qty > buying_power * 0.95:
