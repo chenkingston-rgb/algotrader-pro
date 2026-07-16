@@ -411,5 +411,40 @@
       "roc_not_extended": "True"
     },
     "logged_at": "2026-07-15T15:30:52.534121+00:00"
+  },
+  {
+    "symbol": "GOOGL",
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-16T10:45:32.434905-04:00",
+    "entry_price": 373.05,
+    "exit_time": "2026-07-16T16:10:27.682Z",
+    "exit_price": 370.1252,
+    "qty": 7.0,
+    "pnl": -20.47,
+    "pnl_pct": -0.784,
+    "hold_minutes": 84.9,
+    "exit_reason": "stop_loss",
+    "entry_vix": 15.81,
+    "entry_atr": 1.9597,
+    "entry_stop_price": 370.11,
+    "entry_tp_price": 378.93,
+    "entry_indicators": {
+      "roc": 0.32,
+      "roc_prev": 0.126,
+      "threshold": 0.3,
+      "ma50": 365.57,
+      "price_vs_ma50": 2.047,
+      "vol_ratio": 1.85,
+      "bar_open": 372.62,
+      "bar_move": 0.435,
+      "atr_val": 1.96,
+      "atr_ext_ok": "True",
+      "roc_max_extension": 2.0,
+      "roc_not_extended": "True",
+      "imax20": 0.789,
+      "strev21": -0.0036
+    },
+    "logged_at": "2026-07-16T16:15:52.508159+00:00"
   }
 ]
