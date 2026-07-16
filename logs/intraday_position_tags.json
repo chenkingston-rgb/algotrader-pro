@@ -30,5 +30,11 @@
     "trail_price": 3.437,
     "entry_atr": 6.8744,
     "strategy_type": "daily"
+  },
+  "GOOGL": {
+    "trail_order_id": "",
+    "trail_price": 4.85,
+    "entry_atr": 9.6992,
+    "strategy_type": "daily"
   }
 }
