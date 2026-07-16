@@ -134,9 +134,9 @@ INTRADAY_STRATEGIES = {
         "symbols":  ["SPY", "QQQ", "XLK", "XLE", "XLF"],
         "vix_type": "MOMENTUM",
         "vix_block": 28, "vix_reduce": 20, "vix_reduce_pct": 0.50,
-        "params": {"roc_period": 10, "roc_threshold": 0.3,
+        "params": {"roc_period": 10, "roc_threshold": 0.8,  # FIX-I v8.3: raised 0.3→0.8 (weak 0.3-0.8% band was 100% losses)
                    "atr_ext_mult": 1.0,    # FIX-C v7.4: block entry if bar moved >1x ATR from open
-                   "roc_max_extension": 2.0},  # FIX-D v7.7: block entry if ROC already >2.0%
+                   "roc_max_extension": 1.8},  # FIX-I v8.3: tightened 2.0→1.8 (blow-off top guard, matches only-win upper bound)
                                                 # (blow-off top, not a fresh breakout)
         "timeframe": "15Min", "bar_days": 20,
     },
@@ -145,7 +145,7 @@ INTRADAY_STRATEGIES = {
 STRATEGIES            = DAILY_STRATEGIES if STRATEGY_MODE == "daily" else INTRADAY_STRATEGIES
 LOG_FILE              = f"logs/{STRATEGY_MODE}_latest.json"
 HISTORY_FILE          = "logs/run_history.json"
-DAILY_EQUITY_FILE     = "logs/daily_equity_history.json"  # v8.2 — FIX-H rev1: Optimal Trail 0.5×ATR + Time-Hold Removed (2026-07-17)
+DAILY_EQUITY_FILE     = "logs/daily_equity_history.json"  # v8.3 — FIX-I: Signal Quality Calibration — ROC 0.8%, vol 1.5×, roc_max 1.8% (2026-07-17)
 SIGNALS_HISTORY_FILE  = "logs/signals_history.json"
 MAX_SIGNALS_HISTORY   = 500   # rolling window kept in repo
 
@@ -894,7 +894,7 @@ def signal_momentum_roc_15m(df: pd.DataFrame, p: dict) -> tuple:
         avg_vol   = float(vol.iloc[-20:].mean())
         cur_vol   = float(vol.iloc[-1])
         vol_ratio = round(cur_vol / avg_vol, 2) if avg_vol > 0 else None
-        vol_ok    = (vol_ratio is not None and vol_ratio >= 1.2)
+        vol_ok    = (vol_ratio is not None and vol_ratio >= 1.5)  # FIX-I v8.3: raised 1.2→1.5 (1.2-1.9× range was 91% losses)
 
     inds = {
         "roc":       round(r, 3),
@@ -929,8 +929,8 @@ def signal_momentum_roc_15m(df: pd.DataFrame, p: dict) -> tuple:
     # momentum entries clustered at ROC 0.75-1.04%; the 2 outliers at ROC 6.74%
     # (INTC) and 11.07% (AMD) both lost money on immediate mean-reversion.
     # Cap set with ~2x headroom above the highest normal historical entry.
-    roc_not_extended = r <= p.get("roc_max_extension", 2.0)
-    inds["roc_max_extension"] = p.get("roc_max_extension", 2.0)
+    roc_not_extended = r <= p.get("roc_max_extension", 1.8)  # FIX-I v8.3: default fallback updated
+    inds["roc_max_extension"] = p.get("roc_max_extension", 1.8)
     inds["roc_not_extended"] = roc_not_extended
 
     if r > p["roc_threshold"] and r > prev_r and above_ma50 and vol_ok and atr_ext_ok and roc_not_extended:
