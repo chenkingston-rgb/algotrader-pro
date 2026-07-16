@@ -1,44 +1,44 @@
 {
-  "generated_at": "2026-07-16T14:45:23.093766-04:00",
+  "generated_at": "2026-07-16T14:46:03.016047-04:00",
   "mode": "live",
-  "run_timestamp": "2026-07-16T14:44:57.155942-04:00",
-  "equity": 29614.02,
+  "run_timestamp": "2026-07-16T14:45:36.899161-04:00",
+  "equity": 29613.5,
   "prev_close": 29700.55,
-  "buying_power": 114886.18,
-  "cash": 114886.18,
-  "pnl_today": -86.53,
+  "buying_power": 114884.72,
+  "cash": 114884.72,
+  "pnl_today": -87.05,
   "pnl_today_pct": -0.29,
-  "realized_today": -95.63,
-  "unrealized_today": 9.1,
+  "realized_today": -93.29,
+  "unrealized_today": 6.24,
   "position_count": 1,
   "positions": [
     {
       "symbol": "XLE",
       "qty": 52.0,
       "avg_entry_price": 57.03,
-      "current_price": 57.2,
-      "market_value": 2974.66,
-      "unrealized_pl": 9.1,
-      "unrealized_plpc": 0.307,
+      "current_price": 57.15,
+      "market_value": 2971.8,
+      "unrealized_pl": 6.24,
+      "unrealized_plpc": 0.21,
       "strategy_type": "intraday",
       "strategy_name": "momentum_roc_15m"
     }
   ],
-  "total_unrealized": 9.1,
-  "total_exposure": 2974.66,
+  "total_unrealized": 6.24,
+  "total_exposure": 2971.8,
   "exposure_pct": 10.04,
   "ma20_bear_block": false,
   "ma20_value": null,
   "ma20_spy_close": null,
   "ma20_gap_pct": null,
   "regime_label": "BULL",
-  "vix": 16.46,
+  "vix": 16.52,
   "drawdown_pct": 0.63,
   "kill_switch_active": false,
   "peak_equity": 29801.07,
   "start_equity": 776.15,
   "total_deposited": 28781.89,
-  "cumulative_trading_pnl": 66.47,
+  "cumulative_trading_pnl": 63.09,
   "deposits": [
     {
       "timestamp": "2026-06-04T09:45:33.443259-04:00",
@@ -66,6 +66,21 @@
     }
   ],
   "run_history": [
+    {
+      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "mode": "live",
+      "strategy_mode": "intraday",
+      "equity": 29614.02,
+      "last_equity": 29700.55,
+      "vix": 16.46,
+      "signals_count": 38,
+      "orders_count": 0,
+      "symbols_traded": [],
+      "trading_pnl": 57.37,
+      "total_deposited": 28781.89,
+      "ma20_bear_block": false,
+      "drawdown_pct": 0.63
+    },
     {
       "timestamp": "2026-07-16T14:30:46.737324-04:00",
       "mode": "live",
@@ -520,28 +535,11 @@
       "total_deposited": 28781.89,
       "ma20_bear_block": false,
       "drawdown_pct": 0.35
-    },
-    {
-      "timestamp": "2026-07-15T15:12:52.585244-04:00",
-      "mode": "live",
-      "strategy_mode": "daily",
-      "equity": 29697.94,
-      "last_equity": 29737.12,
-      "vix": 15.91,
-      "signals_count": 120,
-      "orders_count": 1,
-      "symbols_traded": [
-        "AMZN"
-      ],
-      "trading_pnl": 141.29,
-      "total_deposited": 28781.89,
-      "ma20_bear_block": false,
-      "drawdown_pct": 0.35
     }
   ],
   "signals": [
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -555,7 +553,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 57.22,
@@ -566,7 +564,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -580,7 +578,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 750.52,
@@ -591,7 +589,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -605,7 +603,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 706.35,
@@ -616,7 +614,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -630,7 +628,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 295.2,
@@ -641,7 +639,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -655,7 +653,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 365.33,
@@ -666,7 +664,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -680,7 +678,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 177.34,
@@ -691,7 +689,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -705,7 +703,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 56.5,
@@ -716,7 +714,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -730,7 +728,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 161.74,
@@ -741,7 +739,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -755,7 +753,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 257.39,
@@ -766,7 +764,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -780,7 +778,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 106.62,
@@ -791,7 +789,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -805,7 +803,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 216.33,
@@ -816,7 +814,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -830,7 +828,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 359.03,
@@ -841,7 +839,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -855,7 +853,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 187.73,
@@ -866,7 +864,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -880,7 +878,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 495.7,
@@ -891,7 +889,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -905,7 +903,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 61.4,
@@ -916,7 +914,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -930,7 +928,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 404.07,
@@ -941,7 +939,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -955,7 +953,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 331.95,
@@ -966,7 +964,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -980,7 +978,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 117.25,
@@ -991,7 +989,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "bollinger_bands_15m",
       "strategy_type": "intraday",
       "vix_type": "MEAN_REV",
@@ -1005,7 +1003,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "price": 179.14,
@@ -1016,7 +1014,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1030,7 +1028,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": 0.07,
@@ -1048,7 +1046,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1062,7 +1060,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": -0.203,
@@ -1080,7 +1078,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1094,7 +1092,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": -0.227,
@@ -1112,7 +1110,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1126,7 +1124,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": -0.23,
@@ -1144,7 +1142,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1158,7 +1156,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": -0.167,
@@ -1176,7 +1174,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1190,7 +1188,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": 0.025,
@@ -1208,7 +1206,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1222,7 +1220,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": -0.212,
@@ -1240,7 +1238,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1254,7 +1252,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": 0.0,
@@ -1272,7 +1270,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1286,7 +1284,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": 1.409,
@@ -1304,7 +1302,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1318,7 +1316,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": -2.998,
@@ -1336,7 +1334,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1350,7 +1348,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": -1.494,
@@ -1368,7 +1366,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1382,7 +1380,7 @@
       "executed": false,
       "skip_reason": "no_position_to_sell",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": -3.279,
@@ -1400,7 +1398,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1414,7 +1412,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": -0.048,
@@ -1432,7 +1430,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1446,7 +1444,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": -1.197,
@@ -1464,7 +1462,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1478,7 +1476,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": -0.252,
@@ -1496,7 +1494,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1510,7 +1508,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": 1.048,
@@ -1528,7 +1526,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1542,7 +1540,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": 0.387,
@@ -1560,7 +1558,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1574,7 +1572,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": -0.289,
@@ -1592,7 +1590,7 @@
       }
     },
     {
-      "timestamp": "2026-07-16T14:44:57.155942-04:00",
+      "timestamp": "2026-07-16T14:45:36.899161-04:00",
       "strategy": "momentum_roc_15m",
       "strategy_type": "intraday",
       "vix_type": "MOMENTUM",
@@ -1606,7 +1604,7 @@
       "executed": false,
       "skip_reason": "no_signal",
       "order_id": null,
-      "vix": 16.46,
+      "vix": 16.52,
       "vix_reason": "vix_clear",
       "indicators": {
         "roc": -0.237,
