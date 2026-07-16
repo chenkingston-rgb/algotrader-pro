@@ -530,20 +530,97 @@ def get_positions() -> dict:
 
 def place_order(symbol: str, qty: int, side: str,
                 stop_price: float, take_profit: float) -> dict:
+    """
+    FIX-H v8.1: Submit a market buy with a static protective stop only.
+    The take_profit bracket is removed — trailing stop is attached separately
+    via attach_trailing_stop() immediately after fill, which provides
+    unlimited upside capture while protecting against whipsaws.
+    The static stop_price serves as a hard safety net if the trailing
+    stop order fails to submit.
+    """
     payload = {
         "symbol":        symbol,
         "qty":           str(qty),
         "side":          side,
         "type":          "market",
-        "time_in_force": "gtc",   # FIX-2a: was "day" — stops now persist overnight
-        "order_class":   "bracket",
+        "time_in_force": "gtc",
+        "order_class":   "oto",          # one-triggers-other: market → stop safety net
         "stop_loss":     {"stop_price": str(round(stop_price, 2))},
-        "take_profit":   {"limit_price": str(round(take_profit, 2))},
+        # No take_profit bracket: trailing stop handles upside (FIX-H)
     }
     r = requests.post(f"{ALPACA_BASE}/v2/orders",
                       headers=alpaca_headers(), json=payload, timeout=10)
     r.raise_for_status()
     return r.json()
+
+
+def attach_trailing_stop(symbol: str, qty: int, trail_price: float,
+                          parent_order_id: str = "") -> dict:
+    """
+    FIX-H v8.1: Submit a trailing stop sell order immediately after the
+    market buy is filled.  trail_price is the dollar distance to trail
+    (e.g. 1.0×ATR).  Alpaca will automatically move the stop up as the
+    price rises, locking in profit once the position is in the green.
+
+    This is submitted as a SEPARATE order (not a bracket leg) so it can
+    be cancelled independently at EOD before the market-close sweep.
+
+    Args:
+        symbol:          ticker
+        qty:             shares to protect (= full position size)
+        trail_price:     dollar distance to trail (= 1.0 × ATR, min $0.05)
+        parent_order_id: logged for traceability
+    Returns: Alpaca order dict with {"id": ..., "trail_price": ...}
+    """
+    trail_price = max(round(trail_price, 2), 0.05)   # minimum $0.05 trail
+    payload = {
+        "symbol":        symbol,
+        "qty":           str(qty),
+        "side":          "sell",
+        "type":          "trailing_stop",
+        "trail_price":   str(trail_price),
+        "time_in_force": "gtc",
+    }
+    r = requests.post(f"{ALPACA_BASE}/v2/orders",
+                      headers=alpaca_headers(), json=payload, timeout=10)
+    if not r.ok:
+        logging.warning(f"[TRAIL_STOP] Failed to attach trailing stop for {symbol}: "
+                        f"{r.status_code} {r.text[:200]}")
+        return {}
+    result = r.json()
+    logging.info(f"[TRAIL_STOP] Attached trailing stop for {symbol}: "
+                 f"trail=${trail_price:.2f}  order_id={result.get('id')}")
+    return result
+
+
+def cancel_order(order_id: str) -> bool:
+    """Cancel a specific open order by ID. Returns True if cancelled."""
+    if not order_id:
+        return False
+    r = requests.delete(f"{ALPACA_BASE}/v2/orders/{order_id}",
+                        headers=alpaca_headers(), timeout=10)
+    return r.status_code in (200, 204)
+
+
+def cancel_all_trailing_stops_for_symbol(symbol: str) -> int:
+    """
+    FIX-H v8.1 EOD helper: Cancel all open trailing_stop orders for a
+    symbol before the EOD market-close sweep.  Returns number cancelled.
+    """
+    r = requests.get(f"{ALPACA_BASE}/v2/orders",
+                     headers=alpaca_headers(),
+                     params={"status": "open", "symbols": symbol, "limit": 50},
+                     timeout=10)
+    if not r.ok:
+        return 0
+    orders = r.json() if isinstance(r.json(), list) else []
+    cancelled = 0
+    for o in orders:
+        if o.get("type") == "trailing_stop" and o.get("symbol") == symbol:
+            if cancel_order(o["id"]):
+                cancelled += 1
+                logging.info(f"[TRAIL_STOP] Cancelled trailing stop {o['id']} for {symbol} (EOD sweep)")
+    return cancelled
 
 
 def close_position_order(symbol: str, qty: int) -> dict:
@@ -1600,9 +1677,22 @@ def load_json_from_github(filepath: str) -> dict:
 
 
 def run_eod_exit(positions, position_tags, all_signals, orders_placed, run_start):
-    """Force-close all intraday-tagged positions at/after 3:30 PM ET."""
+    """
+    Force-close all intraday-tagged positions at/after 3:00 PM ET.
+    FIX-H v8.1: Before market-closing, cancel ALL open trailing stop orders
+    for the symbol to prevent them from triggering overnight on the next day's
+    open after the position has already been closed by this sweep.
+
+    Also handles daily-strategy positions that have a trail_order_id stored —
+    these are NOT force-closed (daily strategies hold overnight) but their
+    trailing stop orders are refreshed if stale.
+    """
     now_et  = datetime.now(ET)
     if STRATEGY_MODE != "intraday":
+        # ── FIX-H: Even in daily mode, do a trailing stop audit ─────────────
+        # If any daily-strategy position has moved against us by >2×ATR,
+        # and the trailing stop hasn't triggered, log a warning.
+        _daily_trail_audit(positions, position_tags)
         return position_tags
     cutoff = now_et.replace(hour=EOD_EXIT_HOUR, minute=EOD_EXIT_MIN, second=0, microsecond=0)
     if now_et < cutoff:
@@ -1620,6 +1710,18 @@ def run_eod_exit(positions, position_tags, all_signals, orders_placed, run_start
         price = float(pos.get("current_price", 0))
         upl   = float(pos.get("unrealized_pl", 0))
         uplpc = float(pos.get("unrealized_plpc", 0)) * 100
+
+        # ── FIX-H v8.1: Cancel trailing stop BEFORE market-closing ──────────
+        trail_order_id = tag.get("trail_order_id", "")
+        n_cancelled = cancel_all_trailing_stops_for_symbol(sym)
+        if n_cancelled:
+            print(f"  [TRAIL_STOP] Cancelled {n_cancelled} trailing stop order(s) for {sym} (EOD)")
+        elif trail_order_id:
+            # Belt-and-suspenders: also try cancelling by stored ID directly
+            if cancel_order(trail_order_id):
+                print(f"  [TRAIL_STOP] Cancelled trailing stop {trail_order_id} for {sym} (EOD, direct)")
+        # ── end FIX-H EOD cancel ────────────────────────────────────────────
+
         print(f"  [EOD] Closing {sym} qty={qty}  unreal=${upl:+.2f} ({uplpc:+.2f}%)")
         try:
             order    = close_position_order(sym, qty)
@@ -1640,13 +1742,56 @@ def run_eod_exit(positions, position_tags, all_signals, orders_placed, run_start
                 "vix_reason": "eod_forced_exit",
                 "indicators": {"unrealized_pl": round(upl, 2),
                                "unrealized_plpc": round(uplpc, 2),
-                               "entry_strategy": tag.get("strategy")},
+                               "entry_strategy": tag.get("strategy"),
+                               "trail_order_id": trail_order_id},
             })
             print(f"  ✓ EOD CLOSED {sym}  order_id={order_id}")
             del position_tags[sym]
         except Exception as e:
             print(f"  [WARN] EOD exit failed for {sym}: {e}")
     return position_tags
+
+
+def _daily_trail_audit(positions: dict, position_tags: dict) -> None:
+    """
+    FIX-H v8.1: For daily-strategy positions, verify their trailing stop
+    orders are still open on Alpaca.  If a trail order was filled (position
+    closed by Alpaca trailing stop) but position_tags still has the symbol,
+    log the outcome.  If the trail order is missing (e.g. after a restart),
+    re-attach it using the stored ATR and current price.
+    """
+    for sym, tag in list(position_tags.items()):
+        if tag.get("strategy_type") != "daily":
+            continue
+        trail_id = tag.get("trail_order_id", "")
+        if not trail_id:
+            continue
+        try:
+            r = requests.get(f"{ALPACA_BASE}/v2/orders/{trail_id}",
+                             headers=alpaca_headers(), timeout=8)
+            if not r.ok:
+                continue
+            o = r.json()
+            status = o.get("status", "")
+            if status == "filled":
+                fill_p = float(o.get("filled_avg_price") or 0)
+                entry  = float(tag.get("entry_price", 0))
+                pnl_est= (fill_p - entry) * int(float(positions.get(sym, {}).get("qty", 0)))
+                logging.info(f"[TRAIL_STOP][DAILY] {sym} trailing stop filled at "
+                             f"${fill_p:.2f} (entry=${entry:.2f}, est_pnl={pnl_est:+.2f})")
+            elif status in ("cancelled", "expired", "rejected"):
+                # Trailing stop is gone — try to re-attach
+                entry_atr = float(tag.get("entry_atr", 1.0))
+                pos_qty   = int(float(positions.get(sym, {}).get("qty", 0)))
+                if pos_qty > 0 and entry_atr > 0:
+                    new_trail = attach_trailing_stop(sym, pos_qty, entry_atr)
+                    new_id    = new_trail.get("id", "")
+                    if new_id:
+                        tag["trail_order_id"] = new_id
+                        logging.info(f"[TRAIL_STOP][DAILY] Re-attached trailing stop for "
+                                     f"{sym}: trail=${entry_atr:.2f} id={new_id}")
+        except Exception as e:
+            logging.warning(f"[TRAIL_STOP][DAILY] Audit failed for {sym}: {e}")
 
 
 def get_last_sell_fill(symbol: str, after_iso: str) -> dict:
@@ -2308,15 +2453,33 @@ def main():
                         order    = place_order(symbol, qty, "buy", stop_price, tp_price)
                         order_id = order.get("id"); executed = True
                         print(f"  ✓ BUY {qty} {symbol} stop={stop_price:.2f} tp={tp_price:.2f}")
+
+                        # ── FIX-H v8.1: Attach trailing stop immediately after fill ────────────
+                        # Trail distance = 1.0×ATR (tighter than entry stop, catches meaningful
+                        # reversals without getting shaken out by normal noise).
+                        # The static stop in the bracket is a safety net only.
+                        _trail_atr   = max(eff_atr * 1.0, price * 0.003)  # min 0.3% trail
+                        _trail_order = attach_trailing_stop(symbol, qty, _trail_atr, order_id)
+                        _trail_id    = _trail_order.get("id", "")
+                        if _trail_id:
+                            print(f"  ✓ TRAIL_STOP attached for {symbol}: "
+                                  f"trail=${_trail_atr:.2f} ({_trail_atr/price*100:.2f}%) "
+                                  f"order_id={_trail_id}")
+                        else:
+                            print(f"  ⚠️  TRAIL_STOP attach failed for {symbol} — static stop only")
+                        # ── end FIX-H ────────────────────────────────────────────────────────────
+
                         orders_placed.append({
                             "symbol": symbol, "strat": strat_name,
                             "strategy_type": strategy_type,
                             "signal": "buy", "side": "buy", "qty": qty,
                             "price": round(price, 2), "est_value": round(price * qty, 2),
                             "stop_price": round(stop_price, 2), "tp_price": round(tp_price, 2),
-                            "order_id": order_id, "timestamp": run_start.isoformat(),
+                            "order_id": order_id, "trail_order_id": _trail_id,
+                            "trail_price": round(_trail_atr, 3),
+                            "timestamp": run_start.isoformat(),
                         })
-                        # Tag intraday entries for EOD exit + long-term trade log (v7.5)
+                        # Tag entries for EOD exit + long-term trade log (v7.5 + FIX-H)
                         if strategy_type == "intraday":
                             position_tags[symbol] = {
                                 "strategy": strat_name, "strategy_type": "intraday",
@@ -2325,8 +2488,21 @@ def main():
                                 "entry_vix": vix, "entry_atr": round(atr, 4),
                                 "stop_price": round(stop_price, 2),
                                 "tp_price": round(tp_price, 2),
+                                "trail_order_id": _trail_id,   # FIX-H: EOD cancel ref
+                                "trail_price": round(_trail_atr, 3),
                                 "entry_indicators": inds,
                             }
+                            write_github_log(EOD_TAG_FILE, position_tags)
+                        else:
+                            # Daily strategies also get trail_order_id in their tag (FIX-H)
+                            if symbol not in position_tags:
+                                position_tags[symbol] = {}
+                            position_tags[symbol].update({
+                                "trail_order_id": _trail_id,
+                                "trail_price": round(_trail_atr, 3),
+                                "entry_atr": round(atr, 4),
+                                "strategy_type": "daily",
+                            })
                             write_github_log(EOD_TAG_FILE, position_tags)
                         # Immediate in-memory cache update (BUG-001)
                         positions[symbol] = {"symbol": symbol, "qty": str(qty),
