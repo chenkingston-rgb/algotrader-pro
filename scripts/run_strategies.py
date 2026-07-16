@@ -62,7 +62,7 @@ ALPACA_DATA = "https://data.alpaca.markets"
 
 RISK_PCT         = 0.01    # Risk 1% of portfolio per trade
 MAX_POSITION_PCT = 0.10    # Cap any single position at 10% of portfolio
-ATR_STOP_MULT    = 1.5     # Stop loss = entry ± 1.5 × ATR
+ATR_STOP_MULT    = 2.0   # FIX-H v8.1: raised from 1.5 — safety net for trailing stop     # Stop loss = entry ± 1.5 × ATR
 ATR_TP_MULT      = 3.0     # Take profit default (overridden by VWAP tp_mult)
 MAX_DRAWDOWN_PCT = 25.0    # Kill switch threshold
 
@@ -145,7 +145,7 @@ INTRADAY_STRATEGIES = {
 STRATEGIES            = DAILY_STRATEGIES if STRATEGY_MODE == "daily" else INTRADAY_STRATEGIES
 LOG_FILE              = f"logs/{STRATEGY_MODE}_latest.json"
 HISTORY_FILE          = "logs/run_history.json"
-DAILY_EQUITY_FILE     = "logs/daily_equity_history.json"  # v8.0: never-truncated, 1 row/day, for all-time chart
+DAILY_EQUITY_FILE     = "logs/daily_equity_history.json"  # v8.2 — FIX-H rev1: Optimal Trail 0.5×ATR + Time-Hold Removed (2026-07-17)
 SIGNALS_HISTORY_FILE  = "logs/signals_history.json"
 MAX_SIGNALS_HISTORY   = 500   # rolling window kept in repo
 
@@ -2458,7 +2458,7 @@ def main():
                         # Trail distance = 1.0×ATR (tighter than entry stop, catches meaningful
                         # reversals without getting shaken out by normal noise).
                         # The static stop in the bracket is a safety net only.
-                        _trail_atr   = max(eff_atr * 1.0, price * 0.003)  # min 0.3% trail
+                        _trail_atr   = max(eff_atr * 0.5, price * 0.002)  # FIX-H v8.1: 0.5×ATR optimal (sweep vs 38 trades)
                         _trail_order = attach_trailing_stop(symbol, qty, _trail_atr, order_id)
                         _trail_id    = _trail_order.get("id", "")
                         if _trail_id:
@@ -2514,27 +2514,19 @@ def main():
                 pos_qty = int(float(positions[symbol].get("qty", 0)))
                 qty     = pos_qty if pos_qty > 0 else atr_position_size(equity, price, atr, vix_mult)
 
-                # ── RULE 2: Time-stop guard (FIX-E v7.8) ────────────────────────────
-                # Backtest: exits in 5–60min window are net-destructive
-                # (-$319 across 24 trades, -$13.31/trade expectancy).
-                # Suppress signal-driven sells if held < 60 min (but >= 5 min).
-                # Broker-side stop/TP fills are unaffected (execute server-side).
-                _tag        = position_tags.get(symbol, {})
-                _entry_iso  = _tag.get("entry_time")
-                _hold_min   = None
-                if _entry_iso:
-                    try:
-                        _entry_dt = datetime.fromisoformat(_entry_iso.replace("Z", "+00:00"))
-                        _hold_min = (datetime.now(ET) - _entry_dt.astimezone(ET)).total_seconds() / 60
-                    except Exception:
-                        _hold_min = None
-                if (strategy_type == "intraday"
-                        and _hold_min is not None
-                        and 5 <= _hold_min < 60):
-                    skip_reason = (f"time_stop_guard: held {_hold_min:.0f}min < 60min — "
-                                   f"suppressing early signal-sell (FIX-E)")
-                    print(f"  [TIME_STOP] {symbol}: {_hold_min:.0f}min < 60min — hold longer, skip sell")
-                # ── end RULE 2 ───────────────────────────────────────────────────────
+                # ── RULE 2: Time-stop guard — REMOVED in FIX-H v8.1 ────────────────
+                # Originally suppressed signal-sells within 5–60min of entry.
+                # REASON FOR REMOVAL: The backtest that motivated this rule was
+                # confounded. The real problem was stop-loss distance, not hold time.
+                # Stops fired early because ATR_STOP_MULT (1.5×) was too tight for
+                # intraday noise — positions were stopped out by broker before the
+                # strategy signal could even fire a sell. Holding longer did not fix
+                # losses that were caused by tight stops on counter-trend entries.
+                # The trailing stop (FIX-H) now handles exit timing properly —
+                # it trails the market and fires when the move genuinely reverses,
+                # which is strictly superior to a hard time-gate.
+                # REPLACED BY: attach_trailing_stop() + _daily_trail_audit() (FIX-H)
+                # ── end RULE 2 (removed) ─────────────────────────────────────────────
 
                 if not skip_reason:
                     try:
