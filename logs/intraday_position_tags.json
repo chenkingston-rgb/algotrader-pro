@@ -1,1 +1,8 @@
-{}
+{
+  "PANW": {
+    "trail_order_id": "",
+    "trail_price": 8.621,
+    "entry_atr": 17.2428,
+    "strategy_type": "daily"
+  }
+}
