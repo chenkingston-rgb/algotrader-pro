@@ -57,7 +57,7 @@ CORE_SYMBOLS = ["SPY", "QQQ", "IWM", "GLD", "XLK", "XLE", "XLF"]
 # ── Scan universe ─────────────────────────────────────────────────────────────
 SCAN_UNIVERSE = [
     "AAPL", "MSFT", "NVDA", "AMZN", "META", "GOOGL", "TSLA", "AVGO", "ORCL", "AMD",
-    "INTC", "QCOM", "TXN", "MU", "AMAT", "LRCX", "KLAC", "MRVL", "ADI",
+    "INTC", "QCOM", "MU", "AMAT", "LRCX", "KLAC", "ADI",  # FIX-J R6: TXN and MRVL removed (252-trade audit: TXN -$215, MRVL -$289)
     "CRM", "NOW", "ADBE", "INTU", "PANW", "CRWD", "PLTR", "DDOG", "ZS", "SNOW",
     "NFLX", "DIS", "CMCSA", "TMUS",
     "HD", "NKE", "MCD", "CMG", "COST", "TGT", "LOW", "BKNG", "ABNB", "UBER",
