@@ -145,7 +145,7 @@ INTRADAY_STRATEGIES = {
 STRATEGIES            = DAILY_STRATEGIES if STRATEGY_MODE == "daily" else INTRADAY_STRATEGIES
 LOG_FILE              = f"logs/{STRATEGY_MODE}_latest.json"
 HISTORY_FILE          = "logs/run_history.json"
-DAILY_EQUITY_FILE     = "logs/daily_equity_history.json"  # v8.3 — FIX-I: Signal Quality Calibration — ROC 0.8%, vol 1.5×, roc_max 1.8% (2026-07-17)
+DAILY_EQUITY_FILE     = "logs/daily_equity_history.json"  # v8.4 — FIX-J: Board Roundtable Fixes — session ban, 14:00 gate, max hold 390min, weekly cap (2026-07-17)
 SIGNALS_HISTORY_FILE  = "logs/signals_history.json"
 MAX_SIGNALS_HISTORY   = 500   # rolling window kept in repo
 
@@ -720,7 +720,12 @@ def update_stop_cooldowns_from_fills(baseline: dict, now_et: datetime) -> dict:
                 sym      = order["symbol"]
                 fill_ts  = datetime.fromisoformat(
                     order["filled_at"].replace("Z", "+00:00")).astimezone(ET)
-                expiry   = fill_ts + _dt.timedelta(minutes=STOP_COOLDOWN_MINUTES)
+                # FIX-J R1 v8.4: Same-day SESSION BAN after stop-loss (was 30-min cooldown)
+                # 252-trade audit: GOOGL stopped 12:10 → re-entered 13:17 → -$34.70 repeat loss
+                session_end = fill_ts.replace(hour=15, minute=0, second=0, microsecond=0)
+                if session_end <= fill_ts:
+                    session_end = fill_ts + _dt.timedelta(minutes=STOP_COOLDOWN_MINUTES)
+                expiry   = session_end
                 existing = cooldowns.get(sym)
                 if not existing or expiry.isoformat() > existing:
                     cooldowns[sym] = expiry.isoformat()
@@ -1655,6 +1660,12 @@ def run_all_strategies(symbol: str, candles: list) -> None:
 INTRADAY_STRATEGY_NAMES = set(INTRADAY_STRATEGIES.keys())
 EOD_EXIT_HOUR  = 15
 EOD_EXIT_MIN   = 0   # BUG-011: cron ends 19:00 UTC = 3:00pm ET; was 30, now 0
+MAX_HOLD_MINUTES = 390  # FIX-J R2 v8.4: Jun 8 MRVL held 1350min overnight → -$282.73
+                         # Hard session limit: force-close any intraday position held > 6.5h
+MAX_WEEKLY_ENTRIES_PER_SYMBOL = 3  # FIX-J R3 v8.4: concentration cap
+                                    # HOOD = 42.9% of all gross gains; MRVL = 98% of loss magnitude
+                                    # Capping at 3 intraday entries/symbol/week forces diversification: Jun 8 MRVL held 1350min overnight → -$282.73
+                         # Hard session limit: force-close any intraday position held > 6.5h
 EOD_TAG_FILE   = "logs/intraday_position_tags.json"
 STRATEGY_LOG_FILE = "logs/strategy_trade_log.json"  # v7.5: permanent, strategy-tagged trade outcomes
 LIVE_BASELINE_FILE = "logs/live_baseline.json"
@@ -1695,8 +1706,41 @@ def run_eod_exit(positions, position_tags, all_signals, orders_placed, run_start
         _daily_trail_audit(positions, position_tags)
         return position_tags
     cutoff = now_et.replace(hour=EOD_EXIT_HOUR, minute=EOD_EXIT_MIN, second=0, microsecond=0)
+
+    # FIX-J R2 v8.4: Max hold time guard — force-close intraday positions held > 390 min
+    # regardless of current time. Prevents overnight carry from EOD cron failure.
+    # Jun 8: MRVL held 1350 min → -$282.73; MU held 1350 min → -$71.10; total day -$504
+    import datetime as _hdt
+    for _sym_mh, _tag_mh in list(position_tags.items()):
+        if _tag_mh.get("strategy_type") != "intraday":
+            continue
+        _entry_iso = _tag_mh.get("entry_time") or _tag_mh.get("timestamp")
+        if not _entry_iso:
+            continue
+        try:
+            _entry_dt  = datetime.fromisoformat(str(_entry_iso).replace("Z","+00:00")).astimezone(ET)
+            _hold_mins = (now_et - _entry_dt).total_seconds() / 60
+            if _hold_mins > MAX_HOLD_MINUTES:
+                _pos_mh = positions.get(_sym_mh) if positions else None
+                if _pos_mh:
+                    _qty_mh = int(float(_pos_mh.get("qty", 0)))
+                    if _qty_mh > 0:
+                        print(f"  [MAX_HOLD] {_sym_mh}: held {_hold_mins:.0f}min > {MAX_HOLD_MINUTES}min "
+                              f"— force-closing NOW (FIX-J R2)")
+                        cancel_all_trailing_stops_for_symbol(_sym_mh)
+                        _oid_mh = place_order(_sym_mh, _qty_mh, "sell", "market")
+                        orders_placed.append({"symbol": _sym_mh, "side": "sell",
+                                              "qty": _qty_mh, "order_id": _oid_mh,
+                                              "reason": "max_hold_exceeded"})
+                        all_signals.append({"symbol": _sym_mh, "signal": "sell",
+                                            "skip_reason": None, "executed": True,
+                                            "strategy": "max_hold_exit",
+                                            "timestamp": now_et.isoformat()})
+        except Exception as _mh_e:
+            logging.warning(f"[MAX_HOLD] {_sym_mh} check failed: {_mh_e}")
+
     if now_et < cutoff:
-        return position_tags
+        return position_tags   # too early for full EOD sweep, but max-hold ran above
     print(f"\n[EOD EXIT] {now_et.strftime('%H:%M %Z')} — forcing close of intraday-tagged positions.")
     for sym in list(position_tags.keys()):
         tag = position_tags[sym]
@@ -2302,7 +2346,20 @@ def main():
                     symbol, _stop_cooldowns, datetime.now(ET)):
                 _exp = _stop_cooldowns.get(symbol, "")[:16].replace("T", " ")
                 skip_reason = (f"stop_cooldown "
-                               f"(stopped out recently — re-entry blocked until {_exp} ET)")
+                               f"(stopped out recently — SESSION BAN until {_exp} ET, FIX-J)")
+            elif signal == "buy" and strategy_type == "intraday":
+                # FIX-J R3 v8.4: Weekly per-symbol concentration cap
+                # 252-trade audit: single-symbol concentration caused 42.9% gross-gain dependency (HOOD)
+                # and 98% loss concentration (MRVL). Cap at 3 intraday entries per symbol per week.
+                _this_week   = datetime.now(ET).strftime("%Y-W%U")
+                _weekly_cnts = live_baseline.get("weekly_symbol_counts", {})
+                _sym_week_key= f"{symbol}:{_this_week}"
+                _sym_cnt     = _weekly_cnts.get(_sym_week_key, 0)
+                if _sym_cnt >= MAX_WEEKLY_ENTRIES_PER_SYMBOL:
+                    skip_reason = (f"weekly_concentration_cap: {symbol} already traded "
+                                   f"{_sym_cnt}× this week (max {MAX_WEEKLY_ENTRIES_PER_SYMBOL}, FIX-J R3)")
+                    print(f"  [WEEKLY_CAP] {symbol}: {_sym_cnt}/{MAX_WEEKLY_ENTRIES_PER_SYMBOL} "
+                          f"weekly entries used → skipping")
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
@@ -2398,7 +2455,10 @@ def main():
                 # silently preventing the execution block from ever being reached.
                 if not skip_reason and strategy_type == "intraday":
                     now_et_check = datetime.now(ET)
-                    eod_cutoff   = now_et_check.replace(hour=14, minute=45, second=0, microsecond=0)
+                    eod_cutoff   = now_et_check.replace(hour=14, minute=0, second=0, microsecond=0)
+                    # FIX-J R5 v8.4: Tightened from 14:45 → 14:00 ET
+                    # 252-trade audit: 14:00-15:00 window = 26 trades, 38% wr, -$304.74 total (-$11.72 avg)
+                    # Worst single time-window across all 252 trades. EOD sweep at 15:00 is unchanged.
                     # ── RULE 3: Pre-10am entry block (FIX-E v7.8) ───────────────────
                     # Backtest: 40 pre-10am trades → -$109.19 net, 30.0% win rate.
                     # Opening 30 min is highest-noise, widest-spread window.
@@ -2408,7 +2468,7 @@ def main():
                                        f"intraday entries blocked before 10:00am (FIX-E)")
                     # ── end RULE 3 ──────────────────────────────────────────────────
                     elif now_et_check >= eod_cutoff:
-                        skip_reason = f"late_day_block (after 14:45 ET — intraday only, EOD sweep at 15:00 ET)"
+                        skip_reason = f"late_day_block (after 14:00 ET — FIX-J R5: 14:00-15:00 window was -$304.74 in 252-trade audit)"
                 # Kill switch — block all new entries when trailing drawdown >= threshold
                 if not skip_reason and _kill_switch_active:
                     skip_reason = (f"kill_switch_active "
@@ -2468,6 +2528,15 @@ def main():
                         else:
                             print(f"  ⚠️  TRAIL_STOP attach failed for {symbol} — static stop only")
                         # ── end FIX-H ────────────────────────────────────────────────────────────
+
+                        # FIX-J R3: Increment weekly concentration counter after confirmed buy execution
+                        _this_week_inc  = datetime.now(ET).strftime("%Y-W%U")
+                        _sym_week_key_i = f"{symbol}:{_this_week_inc}"
+                        _wk_counts      = live_baseline.get("weekly_symbol_counts", {})
+                        _wk_counts[_sym_week_key_i] = _wk_counts.get(_sym_week_key_i, 0) + 1
+                        live_baseline["weekly_symbol_counts"] = _wk_counts
+                        print(f"  [WEEKLY_CAP] {symbol}: {_wk_counts[_sym_week_key_i]}/{MAX_WEEKLY_ENTRIES_PER_SYMBOL} "
+                              f"weekly intraday entries used this week")
 
                         orders_placed.append({
                             "symbol": symbol, "strat": strat_name,
