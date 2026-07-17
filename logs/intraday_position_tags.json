@@ -4,5 +4,11 @@
     "trail_price": 8.621,
     "entry_atr": 17.2428,
     "strategy_type": "daily"
+  },
+  "XOM": {
+    "trail_order_id": "",
+    "trail_price": 1.567,
+    "entry_atr": 3.1348,
+    "strategy_type": "daily"
   }
 }
