@@ -75,6 +75,9 @@ MAX_DRAWDOWN_PCT = 25.0    # Kill switch threshold
 BREAKEVEN_ATR_TRIGGER  = 1.0   # Price must exceed entry + 1×ATR before upgrade
 PROFIT_LOCK_ATR_MULT   = 0.5   # Trail distance after upgrade (same 0.5×ATR)
 BREAKEVEN_PROFIT_FLOOR = 0.0   # Worst-case P&L once trail is upgraded (0 = break even)
+TRAIL_ACTIVATION_MIN   = 30    # FIX-M v8.6: delay trail activation 30min from entry — prevents
+                                #             noise-stop exits in first 2 cron cycles. Static 2.0×ATR
+                                #             safety net still active during this window.
 
 # ── MA20 REGIME HYSTERESIS BAND (v7.3) ──────────────────────────────────────
 # Prevents whipsawing around the MA20 line. SPY must breach these thresholds
@@ -102,7 +105,7 @@ DAILY_STRATEGIES = {
         "symbols":      ["SPY", "QQQ", "IWM"],
         "vix_type":     "COMBO",
         "vix_block": 28, "vix_reduce": 20, "vix_reduce_pct": 0.50,
-        "params": {"rsi_period": 14, "rsi_os": 35, "rsi_ob": 65,
+        "params": {"rsi_period": 14, "rsi_os": 40, "rsi_ob": 70,  # FIX-N v8.6: os 35→40, ob 65→70. SPY RSI stays 45-70 in bull market; tight os=35 never fires on large-cap ETFs.
                    "macd_fast": 12, "macd_slow": 26, "macd_sig": 9},
         "timeframe": "1Day", "bar_days": 300,
     },
@@ -114,7 +117,7 @@ DAILY_STRATEGIES = {
         "timeframe": "1Day", "bar_days": 300,
     },
     "triple_ema": {
-        "symbols":  ["SPY", "QQQ"],
+        "symbols":  ["SPY", "QQQ", "XLK", "XLF", "XLE"],  # FIX-N v8.6: expanded from 2→5 to increase signal opportunities while staying liquid
         "vix_type": "TREND",
         "vix_block": 28, "vix_reduce": 20, "vix_reduce_pct": 0.50,
         "params": {"ema_fast": 8, "ema_mid": 21, "ema_slow": 55},
@@ -137,7 +140,7 @@ INTRADAY_STRATEGIES = {
         "symbols":  ["SPY", "QQQ"],
         "vix_type": "MEAN_REV",
         "vix_block": 25, "vix_reduce": 18, "vix_reduce_pct": 0.40,
-        "params": {"bb_period": 20, "bb_std": 2.0, "ma_filter": 50},
+        "params": {"bb_period": 20, "bb_std": 1.8, "ma_filter": 20},  # FIX-N v8.6: bb_std 2.0→1.8 (tighter bands → price touches lower more often), ma_filter 50→20 (50 bars=12.5hr unavailable intraday; 20 bars=5hr achievable). Root cause of 139/140 no_signal.
         "timeframe": "15Min", "bar_days": 20,
     },
     "momentum_roc_15m": {
@@ -1884,6 +1887,28 @@ def _upgrade_trail_to_breakeven(
             # Skip if already upgraded this session
             if tag.get("trail_upgraded_to_breakeven"):
                 continue
+
+            # ── FIX-M v8.6: Delay trail until position has aged ≥ 30min ─────────
+            # The 0.5×ATR trail fired 9/9 times as a loss (avg -$21.46) in 14 days.
+            # Normal entry noise shakes out positions before they have room to work.
+            # Static 2.0×ATR stop is the safety net during this window.
+            _entry_time_str = tag.get("entry_time", "")
+            if _entry_time_str:
+                try:
+                    _entry_dt = datetime.fromisoformat(_entry_time_str)
+                    if _entry_dt.tzinfo is None:
+                        _entry_dt = ET.localize(_entry_dt)
+                    _elapsed_min = (datetime.now(ET) - _entry_dt).total_seconds() / 60
+                    if _elapsed_min < TRAIL_ACTIVATION_MIN:
+                        logging.info(
+                            f"[FIX-M] {sym}: trail not yet activated "
+                            f"({_elapsed_min:.0f}min < {TRAIL_ACTIVATION_MIN}min buffer) "
+                            f"— static stop only"
+                        )
+                        continue  # Static 2.0×ATR stop protects during this window
+                except Exception as _te:
+                    pass  # If we can't parse time, allow trail (fail-safe)
+            # ── end FIX-M ────────────────────────────────────────────────────────
 
             entry_price = float(tag.get("entry_price", 0))
             entry_atr   = float(tag.get("entry_atr", 0))
