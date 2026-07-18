@@ -66,6 +66,16 @@ ATR_STOP_MULT    = 2.0   # FIX-H v8.1: raised from 1.5 — safety net for traili
 ATR_TP_MULT      = 3.0     # Take profit default (overridden by VWAP tp_mult)
 MAX_DRAWDOWN_PCT = 25.0    # Kill switch threshold
 
+# ── FIX-L v8.5: Breakeven trail upgrade ──────────────────────────────────────
+# Two-phase stop system: Phase 1 = static 2.0×ATR stop for entry breathing room.
+# Phase 2 = once price clears +BREAKEVEN_ATR_TRIGGER above entry, cancel the
+# existing trailing stop and re-attach a tighter PROFIT_LOCK_ATR_MULT trail,
+# guaranteeing worst-case = no loss once the price has moved in our favour.
+# Checked each 15-min cron cycle via _upgrade_trail_to_breakeven().
+BREAKEVEN_ATR_TRIGGER  = 1.0   # Price must exceed entry + 1×ATR before upgrade
+PROFIT_LOCK_ATR_MULT   = 0.5   # Trail distance after upgrade (same 0.5×ATR)
+BREAKEVEN_PROFIT_FLOOR = 0.0   # Worst-case P&L once trail is upgraded (0 = break even)
+
 # ── MA20 REGIME HYSTERESIS BAND (v7.3) ──────────────────────────────────────
 # Prevents whipsawing around the MA20 line. SPY must breach these thresholds
 # before regime flips. Asymmetric: tighter on recovery (bull) than on decline.
@@ -1847,6 +1857,115 @@ def _daily_trail_audit(positions: dict, position_tags: dict) -> None:
             logging.warning(f"[TRAIL_STOP][DAILY] Audit failed for {sym}: {e}")
 
 
+
+def _upgrade_trail_to_breakeven(
+    positions: dict,
+    position_tags: dict,
+) -> None:
+    """
+    FIX-L v8.5: Two-phase stop upgrade — the breakeven ratchet.
+
+    For every open position tracked in position_tags:
+      Phase 1 (default): Static stop at entry - 2.0×ATR provides breathing room.
+                         A tight 0.5×ATR trailing stop fires on normal noise.
+      Phase 2 (upgrade): Once current_price >= entry + BREAKEVEN_ATR_TRIGGER×ATR,
+                         cancel the existing trailing stop and re-submit a new
+                         0.5×ATR trail whose worst-case execution is at or above
+                         the entry price — guaranteeing no loss.
+
+    The upgrade is idempotent: once 'trail_upgraded_to_breakeven' is set on a
+    tag, this function skips that symbol.  Checked every 15-min cron cycle.
+
+    Requires position_tags to carry:
+        entry_price, entry_atr, trail_order_id, strategy_type
+    """
+    for sym, tag in list(position_tags.items()):
+        try:
+            # Skip if already upgraded this session
+            if tag.get("trail_upgraded_to_breakeven"):
+                continue
+
+            entry_price = float(tag.get("entry_price", 0))
+            entry_atr   = float(tag.get("entry_atr", 0))
+            trail_id    = tag.get("trail_order_id", "")
+
+            if not entry_price or not entry_atr:
+                continue
+
+            # Get current position market price from fresh positions dict
+            pos = positions.get(sym, {})
+            current_price = float(pos.get("current_price") or pos.get("avg_entry_price") or 0)
+            qty           = int(float(pos.get("qty", 0)))
+
+            if not current_price or qty < 1:
+                continue
+
+            # Has price cleared the upgrade threshold?
+            upgrade_threshold = entry_price + BREAKEVEN_ATR_TRIGGER * entry_atr
+            if current_price < upgrade_threshold:
+                continue  # Phase 1 — not yet profitable enough to upgrade
+
+            # ── Phase 2: Cancel old trail, re-attach tighter one ─────────────────
+            # New trail distance = 0.5×ATR. Since highmark is at least entry+1×ATR,
+            # the trail stop floor = (entry+1×ATR) - 0.5×ATR = entry + 0.5×ATR.
+            # Worst case sell price >= entry + 0.5×ATR → guaranteed profit.
+            new_trail_dist = max(round(entry_atr * PROFIT_LOCK_ATR_MULT, 2), 0.05)
+
+            # Cancel existing trailing stop
+            cancelled = 0
+            if trail_id:
+                if cancel_order(trail_id):
+                    cancelled += 1
+                    logging.info(
+                        f"[FIX-L] {sym}: cancelled old trail {trail_id[:8]}… "
+                        f"(entry=${entry_price:.2f}, threshold=${upgrade_threshold:.2f}, "
+                        f"current=${current_price:.2f})"
+                    )
+
+            # Also sweep any other lingering trailing stops for this symbol
+            extra = cancel_all_trailing_stops_for_symbol(sym)
+            cancelled += extra
+
+            # Submit upgraded trail
+            new_trail = attach_trailing_stop(sym, qty, new_trail_dist)
+            new_id    = new_trail.get("id", "")
+
+            if new_id:
+                tag["trail_order_id"]             = new_id
+                tag["trail_upgraded_to_breakeven"] = True
+                tag["trail_upgrade_price"]         = round(current_price, 4)
+                tag["trail_upgrade_atr"]           = round(entry_atr, 4)
+                tag["trail_upgrade_floor"]         = round(
+                    current_price - new_trail_dist, 4
+                )
+                profit_floor_est = (current_price - new_trail_dist - entry_price) * qty
+                print(
+                    f"  [FIX-L] ✅ BREAKEVEN UPGRADE: {sym}  "
+                    f"entry=${entry_price:.2f}  current=${current_price:.2f}  "
+                    f"new_trail=${new_trail_dist:.2f}  "
+                    f"floor=${tag['trail_upgrade_floor']:.2f}  "
+                    f"min_profit≈${profit_floor_est:+.2f}  "
+                    f"new_trail_id={new_id}"
+                )
+                logging.info(
+                    f"[FIX-L] Breakeven upgrade complete for {sym}: "
+                    f"floor=${tag['trail_upgrade_floor']:.2f}, "
+                    f"min_pnl≈${profit_floor_est:+.2f}"
+                )
+            else:
+                # Attach failed — re-attach original trail as fallback
+                fallback = attach_trailing_stop(sym, qty, entry_atr * PROFIT_LOCK_ATR_MULT)
+                fb_id    = fallback.get("id", "")
+                if fb_id:
+                    tag["trail_order_id"] = fb_id
+                logging.warning(
+                    f"[FIX-L] {sym}: upgraded trail attach failed; fallback id={fb_id}"
+                )
+
+        except Exception as e:
+            logging.warning(f"[FIX-L] Upgrade check failed for {sym}: {e}")
+
+
 def get_last_sell_fill(symbol: str, after_iso: str) -> dict:
     """Find the most recent FILLED sell order for symbol after a given timestamp.
     Used to reconstruct exit details for positions closed by a broker-side
@@ -2289,6 +2408,17 @@ def main():
         positions, position_tags, all_signals, orders_placed, run_start
     )
     write_github_log(EOD_TAG_FILE, position_tags)
+
+    # ── FIX-L v8.5: Breakeven trail upgrade — run before strategy signals ────
+    # For any open position where price has cleared entry + 1×ATR, upgrade the
+    # trailing stop to lock in profit (Phase 2). Requires fresh positions.
+    positions = get_positions()   # fresh prices needed for threshold check
+    try:
+        _upgrade_trail_to_breakeven(positions, position_tags)
+        write_github_log(EOD_TAG_FILE, position_tags)  # persist upgrade flags
+    except Exception as _fixl_e:
+        logging.warning(f"[FIX-L] upgrade sweep failed (non-fatal): {_fixl_e}")
+    # ── end FIX-L ──────────────────────────────────────────────────────────────
 
     # ── PHASE 2: Refresh + run strategy signals ───────────────────────────
     positions = get_positions()
