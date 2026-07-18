@@ -112,3 +112,63 @@ if __name__ == "__main__":
     print(f"\n{'='*48}")
     print(f"RESULT: {PASS}/{PASS+FAIL} passed")
     sys.exit(0 if FAIL == 0 else 1)
+
+# ─── FIX-L tests ──────────────────────────────────────────────────────────────
+
+def test_fix_l_constants():
+    """BREAKEVEN constants present and correctly valued."""
+    assert "BREAKEVEN_ATR_TRIGGER  = 1.0" in code
+    assert "PROFIT_LOCK_ATR_MULT   = 0.5" in code
+    assert "BREAKEVEN_PROFIT_FLOOR = 0.0" in code
+
+def test_fix_l_function_exists():
+    """_upgrade_trail_to_breakeven function is defined."""
+    assert "def _upgrade_trail_to_breakeven(" in code
+
+def test_fix_l_idempotent_guard():
+    """Upgrade is skipped if already done this session (idempotent)."""
+    assert "trail_upgraded_to_breakeven" in code
+    assert 'tag.get("trail_upgraded_to_breakeven")' in code
+
+def test_fix_l_cancels_old_trail():
+    """Old trailing stop is cancelled before re-submitting upgraded one."""
+    assert "cancel_order(trail_id)" in code
+    assert "cancel_all_trailing_stops_for_symbol(sym)" in code
+
+def test_fix_l_reattaches_trail():
+    """New trailing stop is submitted after cancel."""
+    assert "attach_trailing_stop(sym, qty, new_trail_dist)" in code
+
+def test_fix_l_stores_upgrade_metadata():
+    """Upgrade metadata persisted to position_tags for dashboard display."""
+    assert '"trail_upgrade_price"' in code
+    assert '"trail_upgrade_floor"' in code
+    assert '"trail_upgraded_to_breakeven"' in code
+
+def test_fix_l_wired_into_main():
+    """_upgrade_trail_to_breakeven is called in main loop."""
+    assert "_upgrade_trail_to_breakeven(positions, position_tags)" in code
+
+def test_fix_l_persists_tags():
+    """position_tags are written to GitHub after upgrade."""
+    # After the upgrade call there must be a write_github_log(EOD_TAG_FILE
+    idx_upgrade = code.index("_upgrade_trail_to_breakeven(positions, position_tags)")
+    idx_write   = code.index("write_github_log(EOD_TAG_FILE, position_tags)", idx_upgrade)
+    assert idx_write > idx_upgrade, "write must come after upgrade"
+
+def test_fix_l_fallback_on_attach_failure():
+    """Fallback trail re-attached if upgraded trail order fails."""
+    assert "fallback = attach_trailing_stop" in code
+    assert "Upgrade check failed" in code or "[FIX-L]" in code
+
+def test_fix_l_all_prior_still_intact():
+    """All prior FIX-* constants and guards still present."""
+    assert "ATR_STOP_MULT    = 2.0" in code
+    assert "ATR_TP_MULT      = 3.0" in code
+    assert "MAX_DRAWDOWN_PCT = 25.0" in code
+    assert "BREAKEVEN_ATR_TRIGGER  = 1.0" in code
+    assert "trail_upgraded_to_breakeven" in code
+    # FIX-J R5 late gate
+    assert "late_day_block" in code
+    # FIX-K heartbeat
+    assert "last_heartbeat" in code
