@@ -1,10 +1,4 @@
 {
-  "AMZN": {
-    "trail_order_id": "",
-    "trail_price": 3.516,
-    "entry_atr": 7.0321,
-    "strategy_type": "daily"
-  },
   "COP": {
     "trail_order_id": "",
     "trail_price": 1.38,
