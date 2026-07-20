@@ -10,5 +10,11 @@
     "trail_price": 0.766,
     "entry_atr": 1.533,
     "strategy_type": "daily"
+  },
+  "COP": {
+    "trail_order_id": "",
+    "trail_price": 1.38,
+    "entry_atr": 2.76,
+    "strategy_type": "daily"
   }
 }
