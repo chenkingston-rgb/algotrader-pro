@@ -4,5 +4,11 @@
     "trail_price": 3.516,
     "entry_atr": 7.0321,
     "strategy_type": "daily"
+  },
+  "OXY": {
+    "trail_order_id": "",
+    "trail_price": 0.766,
+    "entry_atr": 1.533,
+    "strategy_type": "daily"
   }
 }
