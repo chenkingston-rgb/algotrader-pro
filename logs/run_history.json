@@ -1,23 +1,5 @@
 [
   {
-    "timestamp": "2026-07-10T10:15:32.094277-04:00",
-    "mode": "live",
-    "strategy_mode": "intraday",
-    "equity": 28856.02,
-    "last_equity": 28837.18,
-    "vix": 15.49,
-    "signals_count": 38,
-    "orders_count": 2,
-    "symbols_traded": [
-      "ARKK",
-      "ARKK"
-    ],
-    "trading_pnl": 312.48,
-    "total_deposited": 27768.78,
-    "ma20_bear_block": false,
-    "drawdown_pct": 0.16
-  },
-  {
     "timestamp": "2026-07-10T10:30:42.535514-04:00",
     "mode": "live",
     "strategy_mode": "intraday",
@@ -3124,5 +3106,22 @@
     "total_deposited": 28781.89,
     "ma20_bear_block": false,
     "drawdown_pct": 0.65
+  },
+  {
+    "timestamp": "2026-07-20T11:00:00.913849-04:00",
+    "mode": "live",
+    "strategy_mode": "intraday",
+    "equity": 29605.19,
+    "last_equity": 29583.34,
+    "vix": 18.23,
+    "signals_count": 40,
+    "orders_count": 1,
+    "symbols_traded": [
+      "XOM"
+    ],
+    "trading_pnl": 48.54,
+    "total_deposited": 28781.89,
+    "ma20_bear_block": false,
+    "drawdown_pct": 0.66
   }
 ]
