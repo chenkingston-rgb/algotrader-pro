@@ -1,5 +1,5 @@
 """
-AlgoTrader Pro — GitHub Actions Strategy Runner  (v6)
+AlgoTrader Pro — GitHub Actions Strategy Runner  (v8.7)
 Dual-frequency: daily bars for trend strategies, 15-min bars for mean-rev/momentum.
 Writes JSON log files back to the repo so Base44 can read them via raw.githubusercontent.com.
 
@@ -594,6 +594,12 @@ def attach_trailing_stop(symbol: str, qty: int, trail_price: float,
         parent_order_id: logged for traceability
     Returns: Alpaca order dict with {"id": ..., "trail_price": ...}
     """
+    # FIX-Q v8.7: Guard against qty=0 — causes Alpaca to accept then immediately
+    # cancel the stop order (observed: multiple stops with qty=0 in live orders).
+    # Root cause: race between buy fill and position cache update.
+    if qty <= 0:
+        logging.warning(f"[FIX-Q] attach_trailing_stop called with qty={qty} for {symbol} — skipping")
+        return {}
     trail_price = max(round(trail_price, 2), 0.05)   # minimum $0.05 trail
     payload = {
         "symbol":        symbol,
@@ -2614,25 +2620,29 @@ def main():
                 # ── end FIX-G factor filters ─────────────────────────────────────────
 
 
-                # FIX-2c (v7.3): late-day gate is now INSIDE the buy block (not a competing elif)
-                # Previously the elif at L1595 matched intraday buys before 3:15pm but did nothing,
-                # silently preventing the execution block from ever being reached.
-                if not skip_reason and strategy_type == "intraday":
+                # FIX-P v8.7: Universal buy-time gate — extended from intraday-only to ALL strategies.
+                # Problem diagnosed from live orders: daily strategies (ema_crossover, triple_ema)
+                # were entering at 15:54, 16:25, 18:04 ET — post-market/AH with massive spread risk.
+                # The old `strategy_type == "intraday"` guard explicitly allowed daily buys at any time.
+                # Fix: Apply 14:00 ET cutoff universally. Daily holds are unaffected (exits/trails
+                # are handled outside this block). Only new BUY entries are gated.
+                if not skip_reason:
                     now_et_check = datetime.now(ET)
                     eod_cutoff   = now_et_check.replace(hour=14, minute=0, second=0, microsecond=0)
-                    # FIX-J R5 v8.4: Tightened from 14:45 → 14:00 ET
-                    # 252-trade audit: 14:00-15:00 window = 26 trades, 38% wr, -$304.74 total (-$11.72 avg)
-                    # Worst single time-window across all 252 trades. EOD sweep at 15:00 is unchanged.
-                    # ── RULE 3: Pre-10am entry block (FIX-E v7.8) ───────────────────
-                    # Backtest: 40 pre-10am trades → -$109.19 net, 30.0% win rate.
-                    # Opening 30 min is highest-noise, widest-spread window.
-                    open_gate = now_et_check.replace(hour=10, minute=0, second=0, microsecond=0)
-                    if now_et_check < open_gate:
-                        skip_reason = (f"pre_10am_block: {now_et_check.strftime('%H:%M')} ET — "
-                                       f"intraday entries blocked before 10:00am (FIX-E)")
-                    # ── end RULE 3 ──────────────────────────────────────────────────
-                    elif now_et_check >= eod_cutoff:
-                        skip_reason = f"late_day_block (after 14:00 ET — FIX-J R5: 14:00-15:00 window was -$304.74 in 252-trade audit)"
+                    # ── RULE 3: Pre-10am entry block — intraday only (FIX-E v7.8) ────────
+                    # Daily strategies use prior-day bars and are unaffected by open-range noise.
+                    if strategy_type == "intraday":
+                        open_gate = now_et_check.replace(hour=10, minute=0, second=0, microsecond=0)
+                        if now_et_check < open_gate:
+                            skip_reason = (f"pre_10am_block: {now_et_check.strftime('%H:%M')} ET — "
+                                           f"intraday entries blocked before 10:00am (FIX-E)")
+                    # ── end RULE 3 ──────────────────────────────────────────────────────
+                    # Universal 14:00 ET buy cutoff (FIX-P v8.7) — all strategy types
+                    if not skip_reason and now_et_check >= eod_cutoff:
+                        skip_reason = (f"late_day_block: {now_et_check.strftime('%H:%M')} ET after 14:00 — "
+                                       f"FIX-P v8.7 universal gate (strategy_type={strategy_type})")
+                        print(f"  [FIX-P] {symbol}: blocked {strat_name} BUY at "
+                              f"{now_et_check.strftime('%H:%M')} ET — universal 14:00 cutoff")
                 # Kill switch — block all new entries when trailing drawdown >= threshold
                 if not skip_reason and _kill_switch_active:
                     skip_reason = (f"kill_switch_active "
@@ -2683,7 +2693,12 @@ def main():
                         # reversals without getting shaken out by normal noise).
                         # The static stop in the bracket is a safety net only.
                         _trail_atr   = max(eff_atr * 0.5, price * 0.002)  # FIX-H v8.1: 0.5×ATR optimal (sweep vs 38 trades)
-                        _trail_order = attach_trailing_stop(symbol, qty, _trail_atr, order_id)
+                        # FIX-Q v8.7: Verify qty > 0 before attaching trail (race-condition guard)
+                        if qty > 0:
+                            _trail_order = attach_trailing_stop(symbol, qty, _trail_atr, order_id)
+                        else:
+                            logging.warning(f"[FIX-Q] Skipping trail attach for {symbol}: qty={qty}")
+                            _trail_order = {}
                         _trail_id    = _trail_order.get("id", "")
                         if _trail_id:
                             print(f"  ✓ TRAIL_STOP attached for {symbol}: "
@@ -2746,6 +2761,25 @@ def main():
             else:  # SELL
                 pos_qty = int(float(positions[symbol].get("qty", 0)))
                 qty     = pos_qty if pos_qty > 0 else atr_position_size(equity, price, atr, vix_mult)
+
+                # ── FIX-O v8.7: Cross-strategy ownership guard ───────────────────────
+                # A sell signal from strategy X must NOT close a position opened by
+                # strategy Y. They have contradictory entry theses — one buying and the
+                # other immediately selling is pure churn (observed: OXY opened by
+                # ema_crossover, closed 6min later by bollinger_bands_15m, net -$0.45).
+                # The position_tags dict stores "strategy" at entry time. We check it
+                # here and block cross-strategy closes.
+                # EOD sweep and trailing stops are exempt — those close unconditionally.
+                if not skip_reason:
+                    _owner_strat = position_tags.get(symbol, {}).get("strategy", "")
+                    if _owner_strat and _owner_strat != strat_name:
+                        skip_reason = (
+                            f"cross_strategy_block: {symbol} opened by {_owner_strat}, "
+                            f"cannot close via {strat_name} (FIX-O v8.7)"
+                        )
+                        print(f"  [FIX-O] {symbol}: blocked cross-strategy sell "
+                              f"({strat_name} cannot close {_owner_strat} position)")
+                # ── end FIX-O ────────────────────────────────────────────────────────
 
                 # ── RULE 2: Time-stop guard — REMOVED in FIX-H v8.1 ────────────────
                 # Originally suppressed signal-sells within 5–60min of entry.
