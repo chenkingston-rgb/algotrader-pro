@@ -1,5 +1,5 @@
 """
-AlgoTrader Pro — GitHub Actions Strategy Runner  (v8.7)
+AlgoTrader Pro — GitHub Actions Strategy Runner  (v8.8)
 Dual-frequency: daily bars for trend strategies, 15-min bars for mean-rev/momentum.
 Writes JSON log files back to the repo so Base44 can read them via raw.githubusercontent.com.
 
@@ -2742,15 +2742,25 @@ def main():
                             }
                             write_github_log(EOD_TAG_FILE, position_tags)
                         else:
-                            # Daily strategies also get trail_order_id in their tag (FIX-H)
-                            if symbol not in position_tags:
-                                position_tags[symbol] = {}
-                            position_tags[symbol].update({
-                                "trail_order_id": _trail_id,
-                                "trail_price": round(_trail_atr, 3),
-                                "entry_atr": round(atr, 4),
+                            # FIX-R v8.8: Daily tag now carries the same critical fields as
+                            # intraday, fixing two downstream failures:
+                            # (1) _upgrade_trail_to_breakeven() was skipping ALL daily positions
+                            #     because entry_price=0 tripped the 'if not entry_price: continue' guard.
+                            #     Breakeven upgrade (profit-lock ratchet) NEVER fired for daily strategies.
+                            # (2) FIX-O cross-strategy guard read strategy='' → no protection for daily.
+                            # (3) FIX-M 30-min delay couldn't compute elapsed time (entry_time='').
+                            position_tags[symbol] = {
+                                "strategy":      strat_name,        # FIX-R: was missing → FIX-O blind
                                 "strategy_type": "daily",
-                            })
+                                "entry_time":    run_start.isoformat(),  # FIX-R: was missing → FIX-M blind
+                                "entry_price":   round(price, 2),   # FIX-R: was missing → breakeven upgrade skipped
+                                "entry_vix":     vix,
+                                "entry_atr":     round(atr, 4),
+                                "stop_price":    round(stop_price, 2),
+                                "tp_price":      round(tp_price, 2),
+                                "trail_order_id": _trail_id,        # FIX-H: EOD cancel ref
+                                "trail_price":   round(_trail_atr, 3),
+                            }
                             write_github_log(EOD_TAG_FILE, position_tags)
                         # Immediate in-memory cache update (BUG-001)
                         positions[symbol] = {"symbol": symbol, "qty": str(qty),
