@@ -1,5 +1,5 @@
 """
-AlgoTrader Pro — GitHub Actions Strategy Runner  (v8.8)
+AlgoTrader Pro — GitHub Actions Strategy Runner  (v8.9)
 Dual-frequency: daily bars for trend strategies, 15-min bars for mean-rev/momentum.
 Writes JSON log files back to the repo so Base44 can read them via raw.githubusercontent.com.
 
@@ -137,10 +137,24 @@ DAILY_STRATEGIES = {
 # ─────────────────────────────────────────────
 INTRADAY_STRATEGIES = {
     "bollinger_bands_15m": {
-        "symbols":  ["SPY", "QQQ"],
+        "symbols":  ["SPY", "QQQ", "HOOD", "SCHW", "AMAT", "PYPL", "BAC"],  # FIX-S v8.9: added volatile single stocks — SPY/QQQ never touch lower BB in bull market
         "vix_type": "MEAN_REV",
         "vix_block": 25, "vix_reduce": 18, "vix_reduce_pct": 0.40,
         "params": {"bb_period": 20, "bb_std": 1.8, "ma_filter": 20},  # FIX-N v8.6: bb_std 2.0→1.8 (tighter bands → price touches lower more often), ma_filter 50→20 (50 bars=12.5hr unavailable intraday; 20 bars=5hr achievable). Root cause of 139/140 no_signal.
+        "timeframe": "15Min", "bar_days": 20,
+    },
+    "rsi_mean_reversion_15m": {
+        # FIX-S v8.9: RSI8 mean-reversion on volatile single stocks.
+        # These have enough intraday range to hit genuine RSI extremes (<32/>68).
+        # All symbols are in the existing weekly watchlist and have strong liquidity.
+        "symbols":  ["HOOD", "SCHW", "AMAT", "PYPL", "BAC", "TSLA", "AAPL"],
+        "vix_type": "MEAN_REV",
+        "vix_block": 30, "vix_reduce": 22, "vix_reduce_pct": 0.40,
+        "params": {
+            "rsi_period":     8,
+            "rsi_oversold":   32,   # RSI8 < 32 = genuinely oversold single stock
+            "rsi_overbought": 68,   # RSI8 > 68 = overbought, exit
+        },
         "timeframe": "15Min", "bar_days": 20,
     },
     "momentum_roc_15m": {
@@ -891,20 +905,37 @@ def signal_ema_crossover(df: pd.DataFrame, p: dict) -> tuple:
     return "hold", inds
 
 def signal_bollinger_bands_15m(df: pd.DataFrame, p: dict) -> tuple:
+    """
+    FIX-S v8.9: Bollinger mean-reversion buy/sell.
+    BUY:  price below lower band + MA filter + RSI8 < 45 confirmation (not a knife-catch).
+    SELL: price above upper band (full mean-reversion target).
+    Symbols expanded from SPY/QQQ-only to include volatile single stocks (HOOD, SCHW, etc.)
+    which actually touch lower bands in normal intraday conditions.
+    """
     c = df["close"]
     lower, mid, upper = calc_bollinger(c, p["bb_period"], p["bb_std"])
     ma = c.rolling(p["ma_filter"]).mean()
     price, l, m, u, ma_v = c.iloc[-1], lower.iloc[-1], mid.iloc[-1], upper.iloc[-1], ma.iloc[-1]
+
+    # FIX-S v8.9: RSI8 confirmation — prevents buying into a freefall
+    # If RSI8 is already >45 when price touches lower band, the move is not
+    # genuinely oversold (could be a momentary wick). Permissive: pass if NaN.
+    _rsi_delta = c.diff()
+    _rsi_gain  = _rsi_delta.clip(lower=0).rolling(8).mean()
+    _rsi_loss  = (-_rsi_delta.clip(upper=0)).rolling(8).mean()
+    _rsi8_raw  = _rsi_gain / _rsi_loss.replace(0, np.nan)
+    _rsi8_val  = float((100 - (100 / (1 + _rsi8_raw))).iloc[-1])
+    rsi8_ok    = np.isnan(_rsi8_val) or _rsi8_val < 45  # pass if unavailable
+
     inds = {"price": round(price,2), "bb_lower": round(l,2), "bb_mid": round(m,2),
-            "bb_upper": round(u,2), "ma_filter": round(ma_v,2) if not np.isnan(ma_v) else None}
-    # FIX 1: Entry — price must be BELOW lower band AND ABOVE 50-MA (trend filter)
-    #         The original allowed entry when ma_v was NaN (insufficient data).
-    #         Now we require a valid, confirmed uptrend filter before buying.
+            "bb_upper": round(u,2), "ma_filter": round(ma_v,2) if not np.isnan(ma_v) else None,
+            "rsi8": round(_rsi8_val, 1) if not np.isnan(_rsi8_val) else None}
+
     ma_valid = not np.isnan(ma_v)
-    if price < l and ma_valid and price > ma_v:
+    # BUY: price below lower band + valid MA trend filter + RSI8 oversold confirmation
+    if price < l and ma_valid and price > ma_v and rsi8_ok:
         return "buy", inds
-    # FIX 2: Exit — raise from bb_mid to bb_upper so winners run to full mean-reversion
-    #         Old logic sold the moment price crossed the midband, cutting all profit.
+    # SELL: price above upper band (full mean-reversion target)
     if price > u:
         return "sell", inds
     return "hold", inds
@@ -975,13 +1006,80 @@ def signal_momentum_roc_15m(df: pd.DataFrame, p: dict) -> tuple:
 
     return "hold", inds
 
+
+
+def signal_rsi_mean_reversion_15m(df: pd.DataFrame, p: dict) -> tuple:
+    """
+    FIX-S v8.9: RSI8 mean-reversion intraday strategy — the missing intraday fallback.
+
+    Problem it solves: In calm bull markets (VIX<20), SPY/QQQ never touch Bollinger
+    lower bands so bollinger_bands_15m generates ZERO buy signals. Single stocks like
+    HOOD, TSLA, AAPL have enough intraday volatility for RSI to reach extreme levels.
+
+    BUY signal:  RSI8 < rsi_oversold (32) AND RSI8 rising vs prior bar (bounce confirmed)
+                 AND price above MA20 (not catching a falling knife in a downtrend).
+    SELL signal: RSI8 > rsi_overbought (68) — price is overextended to the upside.
+
+    RSI8 (8-period) is used instead of RSI14 for intraday speed — it needs only 8 bars
+    (2hr of data) vs RSI14's 3.5hr, and is more responsive to short-duration exhaustion.
+    Prior-day bars (bar_days=20) ensure RSI is always valid from the first bar of the day.
+    """
+    c   = df["close"]
+    vol = df["volume"] if "volume" in df.columns else None
+
+    rsi_period = p.get("rsi_period", 8)
+    delta = c.diff()
+    # Wilder smoothing (EWM alpha=1/period) — standard RSI; never NaN after warm-up
+    gain  = delta.clip(lower=0).ewm(alpha=1/rsi_period, adjust=False).mean()
+    loss  = (-delta.clip(upper=0)).ewm(alpha=1/rsi_period, adjust=False).mean()
+    rsi   = 100 - (100 / (1 + gain / loss.replace(0, np.nan)))
+    rsi_val  = float(rsi.iloc[-1])
+    rsi_prev = float(rsi.iloc[-2]) if len(rsi) > 1 else rsi_val
+
+    # MA20 trend filter (always valid with prior-day bars in bar_days=20)
+    ma20    = float(c.rolling(20).mean().iloc[-1])
+    ma20_ok = not np.isnan(ma20)
+    price   = float(c.iloc[-1])
+    above_ma20 = ma20_ok and price > ma20
+
+    # Volume ratio (looser than momentum_roc — mean-reversion doesn't require surge)
+    vol_ratio = None
+    if vol is not None and len(vol) >= 5:
+        avg_vol   = float(vol.iloc[-10:].mean()) if len(vol) >= 10 else float(vol.mean())
+        cur_vol   = float(vol.iloc[-1])
+        vol_ratio = round(cur_vol / avg_vol, 2) if avg_vol > 0 else None
+
+    inds = {
+        "rsi8":        round(rsi_val, 1) if not np.isnan(rsi_val) else None,
+        "rsi8_prev":   round(rsi_prev, 1) if not np.isnan(rsi_prev) else None,
+        "rsi_rising":  rsi_val > rsi_prev,
+        "ma20":        round(ma20, 2) if ma20_ok else None,
+        "above_ma20":  above_ma20,
+        "vol_ratio":   vol_ratio,
+        "price":       round(price, 2),
+    }
+
+    if np.isnan(rsi_val):
+        return "hold", inds
+
+    # BUY: RSI oversold + rising (bounce starting, not still falling) + above MA20
+    if rsi_val < p["rsi_oversold"] and rsi_val > rsi_prev and above_ma20:
+        return "buy", inds
+
+    # SELL: RSI overbought — mean-reversion exit (no trend filter; overextension = sell)
+    if rsi_val > p["rsi_overbought"]:
+        return "sell", inds
+
+    return "hold", inds
+
 SIGNAL_FNS = {
     "rsi_macd_combo":      signal_rsi_macd_combo,
     "macd_crossover":      signal_macd_crossover,
     "triple_ema":          signal_triple_ema,
     "ema_crossover":       signal_ema_crossover,
-    "bollinger_bands_15m": signal_bollinger_bands_15m,
-    "momentum_roc_15m":    signal_momentum_roc_15m,
+    "bollinger_bands_15m":        signal_bollinger_bands_15m,
+    "momentum_roc_15m":           signal_momentum_roc_15m,
+    "rsi_mean_reversion_15m":     signal_rsi_mean_reversion_15m,  # FIX-S v8.9
 }
 
 # ══════════════════════════════════════════════
