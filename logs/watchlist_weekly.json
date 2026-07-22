@@ -2,8 +2,8 @@
   "generated_at": "2026-07-20T03:35:40.803060+00:00",
   "scan_type": "weekly_v3_carhart",
   "universe_size": 95,
-  "trend_candidates": 17,
-  "meanrev_candidates": 17,
+  "trend_candidates": 3,
+  "meanrev_candidates": 5,
   "symbols": [
     "SPY",
     "QQQ",
@@ -32,7 +32,15 @@
     "DIS",
     "XOM",
     "COP",
-    "UBER"
+    "UBER",
+    "XLB",
+    "XLU",
+    "XLP",
+    "XLC",
+    "TSM",
+    "NU",
+    "HIMS",
+    "SHOP"
   ],
   "core_symbols": [
     "SPY",
@@ -223,6 +231,36 @@
       "carhart_mom": -1.2626,
       "score": 4.011,
       "pool": "TREND"
+    },
+    {
+      "symbol": "NU",
+      "score": 4.6159,
+      "adx14": 29.6,
+      "carhart_mom": -7.2651,
+      "ret_4w_pct": 11.72,
+      "ret_12w_pct": -5.42,
+      "manually_added": true,
+      "added_at": "2026-07-22T16:23:53.024837+00:00"
+    },
+    {
+      "symbol": "HIMS",
+      "score": 10.3114,
+      "adx14": 20.5,
+      "carhart_mom": 15.5938,
+      "ret_4w_pct": -0.9,
+      "ret_12w_pct": 12.55,
+      "manually_added": true,
+      "added_at": "2026-07-22T16:23:53.024844+00:00"
+    },
+    {
+      "symbol": "SHOP",
+      "score": 0.7916,
+      "adx14": 20.2,
+      "carhart_mom": -4.9069,
+      "ret_4w_pct": 8.88,
+      "ret_12w_pct": -11.23,
+      "manually_added": true,
+      "added_at": "2026-07-22T16:23:53.024850+00:00"
     }
   ],
   "meanrev_picks": [
@@ -321,6 +359,79 @@
       "realized_vol_5d": 28.98,
       "score": 2.4297,
       "pool": "MEAN_REV"
+    },
+    {
+      "symbol": "XLB",
+      "score": 0.4405,
+      "adx14": 10.8,
+      "realized_vol_5d": 14.5,
+      "ret_4w_pct": -0.09,
+      "ret_12w_pct": -2.0,
+      "manually_added": true,
+      "added_at": "2026-07-22T16:23:53.024742+00:00"
+    },
+    {
+      "symbol": "XLU",
+      "score": 0.4358,
+      "adx14": 11.8,
+      "realized_vol_5d": 15.8,
+      "ret_4w_pct": 1.35,
+      "ret_12w_pct": 1.86,
+      "manually_added": true,
+      "added_at": "2026-07-22T16:23:53.024800+00:00"
+    },
+    {
+      "symbol": "XLP",
+      "score": 0.4268,
+      "adx14": 13.7,
+      "realized_vol_5d": 21.7,
+      "ret_4w_pct": 0.88,
+      "ret_12w_pct": 2.85,
+      "manually_added": true,
+      "added_at": "2026-07-22T16:23:53.024806+00:00"
+    },
+    {
+      "symbol": "XLC",
+      "score": 0.4327,
+      "adx14": 13.3,
+      "realized_vol_5d": 18.2,
+      "ret_4w_pct": 2.38,
+      "ret_12w_pct": -6.8,
+      "manually_added": true,
+      "added_at": "2026-07-22T16:23:53.024812+00:00"
+    },
+    {
+      "symbol": "TSM",
+      "score": 0.4049,
+      "adx14": 16.8,
+      "realized_vol_5d": 47.0,
+      "ret_4w_pct": -3.09,
+      "ret_12w_pct": 9.18,
+      "manually_added": true,
+      "added_at": "2026-07-22T16:23:53.024816+00:00"
     }
+  ],
+  "meanrev_symbols": [
+    "XLB",
+    "XLU",
+    "XLP",
+    "XLC",
+    "TSM"
+  ],
+  "trend_symbols": [
+    "NU",
+    "HIMS",
+    "SHOP"
+  ],
+  "manually_patched_at": "2026-07-22T16:23:53.024853+00:00",
+  "manually_added": [
+    "XLB",
+    "XLU",
+    "XLP",
+    "XLC",
+    "TSM",
+    "NU",
+    "HIMS",
+    "SHOP"
   ]
 }
