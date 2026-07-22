@@ -176,21 +176,56 @@ DAILY_EQUITY_FILE     = "logs/daily_equity_history.json"  # v8.4 — FIX-J: Boar
 SIGNALS_HISTORY_FILE  = "logs/signals_history.json"
 MAX_SIGNALS_HISTORY   = 500   # rolling window kept in repo
 
-WATCHLIST_WEEKLY_FILE = "logs/watchlist_weekly.json"
-WATCHLIST_DAILY_FILE  = "logs/watchlist_daily.json"
+WATCHLIST_WEEKLY_FILE  = "logs/watchlist_weekly.json"
+WATCHLIST_DAILY_FILE   = "logs/watchlist_daily.json"
+WATCHLIST_MEANREV_FILE = "logs/watchlist_meanrev.json"   # FIX-T v8.9: pool-specific mean-rev symbols
 
 # ─────────────────────────────────────────────
 # DYNAMIC SYMBOL LOADING FROM WATCHLISTS
 # ─────────────────────────────────────────────
-def load_dynamic_symbols() -> list:
+def load_dynamic_symbols(pool: str = "ALL") -> list:
     """
-    Fetch the appropriate watchlist for the current STRATEGY_MODE from GitHub.
-    - intraday mode → watchlist_daily.json  (daily pre-market picks + 7 core)
-    - daily mode    → watchlist_weekly.json (weekly scan top 25 + 7 core)
-    Falls back to None if the file is missing or the fetch fails.
+    FIX-T v8.9: Pool-aware watchlist loader.
+
+    ─── ARCHITECTURE NOTE — READ THIS BEFORE MODIFYING ───────────────────────
+    The symbol pipeline has TWO stages:
+
+    Stage 1 — Weekly scan (scan_symbols.py, runs Sunday):
+      Scores 95-symbol universe into TWO pools:
+        TREND pool    → ADX>20, strong Carhart momentum (breakout/momentum strategies)
+        MEAN_REV pool → ADX 10-22, low realized vol, close to SMA20 (reversal strategies)
+      Writes:
+        logs/watchlist_weekly.json  → merged list + both pool sublists
+        logs/watchlist_meanrev.json → MEAN_REV pool only (Bollinger/RSI-MR input)
+
+    Stage 2 — Daily pre-market scan (scan_daily.py, runs 9:00am ET weekdays):
+      Reads weekly watchlist, applies pre-market gap + volume filters.
+      Writes: logs/watchlist_daily.json → today's top intraday picks.
+
+    Stage 3 — Engine (run_strategies.py, runs every 15min):
+      Routes each strategy to its correct pool:
+        MEAN_REV strategies → watchlist_meanrev.json (or meanrev_symbols from weekly)
+        TREND/MOMENTUM strategies → watchlist_daily.json (intraday) or weekly trend pool
+      NEVER apply the same merged symbol list to ALL strategies — this destroys pool routing.
+
+    WHAT BROKE BEFORE FIX-T: load_dynamic_symbols() applied one merged list to
+    all strategies, routing Bollinger (MEAN_REV) and momentum_roc (TREND) to identical
+    symbol pools. The scanner's per-stock qualification was wasted.
+
+    pool="MEAN_REV" → watchlist_meanrev.json (symbols qualified by ADX<22 + low vol)
+    pool="ALL"      → watchlist_daily.json (intraday) or watchlist_weekly.json (daily)
+    ──────────────────────────────────────────────────────────────────────────────────
     """
     repo = GITHUB_REPOSITORY or "chenkingston-rgb/algotrader-pro"
-    filename = WATCHLIST_DAILY_FILE if STRATEGY_MODE == "intraday" else WATCHLIST_WEEKLY_FILE
+
+    if pool == "MEAN_REV":
+        # Bollinger + RSI-MR strategies → dedicated mean-reversion pool
+        filename = WATCHLIST_MEANREV_FILE
+    elif STRATEGY_MODE == "intraday":
+        filename = WATCHLIST_DAILY_FILE
+    else:
+        filename = WATCHLIST_WEEKLY_FILE
+
     url = (
         f"https://raw.githubusercontent.com/{repo}/main/{filename}"
         f"?t={int(_time.time())}"
@@ -202,12 +237,12 @@ def load_dynamic_symbols() -> list:
             symbols = data.get("symbols", [])
             if symbols:
                 logging.info(
-                    f"[WATCHLIST] Loaded {len(symbols)} symbols from {filename}: {symbols}"
+                    f"[WATCHLIST] pool={pool} → {len(symbols)} symbols from {filename}: {symbols}"
                 )
                 return symbols
-        logging.warning(f"[WATCHLIST] {filename} fetch returned {r.status_code}")
+        logging.warning(f"[WATCHLIST] {filename} fetch returned {r.status_code} (pool={pool})")
     except Exception as e:
-        logging.warning(f"[WATCHLIST] Error fetching {filename}: {e}")
+        logging.warning(f"[WATCHLIST] Error fetching {filename} (pool={pool}): {e}")
     return []
 
 
@@ -2516,20 +2551,37 @@ def main():
     orders_placed = []
     sold_this_run = set()
 
-    # Apply dynamic watchlist
-    position_symbols = list(positions.keys())
-    dyn_symbols = load_dynamic_symbols()
-    if dyn_symbols:
-        merged = list(dict.fromkeys(position_symbols + dyn_symbols))
-        for sc in STRATEGIES.values():
-            sc["symbols"] = merged
-        dropped = [s for s in position_symbols if s not in dyn_symbols]
-        print(f"[WATCHLIST] {len(merged)} symbols applied "
-              f"({len(dropped)} position-only: {dropped or 'none'})")
-    else:
-        for sc in STRATEGIES.values():
-            sc["symbols"] = list(dict.fromkeys(position_symbols + sc["symbols"]))
-        print("[WATCHLIST] Using hardcoded lists; open positions prepended")
+    # FIX-T v8.9: Pool-aware watchlist routing
+    # ─── DO NOT change this to a single merged list for all strategies ───────
+    # Each strategy's vix_type determines which pool it draws symbols from.
+    # MEAN_REV → watchlist_meanrev.json (ADX<22, low vol, SMA20-close stocks)
+    # TREND/MOMENTUM/COMBO → watchlist_daily.json / watchlist_weekly.json
+    # Routed separately so scan qualification is not wasted.
+    # See load_dynamic_symbols() docstring for full architecture notes.
+    # ──────────────────────────────────────────────────────────────────────────
+    position_symbols  = list(positions.keys())
+    meanrev_symbols   = load_dynamic_symbols(pool="MEAN_REV")
+    general_symbols   = load_dynamic_symbols(pool="ALL")
+
+    for strat_name, sc in STRATEGIES.items():
+        vix_type = sc.get("vix_type", "TREND")
+        if vix_type == "MEAN_REV" and meanrev_symbols:
+            pool_syms = meanrev_symbols
+            pool_tag  = "MEAN_REV"
+        elif general_symbols:
+            pool_syms = general_symbols
+            pool_tag  = "ALL"
+        else:
+            pool_syms = sc["symbols"]   # fallback: hardcoded
+            pool_tag  = "HARDCODED"
+        # Prepend open positions so we always manage existing holds
+        sc["symbols"] = list(dict.fromkeys(position_symbols + pool_syms))
+        print(f"[WATCHLIST] {strat_name:<28} pool={pool_tag:<10} "
+              f"symbols={len(sc['symbols'])} ({sc['symbols'][:8]}{'...' if len(sc['symbols'])>8 else ''})")
+
+    dropped = [s for s in position_symbols if s not in (general_symbols or [])]
+    if dropped:
+        print(f"[WATCHLIST] Position-only symbols (prepended to all): {dropped}")
 
     # ── PHASE 1: EOD exit sweep ──────────────────────────────────────────
     positions     = get_positions()
