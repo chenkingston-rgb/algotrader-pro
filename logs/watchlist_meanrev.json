@@ -1,0 +1,140 @@
+{
+  "symbols": [
+    "XLB",
+    "XLU",
+    "XLP",
+    "XLC",
+    "TSM"
+  ],
+  "generated_at": "2026-07-22T16:23:53.815602+00:00",
+  "manually_patched_at": "2026-07-22T16:23:53.815620+00:00",
+  "source": "manual_scan_FIX-V_2026-07-23",
+  "note": "FIX-T pool. Manually populated from FIX-V universe additions scan. Next auto-scan Sunday.",
+  "picks": [
+    {
+      "sym": "XLB",
+      "price": 50.805,
+      "pool": "MEAN_REV",
+      "qualifies": true,
+      "score": 0.4405,
+      "adx": 10.77,
+      "rvol5d": 14.54,
+      "ret4w": -0.08849557522123686,
+      "ret12w": -1.9965277777777901,
+      "pct52": -4.672108077680837,
+      "vol30": 1036520.0666666667,
+      "gap_pct": 1.4476837060702903,
+      "daily_score": 17.42296411587427,
+      "trend_score": null,
+      "mr_score": 0.4405,
+      "trend_meta": null,
+      "mr_meta": {
+        "adx": 10.77,
+        "rvol5d": 14.54,
+        "ret4w": -0.08849557522123686,
+        "sma20": 50.9,
+        "prox": 0.9981
+      }
+    },
+    {
+      "sym": "XLU",
+      "price": 45.695,
+      "pool": "MEAN_REV",
+      "qualifies": true,
+      "score": 0.4358,
+      "adx": 11.85,
+      "rvol5d": 15.81,
+      "ret4w": 1.3529998890983608,
+      "ret12w": 1.8613464110566191,
+      "pct52": -4.193311667889721,
+      "vol30": 1400618.9666666666,
+      "gap_pct": 1.7252894033837902,
+      "daily_score": 19.755097207252117,
+      "trend_score": null,
+      "mr_score": 0.4358,
+      "trend_meta": null,
+      "mr_meta": {
+        "adx": 11.85,
+        "rvol5d": 15.81,
+        "ret4w": 1.3529998890983608,
+        "sma20": 45.45,
+        "prox": 0.9947
+      }
+    },
+    {
+      "sym": "XLP",
+      "price": 84.44,
+      "pool": "MEAN_REV",
+      "qualifies": true,
+      "score": 0.4268,
+      "adx": 13.67,
+      "rvol5d": 21.71,
+      "ret4w": 0.8841099163679811,
+      "ret12w": 2.8501827040194883,
+      "pct52": -3.419878760150985,
+      "vol30": 1059596.3,
+      "gap_pct": 0.48194204795621004,
+      "daily_score": 9.39957831723015,
+      "trend_score": null,
+      "mr_score": 0.4268,
+      "trend_meta": null,
+      "mr_meta": {
+        "adx": 13.67,
+        "rvol5d": 21.71,
+        "ret4w": 0.8841099163679811,
+        "sma20": 84.26,
+        "prox": 0.9979
+      }
+    },
+    {
+      "sym": "XLC",
+      "price": 109.88,
+      "pool": "MEAN_REV",
+      "qualifies": true,
+      "score": 0.4327,
+      "adx": 13.26,
+      "rvol5d": 18.17,
+      "ret4w": 2.3758501816826483,
+      "ret12w": -6.802374893977959,
+      "pct52": -8.03481754268498,
+      "vol30": 487229.4,
+      "gap_pct": -0.1544752385279434,
+      "daily_score": 11.56875781032445,
+      "trend_score": null,
+      "mr_score": 0.4327,
+      "trend_meta": null,
+      "mr_meta": {
+        "adx": 13.26,
+        "rvol5d": 18.17,
+        "ret4w": 2.3758501816826483,
+        "sma20": 109.8,
+        "prox": 0.9992
+      }
+    },
+    {
+      "sym": "TSM",
+      "price": 423.12,
+      "pool": "MEAN_REV",
+      "qualifies": true,
+      "score": 0.4049,
+      "adx": 16.8,
+      "rvol5d": 47.01,
+      "ret4w": -3.0941529441403492,
+      "ret12w": 9.179579145647597,
+      "pct52": -11.58290669731481,
+      "vol30": 673994.2333333333,
+      "gap_pct": -0.32626235262246406,
+      "daily_score": 11.393479330757062,
+      "trend_score": null,
+      "mr_score": 0.4049,
+      "trend_meta": null,
+      "mr_meta": {
+        "adx": 16.8,
+        "rvol5d": 47.01,
+        "ret4w": -3.0941529441403492,
+        "sma20": 431.61,
+        "prox": 0.9803
+      }
+    }
+  ]
+}
