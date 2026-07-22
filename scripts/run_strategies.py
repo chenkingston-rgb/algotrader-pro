@@ -1,5 +1,5 @@
 """
-AlgoTrader Pro — GitHub Actions Strategy Runner  (v8.9)
+AlgoTrader Pro — GitHub Actions Strategy Runner  (v9.0)
 Dual-frequency: daily bars for trend strategies, 15-min bars for mean-rev/momentum.
 Writes JSON log files back to the repo so Base44 can read them via raw.githubusercontent.com.
 
@@ -941,36 +941,45 @@ def signal_ema_crossover(df: pd.DataFrame, p: dict) -> tuple:
 
 def signal_bollinger_bands_15m(df: pd.DataFrame, p: dict) -> tuple:
     """
-    FIX-S v8.9: Bollinger mean-reversion buy/sell.
-    BUY:  price below lower band + MA filter + RSI8 < 45 confirmation (not a knife-catch).
-    SELL: price above upper band (full mean-reversion target).
-    Symbols expanded from SPY/QQQ-only to include volatile single stocks (HOOD, SCHW, etc.)
-    which actually touch lower bands in normal intraday conditions.
+    FIX-U v8.9: Bollinger mean-reversion buy/sell.
+
+    BUY:  price < lower band  AND  RSI8 < 45  (oversold confirmation, not a knife-catch)
+    SELL: price > upper band  (full mean-reversion target)
+
+    FIX-U change: Removed 'price > MA20' intraday trend filter.
+    REASON: The MA20 on 15Min bars = rolling avg of last 20 × 15min bars = ~5hr window.
+    At session open, those 20 bars are all from YESTERDAY's afternoon close levels.
+    A stock that gapped down 1% today has price < yesterday-afternoon-MA20 from bar 1 —
+    this filter blocked every single early-session oversold buy, the exact entries we want.
+    Additionally it is MATHEMATICALLY REDUNDANT: price < lower_band already implies
+    price < BB_midband (= MA20), so 'price > MA20' was a logical contradiction of the
+    buy condition. The RSI8 < 45 gate already prevents freefall knife-catches.
+
+    Keep ma_filter param in config (used only to compute BB bands via calc_bollinger).
     """
     c = df["close"]
     lower, mid, upper = calc_bollinger(c, p["bb_period"], p["bb_std"])
-    ma = c.rolling(p["ma_filter"]).mean()
-    price, l, m, u, ma_v = c.iloc[-1], lower.iloc[-1], mid.iloc[-1], upper.iloc[-1], ma.iloc[-1]
+    price, l, m, u = float(c.iloc[-1]), float(lower.iloc[-1]), float(mid.iloc[-1]), float(upper.iloc[-1])
 
-    # FIX-S v8.9: RSI8 confirmation — prevents buying into a freefall
-    # If RSI8 is already >45 when price touches lower band, the move is not
-    # genuinely oversold (could be a momentary wick). Permissive: pass if NaN.
-    _rsi_delta = c.diff()
-    _rsi_gain  = _rsi_delta.clip(lower=0).rolling(8).mean()
-    _rsi_loss  = (-_rsi_delta.clip(upper=0)).rolling(8).mean()
-    _rsi8_raw  = _rsi_gain / _rsi_loss.replace(0, np.nan)
-    _rsi8_val  = float((100 - (100 / (1 + _rsi8_raw))).iloc[-1])
+    # RSI8 confirmation — prevents buying into a freefall (Wilder EWM, consistent with RSI_MR)
+    _delta     = c.diff()
+    _gain      = _delta.clip(lower=0).ewm(alpha=1/8, adjust=False).mean()
+    _loss      = (-_delta.clip(upper=0)).ewm(alpha=1/8, adjust=False).mean()
+    _rsi8_val  = float((100 - (100 / (1 + _gain / _loss.replace(0, np.nan)))).iloc[-1])
     rsi8_ok    = np.isnan(_rsi8_val) or _rsi8_val < 45  # pass if unavailable
 
-    inds = {"price": round(price,2), "bb_lower": round(l,2), "bb_mid": round(m,2),
-            "bb_upper": round(u,2), "ma_filter": round(ma_v,2) if not np.isnan(ma_v) else None,
-            "rsi8": round(_rsi8_val, 1) if not np.isnan(_rsi8_val) else None}
+    inds = {
+        "price":    round(price, 2),
+        "bb_lower": round(l, 2),
+        "bb_mid":   round(m, 2),
+        "bb_upper": round(u, 2),
+        "rsi8":     round(_rsi8_val, 1) if not np.isnan(_rsi8_val) else None,
+    }
 
-    ma_valid = not np.isnan(ma_v)
-    # BUY: price below lower band + valid MA trend filter + RSI8 oversold confirmation
-    if price < l and ma_valid and price > ma_v and rsi8_ok:
+    # BUY: price below lower band (oversold vs recent range) + RSI8 < 45 (not freefall)
+    if price < l and rsi8_ok:
         return "buy", inds
-    # SELL: price above upper band (full mean-reversion target)
+    # SELL: price above upper band (overbought vs recent range — full mean-reversion)
     if price > u:
         return "sell", inds
     return "hold", inds
@@ -1071,11 +1080,27 @@ def signal_rsi_mean_reversion_15m(df: pd.DataFrame, p: dict) -> tuple:
     rsi_val  = float(rsi.iloc[-1])
     rsi_prev = float(rsi.iloc[-2]) if len(rsi) > 1 else rsi_val
 
-    # MA20 trend filter (always valid with prior-day bars in bar_days=20)
-    ma20    = float(c.rolling(20).mean().iloc[-1])
-    ma20_ok = not np.isnan(ma20)
+    # FIX-U v8.9: Daily MA20 trend filter — replaces broken 15Min MA20.
+    # PROBLEM WITH 15Min MA20: rolling(20) on 15Min bars = avg of last 20 × 15min bars
+    # = ~5hr window. At 9:45am open, those 20 bars are yesterday's afternoon levels.
+    # Stock that gaps down today has price < yesterday-MA20 from bar 1 → blocks all morning entries.
+    #
+    # FIX: Extract daily MA20 from the same 15Min bar window. Sample the last close of
+    # each calendar day present in the dataframe. This gives a proper 4-week trend filter
+    # (same semantics as "price above 20-day moving average") with NO extra API call.
     price   = float(c.iloc[-1])
-    above_ma20 = ma20_ok and price > ma20
+    _df_daily_closes = (
+        df.copy()
+        .assign(_date=df.index.map(lambda x: x.date() if hasattr(x, 'date') else x))
+        .groupby('_date')['close']
+        .last()
+        .sort_index()
+    )
+    _daily_ma20_raw = _df_daily_closes.rolling(20, min_periods=5).mean()
+    _daily_ma20_val = float(_daily_ma20_raw.iloc[-1]) if len(_daily_ma20_raw) > 0 else float('nan')
+    ma20_ok    = not np.isnan(_daily_ma20_val)
+    above_ma20 = ma20_ok and price > _daily_ma20_val
+    ma20       = _daily_ma20_val  # for indicators dict
 
     # Volume ratio (looser than momentum_roc — mean-reversion doesn't require surge)
     vol_ratio = None
