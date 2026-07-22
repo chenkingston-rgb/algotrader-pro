@@ -1,5 +1,18 @@
 # AlgoTrader Pro — Strategy Rulebook
 
+## ⚠️ PERMANENT RULE: Symbol Pool Routing (FIX-T v8.9)
+
+See `docs/SYMBOL_POOL_ROUTING.md` for full details.
+
+**Summary:**
+- `scan_symbols.py` produces a TREND pool and a MEAN_REV pool every Sunday.
+- `bollinger_bands_15m` and `rsi_mean_reversion_15m` → MEAN_REV pool (`watchlist_meanrev.json`)
+- All other strategies → daily/weekly general watchlist
+- **NEVER hardcode symbols as primary source** — use the scan pools
+- **NEVER merge TREND + MEAN_REV into one list for all strategies**
+- Set `vix_type = "MEAN_REV"` on any new mean-reversion strategy to auto-route correctly
+
+
 > **Living document.** Every logic change to the engine must be recorded here.
 > This file is the authoritative source of truth for all strategy rules, parameters,
 > and filters. It mirrors the `StrategyRulebook` entity on the Base44 dashboard.
