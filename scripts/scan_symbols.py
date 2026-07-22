@@ -359,19 +359,42 @@ def main():
     meanrev_syms = [s["symbol"] for s in top_meanrev]
     all_symbols  = list(dict.fromkeys(CORE_SYMBOLS + trend_syms + meanrev_syms))
 
+    # ── FIX-T v8.9: Pool-specific symbol lists now included in output ────────────
+    # This allows run_strategies.py to route each strategy to its correct pool.
+    # TREND pool:    stocks with ADX>20, strong Carhart momentum (use for breakout/momentum strategies)
+    # MEAN_REV pool: stocks with ADX 10-22, ranging, tight realized vol (use for Bollinger/RSI-MR)
+    # CORE symbols:  always included in ALL strategies regardless of pool
+    # DO NOT flatten these pools into a single symbol list for strategy routing.
     output = {
         "generated_at":       run_time.isoformat(),
         "scan_type":          "weekly_v3_carhart",  # FIX-F v7.9: Carhart momentum + illiq filter
         "universe_size":      len(SCAN_UNIVERSE),
         "trend_candidates":   len(trend_picks),
         "meanrev_candidates": len(meanrev_picks),
-        "symbols":            all_symbols,
+        "symbols":            all_symbols,           # merged: for backward compat + daily scan input
         "core_symbols":       CORE_SYMBOLS,
+        "trend_symbols":      trend_syms,            # FIX-T v8.9: TREND pool symbols only
+        "meanrev_symbols":    meanrev_syms,          # FIX-T v8.9: MEAN_REV pool symbols only
         "trend_picks":        top_trend,
         "meanrev_picks":      top_meanrev,
     }
 
     write_github_log("logs/watchlist_weekly.json", output)
+
+    # FIX-T v8.9: Write a dedicated mean-reversion watchlist consumed exclusively
+    # by bollinger_bands_15m and rsi_mean_reversion_15m strategies.
+    # This prevents the pool-routing loss that occurs when the merged 'symbols'
+    # list is applied uniformly to all strategies.
+    meanrev_output = {
+        "generated_at":    run_time.isoformat(),
+        "scan_type":       "weekly_meanrev",
+        "symbols":         list(dict.fromkeys(CORE_SYMBOLS + meanrev_syms)),
+        "core_symbols":    CORE_SYMBOLS,
+        "meanrev_symbols": meanrev_syms,
+        "meanrev_picks":   top_meanrev,
+        "note":            "Used by bollinger_bands_15m and rsi_mean_reversion_15m strategies only.",
+    }
+    write_github_log("logs/watchlist_meanrev.json", meanrev_output)
     logging.info(
         f"Done: {len(all_symbols)} symbols total "
         f"({len(top_trend)} trend + {len(top_meanrev)} mean-rev + {len(CORE_SYMBOLS)} core)"
