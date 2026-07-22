@@ -56,18 +56,50 @@ CORE_SYMBOLS = ["SPY", "QQQ", "IWM", "GLD", "XLK", "XLE", "XLF"]
 
 # ── Scan universe ─────────────────────────────────────────────────────────────
 SCAN_UNIVERSE = [
-    "AAPL", "MSFT", "NVDA", "AMZN", "META", "GOOGL", "TSLA", "AVGO", "ORCL", "AMD",
-    "INTC", "QCOM", "MU", "AMAT", "LRCX", "KLAC", "ADI",  # FIX-J R6: TXN and MRVL removed (252-trade audit: TXN -$215, MRVL -$289)
-    "CRM", "NOW", "ADBE", "INTU", "PANW", "CRWD", "PLTR", "DDOG", "ZS", "SNOW",
-    "NFLX", "DIS", "CMCSA", "TMUS",
-    "HD", "NKE", "MCD", "CMG", "COST", "TGT", "LOW", "BKNG", "ABNB", "UBER",
-    "JPM", "BAC", "GS", "MS", "WFC", "BLK", "SCHW", "V", "MA", "AXP", "PYPL",
+    # ── Mega-cap tech ────────────────────────────────────────────────────────────
+    "AAPL", "MSFT", "NVDA", "AMZN", "META", "GOOGL", "TSLA", "AVGO", "ORCL", "AMD",  # ORCL: cyclical (52wk dip), vol=1.2M — kept per panel verdict
+    # ── Semiconductors ──────────────────────────────────────────────────────────
+    "INTC", "QCOM", "MU", "AMAT", "LRCX", "KLAC",  # FIX-J R6: MRVL+TXN removed (252-trade audit). FIX-V: ADI removed (structural vol <200k/day all year)
+    "TSM",                                            # FIX-V ADD: ADX=16.8, vol=0.7M, passes all filters
+    # ── Cloud / SaaS / Cybersecurity ─────────────────────────────────────────────
+    "CRM", "NOW", "INTU", "PANW", "PLTR", "DDOG", "SNOW",
+    # FIX-V: ADBE removed (structural vol, -41% 52wk). CRWD removed (post-4:1-split still -76% 52wk, -60% ret12w). ZS removed (structural vol).
+    # ── Media / Streaming ────────────────────────────────────────────────────────
+    "NFLX", "DIS", "CMCSA",
+    # FIX-V: TMUS removed (structural vol <230k all year)
+    # ── Consumer Discretionary ───────────────────────────────────────────────────
+    "NKE", "CMG", "TGT", "BKNG", "UBER",
+    "SHOP",   # FIX-V ADD: ADX=20.5, vol=0.3M (borderline), e-commerce momentum
+    "DKNG",   # FIX-V ADD: ADX=14.7, vol=0.8M, passes all hard filters
+    # FIX-V: HD removed (structural vol). MCD removed (structural vol). COST removed (structural vol <80k).
+    #        LOW removed (structural vol + 52wk). ABNB removed (structural vol <160k).
+    # ── Financials ───────────────────────────────────────────────────────────────
+    "BAC", "MS", "WFC", "SCHW", "V", "PYPL",
+    "NU",    # FIX-V ADD: ADX=29.6, vol=3.4M, strong trend — fintech diversifier (Nubank)
+    # FIX-V: JPM removed (structural vol <280k, right at threshold but max1y=0.30M).
+    #        GS removed (structural vol <80k). BLK removed (structural vol <60k).
+    #        MA removed (structural vol <180k). AXP removed (structural vol <120k).
+    # ── Fintech / Crypto / Speculative fintech ───────────────────────────────────
     "COIN", "HOOD", "SOFI",
-    "LLY", "UNH", "ABBV", "MRK", "TMO", "ABT", "ISRG", "REGN",
+    # ── Healthcare ───────────────────────────────────────────────────────────────
+    "UNH", "ABBV", "MRK", "ABT",
+    "HIMS",  # FIX-V ADD: ADX=20.5, vol=0.5M, growth health-tech momentum
+    # FIX-V: LLY removed (structural vol <130k). TMO removed (structural vol). ISRG removed (structural vol + 52wk).
+    #        REGN removed (structural vol <65k). IBB removed (structural vol <100k).
+    # ── Energy ───────────────────────────────────────────────────────────────────
     "XOM", "CVX", "COP", "SLB", "EOG", "OXY",
-    "CAT", "DE", "BA", "HON", "GE", "RTX", "LMT",
-    "RIVN", "MSTR", "RKLB", "IONQ", "SMCI", "ARM",
-    "SMH", "IBB", "ARKK", "XLV", "XLI", "XLY",
+    # ── Industrials ──────────────────────────────────────────────────────────────
+    "GE",
+    # FIX-V: CAT removed (structural vol). DE removed (structural vol). BA removed (structural vol).
+    #        HON removed (structural vol). RTX removed (structural vol). LMT removed (structural vol <50k).
+    # ── Speculative / High-beta ──────────────────────────────────────────────────
+    "RIVN", "MSTR", "SMCI", "ARM",
+    # FIX-V: RKLB removed (-52% 52wk, -20% ret12w — deep drawdown). IONQ removed (-52% 52wk, -25% ret12w).
+    # ── ETFs — Broad + Thematic ──────────────────────────────────────────────────
+    "SMH", "ARKK", "XLV", "XLI", "XLY",
+    # FIX-V: IBB removed (structural vol). Added sector ETFs for MEAN_REV pool coverage:
+    "XLB", "XLU", "XLP", "XLC",   # FIX-V ADD: Materials, Utilities, Staples, Comms — low-ADX, low-vol, ideal BB targets
+    # ── CORE — always in watchlist, never scored out ──────────────────────────────
     "SPY", "QQQ", "IWM", "GLD", "XLK", "XLE", "XLF",
 ]
 SCAN_UNIVERSE = list(dict.fromkeys(SCAN_UNIVERSE))
