@@ -43,7 +43,7 @@ def test_fix_j_r3_weekly_cap():
 def test_fix_j_r5_late_gate():
     assert "hour=14, minute=0" in code
     assert "hour=14, minute=45" not in code
-    assert "FIX-J R5" in code
+    assert "FIX-P" in code or "FIX-J R5" in code  # FIX-P renamed from FIX-J R5
     assert "after 14:00 ET" in code
 
 def test_fix_k_cron():
@@ -172,3 +172,74 @@ def test_fix_l_all_prior_still_intact():
     assert "late_day_block" in code
     # FIX-K heartbeat
     assert "last_heartbeat" in code
+
+
+def test_fix_w_intraday_execution_path():
+    """FIX-W v9.1: Weekly cap check must NOT consume intraday buy signals.
+    
+    Bug: `elif signal == "buy" and strategy_type == "intraday":` in the if/elif
+    chain consumed ALL intraday buy signals. When the weekly cap didn't fire
+    (new symbols with 0 counts), the chain ended — the execution path (pre-10am,
+    position sizing, order placement) inside `elif signal == "buy":` was NEVER
+    reached. Result: 20 buy signals generated, 0 executed on Jul 23, 2026.
+    
+    Fix: Move weekly cap check inside the buy catch-all (`elif signal == "buy":`).
+    """
+    import os, requests, base64
+    for line in open('/app/.agents/.env').read().split('\n'):
+        line = line.strip()
+        if not line or line.startswith('#'): continue
+        line = line.replace('export ', '')
+        if '=' in line:
+            k, v = line.split('=', 1)
+            os.environ.setdefault(k.strip(), v.strip())
+    GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN','')
+    H_GH = {'Authorization': f'Bearer {GH_TOKEN}', 'Accept': 'application/vnd.github+json'}
+    REPO = 'chenkingston-rgb/algotrader-pro'
+    r = requests.get(f'https://api.github.com/repos/{REPO}/contents/scripts/run_strategies.py',
+                     headers=H_GH, timeout=15)
+    code = base64.b64decode(r.json()['content']).decode()
+    
+    # 1. The old `elif signal == "buy" and strategy_type == "intraday":` must NOT
+    #    be in the if/elif chain (it should be a regular if inside the buy body)
+    import ast
+    tree = ast.parse(code)
+    
+    # Find the main loop's if/elif chain
+    lines = code.splitlines()
+    chain_elifs = [(i+1, l.strip()) for i, l in enumerate(lines) 
+                  if l.strip().startswith('elif') and 'strategy_type == "intraday"' in l 
+                  and 2680 < i < 2700]
+    
+    assert len(chain_elifs) == 0, (
+        f"FIX-W FAIL: `elif ... strategy_type == intraday` still in if/elif chain at L{chain_elifs[0][0]}. "
+        f"This consumes intraday buy signals and blocks the execution path."
+    )
+    
+    # 2. The weekly cap check should be INSIDE the `elif signal == "buy":` body
+    buy_elif_idx = None
+    for i, l in enumerate(lines):
+        if l.strip() == 'elif signal == "buy":' and i > 2600:
+            buy_elif_idx = i
+            break
+    
+    assert buy_elif_idx is not None, 'FIX-W FAIL: `elif signal == "buy":` not found' 
+    
+    # Check that the weekly cap is inside the buy body (within 30 lines)
+    buy_block = lines[buy_elif_idx:buy_elif_idx+40]
+    weekly_cap_inside = any('weekly_concentration_cap' in l for l in buy_block)
+    assert weekly_cap_inside, (
+        'FIX-W FAIL: Weekly cap check not found inside buy body'
+    )
+    
+    # 3. The execution path (pre-10am, position sizing, order placement) must be
+    #    reachable from the buy catch-all
+    exec_path = any('pre_10am_block' in l for l in buy_block) and                 any('atr_position_size' in l for l in lines[buy_elif_idx:buy_elif_idx+200]) and                 any('place_order' in l for l in lines[buy_elif_idx:buy_elif_idx+200])
+    assert exec_path, (
+        "FIX-W FAIL: Execution path (pre-10am + sizing + order) not reachable from buy catch-all"
+    )
+    
+    # 4. FIX-W comment should be present
+    assert "FIX-W" in code, "FIX-W comment not found in code"
+    
+    print("  FIX-W: Weekly cap moved inside buy catch-all — intraday execution path reachable ✅")
