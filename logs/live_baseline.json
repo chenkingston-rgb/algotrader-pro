@@ -34,14 +34,15 @@
   "peak_equity": 29801.07,
   "regime_label": "BULL",
   "stop_cooldowns": {},
-  "last_heartbeat": "2026-07-23T11:16:00.410662-04:00",
-  "last_heartbeat_et": "2026-07-23 11:16 ET",
+  "last_heartbeat": "2026-07-23T11:31:05.108606-04:00",
+  "last_heartbeat_et": "2026-07-23 11:31 ET",
   "engine_version": "v8.4-FIX-K",
   "weekly_symbol_counts": {
     "PANW:2026-W28": 2,
     "AMZN:2026-W29": 2,
     "OXY:2026-W29": 3,
     "COP:2026-W29": 1,
-    "BAC:2026-W29": 1
+    "BAC:2026-W29": 1,
+    "XLB:2026-W29": 1
   }
 }
