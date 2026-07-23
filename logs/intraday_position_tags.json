@@ -30,5 +30,17 @@
       "rsi8": 24.8,
       "strev21": 0.0126
     }
+  },
+  "CVX": {
+    "strategy": "triple_ema",
+    "strategy_type": "daily",
+    "entry_time": "2026-07-23T11:57:01.609190-04:00",
+    "entry_price": 196.23,
+    "entry_vix": 19.72,
+    "entry_atr": 3.5496,
+    "stop_price": 189.13,
+    "tp_price": 206.88,
+    "trail_order_id": "",
+    "trail_price": 1.775
   }
 }
