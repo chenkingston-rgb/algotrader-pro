@@ -2692,22 +2692,25 @@ def main():
                 _exp = _stop_cooldowns.get(symbol, "")[:16].replace("T", " ")
                 skip_reason = (f"stop_cooldown "
                                f"(stopped out recently — SESSION BAN until {_exp} ET, FIX-J)")
-            elif signal == "buy" and strategy_type == "intraday":
-                # FIX-J R3 v8.4: Weekly per-symbol concentration cap
-                # 252-trade audit: single-symbol concentration caused 42.9% gross-gain dependency (HOOD)
-                # and 98% loss concentration (MRVL). Cap at 3 intraday entries per symbol per week.
-                _this_week   = datetime.now(ET).strftime("%Y-W%U")
-                _weekly_cnts = live_baseline.get("weekly_symbol_counts", {})
-                _sym_week_key= f"{symbol}:{_this_week}"
-                _sym_cnt     = _weekly_cnts.get(_sym_week_key, 0)
-                if _sym_cnt >= MAX_WEEKLY_ENTRIES_PER_SYMBOL:
-                    skip_reason = (f"weekly_concentration_cap: {symbol} already traded "
-                                   f"{_sym_cnt}× this week (max {MAX_WEEKLY_ENTRIES_PER_SYMBOL}, FIX-J R3)")
-                    print(f"  [WEEKLY_CAP] {symbol}: {_sym_cnt}/{MAX_WEEKLY_ENTRIES_PER_SYMBOL} "
-                          f"weekly entries used → skipping")
             elif signal == "sell" and symbol not in positions:
                 skip_reason = "no_position_to_sell"
             elif signal == "buy":
+                # ── FIX-W v9.1: Weekly cap moved from elif chain to fix intraday execution ──
+                # BUG: `elif signal == "buy" and strategy_type == "intraday":` consumed ALL
+                # intraday buy signals. When weekly cap didn't fire (new symbols, 0 counts),
+                # the if/elif chain ended — the execution path inside `elif signal == "buy":`
+                # was NEVER reached. Result: 20 buy signals generated, 0 executed (Jul 23).
+                # Fix: Move weekly cap inside the buy catch-all so execution path always runs.
+                if strategy_type == "intraday":
+                    _this_week   = datetime.now(ET).strftime("%Y-W%U")
+                    _weekly_cnts = live_baseline.get("weekly_symbol_counts", {})
+                    _sym_week_key = f"{symbol}:{_this_week}"
+                    _sym_cnt     = _weekly_cnts.get(_sym_week_key, 0)
+                    if _sym_cnt >= MAX_WEEKLY_ENTRIES_PER_SYMBOL:
+                        skip_reason = (f"weekly_concentration_cap: {symbol} already traded "
+                                       f"{_sym_cnt}× this week (max {MAX_WEEKLY_ENTRIES_PER_SYMBOL}, FIX-J R3)")
+                        print(f"  [WEEKLY_CAP] {symbol}: {_sym_cnt}/{MAX_WEEKLY_ENTRIES_PER_SYMBOL} "
+                              f"weekly entries used → skipping")
                 # ── FIX-F v7.9 rev1: high52w DUAL-CONDITION + illiq ─────────────────
                 # FILTER 1 — high52w DUAL-CONDITION (George & Hwang 2004, corrected):
                 # Block ONLY when BOTH: (a) h52w < 0.75 AND (b) ret12w < 0%
