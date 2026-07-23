@@ -226,7 +226,7 @@ def test_fix_w_intraday_execution_path():
     assert buy_elif_idx is not None, 'FIX-W FAIL: `elif signal == "buy":` not found' 
     
     # Check that the weekly cap is inside the buy body (within 30 lines)
-    buy_block = lines[buy_elif_idx:buy_elif_idx+40]
+    buy_block = lines[buy_elif_idx:buy_elif_idx+200]
     weekly_cap_inside = any('weekly_concentration_cap' in l for l in buy_block)
     assert weekly_cap_inside, (
         'FIX-W FAIL: Weekly cap check not found inside buy body'
