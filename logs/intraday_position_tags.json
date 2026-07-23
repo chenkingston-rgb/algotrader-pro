@@ -10,5 +10,25 @@
     "tp_price": 65.37,
     "trail_order_id": "",
     "trail_price": 0.599
+  },
+  "XLB": {
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-23T11:30:43.930314-04:00",
+    "entry_price": 50.22,
+    "entry_vix": 19.8,
+    "entry_atr": 0.1721,
+    "stop_price": 49.87,
+    "tp_price": 50.73,
+    "trail_order_id": "",
+    "trail_price": 0.1,
+    "entry_indicators": {
+      "price": 50.22,
+      "bb_lower": 50.3,
+      "bb_mid": 50.64,
+      "bb_upper": 50.99,
+      "rsi8": 24.8,
+      "strev21": 0.0126
+    }
   }
 }
