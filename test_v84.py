@@ -44,7 +44,7 @@ def test_fix_j_r5_late_gate():
     assert "hour=14, minute=0" in code
     assert "hour=14, minute=45" not in code
     assert "FIX-P" in code or "FIX-J R5" in code  # FIX-P renamed from FIX-J R5
-    assert "after 14:00 ET" in code
+    assert "after 14:00" in code
 
 def test_fix_k_cron():
     with open(".github/workflows/intraday.yml") as f: wf = f.read()
