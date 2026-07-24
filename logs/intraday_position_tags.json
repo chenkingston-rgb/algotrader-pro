@@ -8,8 +8,9 @@
     "entry_atr": 1.1976,
     "stop_price": 59.38,
     "tp_price": 65.37,
-    "trail_order_id": "562ff1eb-3a4e-4a35-abf6-1d099f60a196",
-    "trail_price": 0.599
+    "trail_order_id": "1eba862c-b009-49e2-880d-9f6c72c5e89e",
+    "trail_price": 2.4,
+    "trail_widened_at": "2026-07-24T11:25:48.779143-04:00"
   },
   "CVX": {
     "strategy": "triple_ema",
@@ -33,8 +34,8 @@
     "entry_atr": 0.2327,
     "stop_price": 83.65,
     "tp_price": 84.81,
-    "trail_order_id": "e656891b-3e52-4737-ba05-d2846ffb0106",
-    "trail_price": 0.168,
+    "trail_order_id": "8a5f50c7-56ad-48ce-aa24-9ff1a14dbc70",
+    "trail_price": 0.47,
     "entry_indicators": {
       "roc": 1.478,
       "roc_prev": 1.079,
@@ -50,6 +51,7 @@
       "roc_not_extended": "True",
       "imax20": 1.0,
       "strev21": -0.0108
-    }
+    },
+    "trail_widened_at": "2026-07-24T11:25:49.455484-04:00"
   }
 }
