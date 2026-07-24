@@ -23,18 +23,6 @@
     "trail_order_id": "",
     "trail_price": 1.775
   },
-  "HIMS": {
-    "strategy": "triple_ema",
-    "strategy_type": "daily",
-    "entry_time": "2026-07-23T13:23:18.865920-04:00",
-    "entry_price": 35.5,
-    "entry_vix": 19.54,
-    "entry_atr": 2.5946,
-    "stop_price": 30.31,
-    "tp_price": 43.28,
-    "trail_order_id": "",
-    "trail_price": 1.297
-  },
   "TSM": {
     "strategy": "bollinger_bands_15m",
     "strategy_type": "intraday",
