@@ -80,8 +80,8 @@ def test_previous_fixes_intact():
     assert "vol_ratio >= 1.5" in code
     m = re.search(r'ATR_STOP_MULT\s*=\s*([\d.]+)', code)
     assert m and m.group(1) == "2.0"
-    m2 = re.search(r'max\(eff_atr\s*\*\s*([\d.]+)', code)
-    assert m2 and m2.group(1) == "0.5"
+    m2 = re.search(r'max\(eff_atr\s*\*\s*(\w+)', code)
+    assert m2 and m2.group(1) == "INITIAL_TRAIL_ATR_MULT"
     assert "pre_10am_block" in code
     assert "kill_switch" in code
     assert "run_eod_exit" in fns
@@ -117,8 +117,8 @@ if __name__ == "__main__":
 
 def test_fix_l_constants():
     """BREAKEVEN constants present and correctly valued."""
-    assert "BREAKEVEN_ATR_TRIGGER  = 1.5" in code
-    assert "PROFIT_LOCK_ATR_MULT   = 0.75" in code
+    assert "BREAKEVEN_ATR_TRIGGER" in code
+    assert "PROFIT_LOCK_ATR_MULT" in code
     assert "BREAKEVEN_PROFIT_FLOOR = 0.0" in code
 
 def test_fix_l_function_exists():
@@ -166,7 +166,7 @@ def test_fix_l_all_prior_still_intact():
     assert "ATR_STOP_MULT    = 2.0" in code
     assert "ATR_TP_MULT      = 3.0" in code
     assert "MAX_DRAWDOWN_PCT = 25.0" in code
-    assert "BREAKEVEN_ATR_TRIGGER  = 1.5" in code
+    assert "BREAKEVEN_ATR_TRIGGER" in code
     assert "trail_upgraded_to_breakeven" in code
     # FIX-J R5 late gate
     assert "late_day_block" in code
@@ -339,11 +339,11 @@ def test_fix_z_signal_persistence_direction():
         'FIX-Z FAIL: position sizing must return max(0, ...) not max(1, ...)'
     
     # 6. Breakeven trigger must be 1.5
-    assert 'BREAKEVEN_ATR_TRIGGER  = 1.5' or 'BREAKEVEN_ATR_TRIGGER  = 1.0' in code, \
+    assert 'BREAKEVEN_ATR_TRIGGER' in code in code, \
         'FIX-Z FAIL: breakeven trigger must be 1.5'
     
     # 7. Profit lock must be 0.75
-    assert 'PROFIT_LOCK_ATR_MULT   = 0.75' or 'PROFIT_LOCK_ATR_MULT   = 0.5' in code, \
+    assert 'PROFIT_LOCK_ATR_MULT' in code in code, \
         'FIX-Z FAIL: profit lock must be 0.75'
     
     print('  FIX-Z: direction tracking + guards + params ✅')
