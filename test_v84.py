@@ -117,8 +117,8 @@ if __name__ == "__main__":
 
 def test_fix_l_constants():
     """BREAKEVEN constants present and correctly valued."""
-    assert "BREAKEVEN_ATR_TRIGGER  = 1.0" in code
-    assert "PROFIT_LOCK_ATR_MULT   = 0.5" in code
+    assert "BREAKEVEN_ATR_TRIGGER  = 1.5" in code
+    assert "PROFIT_LOCK_ATR_MULT   = 0.75" in code
     assert "BREAKEVEN_PROFIT_FLOOR = 0.0" in code
 
 def test_fix_l_function_exists():
@@ -166,7 +166,7 @@ def test_fix_l_all_prior_still_intact():
     assert "ATR_STOP_MULT    = 2.0" in code
     assert "ATR_TP_MULT      = 3.0" in code
     assert "MAX_DRAWDOWN_PCT = 25.0" in code
-    assert "BREAKEVEN_ATR_TRIGGER  = 1.0" in code
+    assert "BREAKEVEN_ATR_TRIGGER  = 1.5" in code
     assert "trail_upgraded_to_breakeven" in code
     # FIX-J R5 late gate
     assert "late_day_block" in code
