@@ -196,9 +196,8 @@ def test_fix_w_intraday_execution_path():
     GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN','')
     H_GH = {'Authorization': f'Bearer {GH_TOKEN}', 'Accept': 'application/vnd.github+json'}
     REPO = 'chenkingston-rgb/algotrader-pro'
-    r = requests.get(f'https://api.github.com/repos/{REPO}/contents/scripts/run_strategies.py',
-                     headers=H_GH, timeout=15)
-    code = base64.b64decode(r.json()['content']).decode()
+    r = requests.get(f'https://raw.githubusercontent.com/{REPO}/main/scripts/run_strategies.py', timeout=15)
+    code = r.text
     
     # 1. The old `elif signal == "buy" and strategy_type == "intraday":` must NOT
     #    be in the if/elif chain (it should be a regular if inside the buy body)
@@ -269,9 +268,8 @@ def test_fix_x_oto_stop_trail_activation():
     GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN','')
     H_GH = {'Authorization': f'Bearer {GH_TOKEN}', 'Accept': 'application/vnd.github+json'}
     REPO = 'chenkingston-rgb/algotrader-pro'
-    r = requests.get(f'https://api.github.com/repos/{REPO}/contents/scripts/run_strategies.py',
-                     headers=H_GH, timeout=15)
-    code = base64.b64decode(r.json()['content']).decode()
+    r = requests.get(f'https://raw.githubusercontent.com/{REPO}/main/scripts/run_strategies.py', timeout=15)
+    code = r.text
     
     # 1. cancel_all_sell_orders_for_symbol must exist
     assert 'def cancel_all_sell_orders_for_symbol' in code, \
@@ -317,9 +315,8 @@ def test_fix_z_signal_persistence_direction():
     GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN','')
     H_GH = {'Authorization': f'Bearer {GH_TOKEN}', 'Accept': 'application/vnd.github+json'}
     REPO = 'chenkingston-rgb/algotrader-pro'
-    r = requests.get(f'https://api.github.com/repos/{REPO}/contents/scripts/run_strategies.py',
-                     headers=H_GH, timeout=15)
-    code = base64.b64decode(r.json()['content']).decode()
+    r = requests.get(f'https://raw.githubusercontent.com/{REPO}/main/scripts/run_strategies.py', timeout=15)
+    code = r.text
     
     # 1. Cache must store direction (list/tuple, not just integer)
     assert '_signal_hold_cache[_cache_key] = [signal' in code, \
