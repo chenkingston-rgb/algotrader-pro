@@ -466,5 +466,32 @@
     "entry_tp_price": 43.28,
     "entry_indicators": {},
     "logged_at": "2026-07-24T14:30:49.519539+00:00"
+  },
+  {
+    "symbol": "TSM",
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-24T10:00:50.675371-04:00",
+    "entry_price": 406.46,
+    "exit_time": "2026-07-24T14:52:53.521Z",
+    "exit_price": 403.695,
+    "qty": 7.0,
+    "pnl": -19.35,
+    "pnl_pct": -0.68,
+    "hold_minutes": 52.0,
+    "exit_reason": "signal_or_manual",
+    "entry_vix": 18.78,
+    "entry_atr": 2.7061,
+    "entry_stop_price": 401.05,
+    "entry_tp_price": 414.58,
+    "entry_indicators": {
+      "price": 406.46,
+      "bb_lower": 409.96,
+      "bb_mid": 415.06,
+      "bb_upper": 420.16,
+      "rsi8": 20.6,
+      "strev21": 0.0153
+    },
+    "logged_at": "2026-07-24T15:00:50.134701+00:00"
   }
 ]
