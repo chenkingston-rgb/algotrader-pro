@@ -12,35 +12,6 @@
     "trail_price": 2.4,
     "trail_widened_at": "2026-07-24T11:25:48.779143-04:00"
   },
-  "XLP": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-07-24T10:40:23.237002-04:00",
-    "entry_price": 84.12,
-    "entry_vix": 18.35,
-    "entry_atr": 0.2327,
-    "stop_price": 83.65,
-    "tp_price": 84.81,
-    "trail_order_id": "8a5f50c7-56ad-48ce-aa24-9ff1a14dbc70",
-    "trail_price": 0.47,
-    "entry_indicators": {
-      "roc": 1.478,
-      "roc_prev": 1.079,
-      "threshold": 0.8,
-      "ma50": 83.68,
-      "price_vs_ma50": 0.525,
-      "vol_ratio": 1.85,
-      "bar_open": 83.89,
-      "bar_move": 0.225,
-      "atr_val": 0.233,
-      "atr_ext_ok": "True",
-      "roc_max_extension": 1.8,
-      "roc_not_extended": "True",
-      "imax20": 1.0,
-      "strev21": -0.0108
-    },
-    "trail_widened_at": "2026-07-24T11:25:49.455484-04:00"
-  },
   "XLI": {
     "strategy": "triple_ema",
     "strategy_type": "daily",
