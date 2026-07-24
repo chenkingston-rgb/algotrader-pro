@@ -295,3 +295,58 @@ def test_fix_x_oto_stop_trail_activation():
     assert 'FIX-X' in code, 'FIX-X comment not found'
     
     print('  FIX-X: OTO stop cancellation + trailing stop activation ✅')
+
+
+def test_fix_z_signal_persistence_direction():
+    """FIX-Z v9.4: Signal persistence cache must track direction, not just count.
+    
+    Bug: After a sell signal, the cache forced signal='buy' on the next hold bar,
+    causing immediate whipsaw (sell then buy back). The cache only stored a count,
+    not the direction of the original signal.
+    
+    Fix: Cache stores [direction, count]. On hold, persists the ORIGINAL direction.
+    """
+    import os, requests, base64
+    for line in open('/app/.agents/.env').read().split('\n'):
+        line = line.strip()
+        if not line or line.startswith('#'): continue
+        line = line.replace('export ', '')
+        if '=' in line:
+            k, v = line.split('=', 1)
+            os.environ.setdefault(k.strip(), v.strip())
+    GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN','')
+    H_GH = {'Authorization': f'Bearer {GH_TOKEN}', 'Accept': 'application/vnd.github+json'}
+    REPO = 'chenkingston-rgb/algotrader-pro'
+    r = requests.get(f'https://api.github.com/repos/{REPO}/contents/scripts/run_strategies.py',
+                     headers=H_GH, timeout=15)
+    code = base64.b64decode(r.json()['content']).decode()
+    
+    # 1. Cache must store direction (list/tuple, not just integer)
+    assert '_signal_hold_cache[_cache_key] = [signal' in code, \
+        'FIX-Z FAIL: cache must store [direction, count], not just count'
+    
+    # 2. Persistence must use cached_dir, not force "buy"
+    assert 'signal = cached_dir' in code, \
+        'FIX-Z FAIL: persistence must use original direction'
+    
+    # 3. Old pattern (always buy) must be gone
+    assert 'signal = "buy" if _signal_hold_cache' not in code, \
+        'FIX-Z FAIL: old always-buy pattern still present'
+    
+    # 4. IndexError guards must be present
+    assert 'if len(hist) > 1' in code or 'if len(ef)>1' in code, \
+        'FIX-Z FAIL: IndexError guard not found'
+    
+    # 5. Position sizing must return 0, not max(1, ...)
+    assert 'max(0, int(min(shares_by_risk' in code, \
+        'FIX-Z FAIL: position sizing must return max(0, ...) not max(1, ...)'
+    
+    # 6. Breakeven trigger must be 1.5
+    assert 'BREAKEVEN_ATR_TRIGGER  = 1.5' in code, \
+        'FIX-Z FAIL: breakeven trigger must be 1.5'
+    
+    # 7. Profit lock must be 0.75
+    assert 'PROFIT_LOCK_ATR_MULT   = 0.75' in code, \
+        'FIX-Z FAIL: profit lock must be 0.75'
+    
+    print('  FIX-Z: direction tracking + guards + params ✅')
