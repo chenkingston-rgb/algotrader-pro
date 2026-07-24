@@ -73,7 +73,7 @@ MAX_DRAWDOWN_PCT = 25.0    # Kill switch threshold
 # guaranteeing worst-case = no loss once the price has moved in our favour.
 # Checked each 15-min cron cycle via _upgrade_trail_to_breakeven().
 BREAKEVEN_ATR_TRIGGER  = 1.0   # Price must exceed entry + 1×ATR before upgrade
-PROFIT_LOCK_ATR_MULT   = 0.5   # Trail distance after breakeven upgrade (tight — locks profit)
+PROFIT_LOCK_ATR_MULT   = 0.75  # FIX-Z v9.4: Monte Carlo optimized (was 0.5)
 INITIAL_TRAIL_ATR_MULT = 2.0   # FIX-Y v9.3: Initial trail distance (wide — lets position breathe)
 BREAKEVEN_PROFIT_FLOOR = 0.0   # Worst-case P&L once trail is upgraded (0 = break even)
 TRAIL_ACTIVATION_MIN   = 30    # FIX-M v8.6: delay trail activation 30min from entry — prevents
@@ -915,7 +915,7 @@ def atr_position_size(equity: float, price: float, atr: float,
     dollar_risk    = equity * effective_risk_pct
     shares_by_risk = dollar_risk / (ATR_STOP_MULT * atr)
     max_by_cap     = (equity * MAX_POSITION_PCT) / price
-    return max(1, int(min(shares_by_risk, max_by_cap)))
+    return max(0, int(min(shares_by_risk, max_by_cap)))  # FIX-Z: 0 if too expensive (was max(1,...))
 
 # ─────────────────────────────────────────────
 # STRATEGY SIGNAL FUNCTIONS (DataFrame-based)
@@ -924,7 +924,7 @@ def signal_rsi_macd_combo(df: pd.DataFrame, p: dict) -> tuple:
     rsi             = calc_rsi(df["close"], p["rsi_period"])
     macd, sig, hist = calc_macd(df["close"], p["macd_fast"], p["macd_slow"], p["macd_sig"])
     r, m, s, h      = rsi.iloc[-1], macd.iloc[-1], sig.iloc[-1], hist.iloc[-1]
-    prev_h          = hist.iloc[-2]
+    prev_h          = hist.iloc[-2] if len(hist) > 1 else hist.iloc[-1]  # FIX-Z: guard
     inds = {"rsi": round(r,2), "macd": round(m,4), "macd_sig": round(s,4), "macd_hist": round(h,4)}
     if r < p["rsi_os"] and h > 0 and prev_h < 0:
         return "buy", inds
@@ -948,7 +948,9 @@ def signal_triple_ema(df: pd.DataFrame, p: dict) -> tuple:
     em  = c.ewm(span=p["ema_mid"],  adjust=False).mean()
     es  = c.ewm(span=p["ema_slow"], adjust=False).mean()
     f, m, s    = ef.iloc[-1], em.iloc[-1], es.iloc[-1]
-    pf, pm, ps = ef.iloc[-2], em.iloc[-2], es.iloc[-2]
+    pf, pm, ps = (ef.iloc[-2] if len(ef)>1 else ef.iloc[-1],
+                    em.iloc[-2] if len(em)>1 else em.iloc[-1],
+                    es.iloc[-2] if len(es)>1 else es.iloc[-1])  # FIX-Z: guard
     inds = {"ema_fast": round(f,2), "ema_mid": round(m,2), "ema_slow": round(s,2)}
     if f > m > s and not (pf > pm > ps):
         return "buy", inds
@@ -960,7 +962,8 @@ def signal_ema_crossover(df: pd.DataFrame, p: dict) -> tuple:
     c    = df["close"]
     ef   = c.ewm(span=p["ema_fast"], adjust=False).mean()
     es   = c.ewm(span=p["ema_slow"], adjust=False).mean()
-    diff, prev_diff = ef.iloc[-1] - es.iloc[-1], ef.iloc[-2] - es.iloc[-2]
+    diff = ef.iloc[-1] - es.iloc[-1]
+    prev_diff = (ef.iloc[-2] - es.iloc[-2]) if len(ef) > 1 else diff  # FIX-Z: guard
     inds = {"ema_fast": round(ef.iloc[-1],2), "ema_slow": round(es.iloc[-1],2), "diff": round(diff,4)}
     if diff > 0 and prev_diff <= 0:
         return "buy", inds
@@ -1006,7 +1009,7 @@ def signal_bollinger_bands_15m(df: pd.DataFrame, p: dict) -> tuple:
     }
 
     # BUY: price below lower band (oversold vs recent range) + RSI8 < 45 (not freefall)
-    if price < l and rsi8_ok:
+    if price <= l and rsi8_ok:  # FIX-Z: <= for exact band touch
         return "buy", inds
     # SELL: price above upper band (overbought vs recent range — full mean-reversion)
     if price > u:
@@ -1017,7 +1020,8 @@ def signal_momentum_roc_15m(df: pd.DataFrame, p: dict) -> tuple:
     c   = df["close"]
     vol = df["volume"] if "volume" in df.columns else None
     roc = (c / c.shift(p["roc_period"]) - 1) * 100
-    r, prev_r = roc.iloc[-1], roc.iloc[-2]
+    r = roc.iloc[-1]
+    prev_r = roc.iloc[-2] if len(roc) > 1 else r  # FIX-Z: guard
 
     # FIX-A (v7.2): MA50 trend filter — only buy when price is above the 50-bar MA.
     # Prevents entering long positions in a downtrend (rulebook STRATEGY_RULEBOOK FIX-A).
@@ -1152,11 +1156,11 @@ def signal_rsi_mean_reversion_15m(df: pd.DataFrame, p: dict) -> tuple:
         return "hold", inds
 
     # BUY: RSI oversold + rising (bounce starting, not still falling) + above MA20
-    if rsi_val < p["rsi_oversold"] and rsi_val > rsi_prev and above_ma20:
+    if rsi_val <= p["rsi_oversold"] and rsi_val > rsi_prev and above_ma20:  # FIX-Z: <=
         return "buy", inds
 
     # SELL: RSI overbought — mean-reversion exit (no trend filter; overextension = sell)
-    if rsi_val > p["rsi_overbought"]:
+    if rsi_val >= p["rsi_overbought"]:  # FIX-Z: >=
         return "sell", inds
 
     return "hold", inds
@@ -1518,7 +1522,7 @@ def compute_position_size(entry_price: float, stop_price: float,
             return 0
         shares_by_risk = dollar_risk / per_share
         max_by_cap     = (equity * MAX_POSITION_PCT) / entry_price
-        return max(1, int(min(shares_by_risk, max_by_cap)))
+        return max(0, int(min(shares_by_risk, max_by_cap)))  # FIX-Z: 0 if too expensive
     except Exception:
         return 0
 
@@ -2717,17 +2721,20 @@ def main():
             # if the cron run happened to skip the exact cross bar.
             _cache_key = (strat_name, symbol)
             if signal in ("buy", "sell"):
-                _signal_hold_cache[_cache_key] = _SIGNAL_HOLD_BARS   # reset counter
-            elif signal == "hold" and _signal_hold_cache.get(_cache_key, 0) > 0:
-                # Previous cross is still within the hold window — keep the signal
-                signal = "buy" if _signal_hold_cache.get(_cache_key, 0) > 0 else "hold"
-                _signal_hold_cache[_cache_key] -= 1
-                if signal == "buy":
-                    print(f"  {symbol}: [PERSIST] crossover signal extended "
-                          f"({_signal_hold_cache[_cache_key]+1} bars remaining)")
+                _signal_hold_cache[_cache_key] = [signal, _SIGNAL_HOLD_BARS]   # FIX-Z: track direction
+            elif signal == "hold" and _cache_key in _signal_hold_cache:
+                cached_dir, cached_cnt = _signal_hold_cache[_cache_key]
+                if cached_cnt > 0:
+                    signal = cached_dir   # FIX-Z: persist ORIGINAL direction, not always "buy"
+                    _signal_hold_cache[_cache_key] = [cached_dir, cached_cnt - 1]
+                    print(f"  {symbol}: [PERSIST] {cached_dir} signal extended "
+                          f"({_signal_hold_cache[_cache_key][1]} bars remaining)")
+                else:
+                    del _signal_hold_cache[_cache_key]
             # Decrement even when signal was a cross (avoid double-extension)
-            if _signal_hold_cache.get(_cache_key, 0) > 0 and signal in ("buy","sell"):
-                _signal_hold_cache[_cache_key] = max(0, _signal_hold_cache[_cache_key] - 1)
+            if _cache_key in _signal_hold_cache and signal in ("buy","sell"):
+                d, c = _signal_hold_cache[_cache_key]
+                _signal_hold_cache[_cache_key] = [d, max(0, c - 1)]
             # ── end signal persistence ────────────────────────────────────────────
 
 
