@@ -52,5 +52,17 @@
     "tp_price": 192.07,
     "trail_order_id": "",
     "trail_price": 5.672
+  },
+  "XOM": {
+    "strategy": "triple_ema",
+    "strategy_type": "daily",
+    "entry_time": "2026-07-24T11:33:45.167181-04:00",
+    "entry_price": 156.71,
+    "entry_vix": 17.76,
+    "entry_atr": 3.1754,
+    "stop_price": 150.36,
+    "tp_price": 166.24,
+    "trail_order_id": "",
+    "trail_price": 6.351
   }
 }
