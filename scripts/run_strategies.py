@@ -73,7 +73,8 @@ MAX_DRAWDOWN_PCT = 25.0    # Kill switch threshold
 # guaranteeing worst-case = no loss once the price has moved in our favour.
 # Checked each 15-min cron cycle via _upgrade_trail_to_breakeven().
 BREAKEVEN_ATR_TRIGGER  = 1.0   # Price must exceed entry + 1×ATR before upgrade
-PROFIT_LOCK_ATR_MULT   = 0.5   # Trail distance after upgrade (same 0.5×ATR)
+PROFIT_LOCK_ATR_MULT   = 0.5   # Trail distance after breakeven upgrade (tight — locks profit)
+INITIAL_TRAIL_ATR_MULT = 2.0   # FIX-Y v9.3: Initial trail distance (wide — lets position breathe)
 BREAKEVEN_PROFIT_FLOOR = 0.0   # Worst-case P&L once trail is upgraded (0 = break even)
 TRAIL_ACTIVATION_MIN   = 30    # FIX-M v8.6: delay trail activation 30min from entry — prevents
                                 #             noise-stop exits in first 2 cron cycles. Static 2.0×ATR
@@ -2042,7 +2043,7 @@ def _daily_trail_audit(positions: dict, position_tags: dict) -> None:
                 entry_atr = float(tag.get("entry_atr", 1.0))
                 pos_qty   = int(float(positions.get(sym, {}).get("qty", 0)))
                 if pos_qty > 0 and entry_atr > 0:
-                    new_trail = attach_trailing_stop(sym, pos_qty, entry_atr)
+                    new_trail = attach_trailing_stop(sym, pos_qty, entry_atr * INITIAL_TRAIL_ATR_MULT)  # FIX-Y v9.3: wide trail
                     new_id    = new_trail.get("id", "")
                     if new_id:
                         tag["trail_order_id"] = new_id
@@ -2128,7 +2129,7 @@ def _upgrade_trail_to_breakeven(
                 if n_freed > 0:
                     print(f"  [FIX-X] Cancelled {n_freed} sell order(s) for {sym} to free shares for trailing stop")
                 # Attach initial trailing stop (0.5xATR)
-                init_trail_dist = max(round(entry_atr * PROFIT_LOCK_ATR_MULT, 2), 0.05)
+                init_trail_dist = max(round(entry_atr * INITIAL_TRAIL_ATR_MULT, 2), 0.05)  # FIX-Y v9.3: wide initial trail
                 init_trail = attach_trailing_stop(sym, qty, init_trail_dist)
                 init_id = init_trail.get("id", "")
                 if init_id:
@@ -2927,7 +2928,7 @@ def main():
                         # Trail distance = 1.0×ATR (tighter than entry stop, catches meaningful
                         # reversals without getting shaken out by normal noise).
                         # The static stop in the bracket is a safety net only.
-                        _trail_atr   = max(eff_atr * 0.5, price * 0.002)  # FIX-H v8.1: 0.5×ATR optimal (sweep vs 38 trades)
+                        _trail_atr   = max(eff_atr * INITIAL_TRAIL_ATR_MULT, price * 0.002)  # FIX-Y v9.3: 2.0×ATR wide trail (sim: +2.8× P&L vs 0.5×ATR)
                         # FIX-Q v8.7: Verify qty > 0 before attaching trail (race-condition guard)
                         if qty > 0:
                             _trail_order = attach_trailing_stop(symbol, qty, _trail_atr, order_id)
