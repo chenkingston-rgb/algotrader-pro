@@ -446,5 +446,25 @@
       "strev21": -0.0036
     },
     "logged_at": "2026-07-16T16:15:52.508159+00:00"
+  },
+  {
+    "symbol": "HIMS",
+    "strategy": "triple_ema",
+    "strategy_type": "daily",
+    "entry_time": "2026-07-23T13:23:18.865920-04:00",
+    "entry_price": 35.5,
+    "exit_time": "2026-07-24T14:16:05.062Z",
+    "exit_price": 30.32,
+    "qty": 8.0,
+    "pnl": -41.44,
+    "pnl_pct": -14.592,
+    "hold_minutes": 1252.8,
+    "exit_reason": "stop_loss",
+    "entry_vix": 19.54,
+    "entry_atr": 2.5946,
+    "entry_stop_price": 30.31,
+    "entry_tp_price": 43.28,
+    "entry_indicators": {},
+    "logged_at": "2026-07-24T14:30:49.519539+00:00"
   }
 ]
