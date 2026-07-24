@@ -12,19 +12,6 @@
     "trail_price": 2.4,
     "trail_widened_at": "2026-07-24T11:25:48.779143-04:00"
   },
-  "CVX": {
-    "strategy": "triple_ema",
-    "strategy_type": "daily",
-    "entry_time": "2026-07-23T11:57:01.609190-04:00",
-    "entry_price": 196.23,
-    "entry_vix": 19.72,
-    "entry_atr": 3.5496,
-    "stop_price": 189.13,
-    "tp_price": 206.88,
-    "trail_order_id": "2a7a1d16-c9c6-4291-a016-371eda190db5",
-    "trail_price": 1.775,
-    "trail_activated_at": "2026-07-24T10:42:45.366791-04:00"
-  },
   "XLP": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
