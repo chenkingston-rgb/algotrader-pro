@@ -243,3 +243,55 @@ def test_fix_w_intraday_execution_path():
     assert "FIX-W" in code, "FIX-W comment not found in code"
     
     print("  FIX-W: Weekly cap moved inside buy catch-all — intraday execution path reachable ✅")
+
+
+def test_fix_x_oto_stop_trail_activation():
+    """FIX-X v9.2: After 30-min FIX-M delay, cancel OTO static stop and attach trailing stop.
+    
+    Bug: place_order() creates an OTO bracket that reserves all shares for the
+    static stop. attach_trailing_stop() then fails with "insufficient qty available"
+    because the shares are held. Result: NO trailing stop was ever attached for
+    ANY position. The breakeven upgrade could not fire because there was nothing
+    to upgrade from.
+    
+    Fix: In _upgrade_trail_to_breakeven, when trail_order_id is empty and the
+    30-min delay has passed, cancel ALL sell orders (including OTO stop) via
+    cancel_all_sell_orders_for_symbol(), then attach a trailing stop.
+    """
+    import os, requests, base64
+    for line in open('/app/.agents/.env').read().split('\n'):
+        line = line.strip()
+        if not line or line.startswith('#'): continue
+        line = line.replace('export ', '')
+        if '=' in line:
+            k, v = line.split('=', 1)
+            os.environ.setdefault(k.strip(), v.strip())
+    GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN','')
+    H_GH = {'Authorization': f'Bearer {GH_TOKEN}', 'Accept': 'application/vnd.github+json'}
+    REPO = 'chenkingston-rgb/algotrader-pro'
+    r = requests.get(f'https://api.github.com/repos/{REPO}/contents/scripts/run_strategies.py',
+                     headers=H_GH, timeout=15)
+    code = base64.b64decode(r.json()['content']).decode()
+    
+    # 1. cancel_all_sell_orders_for_symbol must exist
+    assert 'def cancel_all_sell_orders_for_symbol' in code, \
+        'FIX-X FAIL: cancel_all_sell_orders_for_symbol not defined'
+    
+    # 2. It must cancel both stop AND trailing_stop orders
+    assert '"stop"' in code and '"trailing_stop"' in code, \
+        'FIX-X FAIL: cancel function must handle both stop types'
+    
+    # 3. _upgrade_trail_to_breakeven must call cancel_all_sell_orders_for_symbol
+    assert 'cancel_all_sell_orders_for_symbol' in code, \
+        'FIX-X FAIL: cancel function not called in engine'
+    
+    # 4. The activation logic must exist (attach trail when trail_id is empty)
+    assert 'if not trail_id:' in code, \
+        'FIX-X FAIL: trail activation logic not found'
+    assert 'attach_trailing_stop' in code, \
+        'FIX-X FAIL: attach_trailing_stop call not found'
+    
+    # 5. FIX-X comment must be present
+    assert 'FIX-X' in code, 'FIX-X comment not found'
+    
+    print('  FIX-X: OTO stop cancellation + trailing stop activation ✅')
