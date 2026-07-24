@@ -40,5 +40,17 @@
       "strev21": -0.0108
     },
     "trail_widened_at": "2026-07-24T11:25:49.455484-04:00"
+  },
+  "XLI": {
+    "strategy": "triple_ema",
+    "strategy_type": "daily",
+    "entry_time": "2026-07-24T11:33:45.167181-04:00",
+    "entry_price": 183.56,
+    "entry_vix": 17.76,
+    "entry_atr": 2.8362,
+    "stop_price": 177.89,
+    "tp_price": 192.07,
+    "trail_order_id": "",
+    "trail_price": 5.672
   }
 }
