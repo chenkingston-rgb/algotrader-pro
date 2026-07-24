@@ -34,8 +34,8 @@
   "peak_equity": 29801.07,
   "regime_label": "BULL",
   "stop_cooldowns": {},
-  "last_heartbeat": "2026-07-24T14:01:03.931874-04:00",
-  "last_heartbeat_et": "2026-07-24 14:01 ET",
+  "last_heartbeat": "2026-07-24T14:15:44.478596-04:00",
+  "last_heartbeat_et": "2026-07-24 14:15 ET",
   "engine_version": "v8.4-FIX-K",
   "weekly_symbol_counts": {
     "PANW:2026-W28": 2,
