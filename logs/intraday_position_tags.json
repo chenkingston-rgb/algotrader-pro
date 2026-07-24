@@ -24,27 +24,6 @@
     "trail_price": 1.775,
     "trail_activated_at": "2026-07-24T10:42:45.366791-04:00"
   },
-  "TSM": {
-    "strategy": "bollinger_bands_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-07-24T10:00:50.675371-04:00",
-    "entry_price": 406.46,
-    "entry_vix": 18.78,
-    "entry_atr": 2.7061,
-    "stop_price": 401.05,
-    "tp_price": 414.58,
-    "trail_order_id": "81e1486d-90ef-444d-a7ad-b582dab59cec",
-    "trail_price": 1.353,
-    "entry_indicators": {
-      "price": 406.46,
-      "bb_lower": 409.96,
-      "bb_mid": 415.06,
-      "bb_upper": 420.16,
-      "rsi8": 20.6,
-      "strev21": 0.0153
-    },
-    "trail_activated_at": "2026-07-24T10:42:46.968431-04:00"
-  },
   "XLP": {
     "strategy": "momentum_roc_15m",
     "strategy_type": "intraday",
