@@ -72,7 +72,7 @@ MAX_DRAWDOWN_PCT = 25.0    # Kill switch threshold
 # existing trailing stop and re-attach a tighter PROFIT_LOCK_ATR_MULT trail,
 # guaranteeing worst-case = no loss once the price has moved in our favour.
 # Checked each 15-min cron cycle via _upgrade_trail_to_breakeven().
-BREAKEVEN_ATR_TRIGGER  = 1.0   # Price must exceed entry + 1×ATR before upgrade
+BREAKEVEN_ATR_TRIGGER  = 1.5   # FIX-Z v9.4: Monte Carlo optimized (was 1.0)
 PROFIT_LOCK_ATR_MULT   = 0.75  # FIX-Z v9.4: Monte Carlo optimized (was 0.5)
 INITIAL_TRAIL_ATR_MULT = 2.0   # FIX-Y v9.3: Initial trail distance (wide — lets position breathe)
 BREAKEVEN_PROFIT_FLOOR = 0.0   # Worst-case P&L once trail is upgraded (0 = break even)
