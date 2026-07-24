@@ -493,5 +493,25 @@
       "strev21": 0.0153
     },
     "logged_at": "2026-07-24T15:00:50.134701+00:00"
+  },
+  {
+    "symbol": "CVX",
+    "strategy": "triple_ema",
+    "strategy_type": "daily",
+    "entry_time": "2026-07-23T11:57:01.609190-04:00",
+    "entry_price": 196.23,
+    "exit_time": "2026-07-24T15:25:47.298Z",
+    "exit_price": 195.0401,
+    "qty": 15.0,
+    "pnl": -17.85,
+    "pnl_pct": -0.606,
+    "hold_minutes": 1408.8,
+    "exit_reason": "signal_or_manual",
+    "entry_vix": 19.72,
+    "entry_atr": 3.5496,
+    "entry_stop_price": 189.13,
+    "entry_tp_price": 206.88,
+    "entry_indicators": {},
+    "logged_at": "2026-07-24T15:30:40.135820+00:00"
   }
 ]
