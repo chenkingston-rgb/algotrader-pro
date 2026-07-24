@@ -700,6 +700,34 @@ def cancel_all_trailing_stops_for_symbol(symbol: str) -> int:
     return cancelled
 
 
+def cancel_all_sell_orders_for_symbol(symbol: str) -> int:
+    """
+    FIX-X v9.2: Cancel ALL open sell orders (stop + trailing_stop) for a symbol.
+    Used to free shares held by OTO bracket stops before attaching a trailing stop.
+    Root cause: place_order() creates an OTO bracket that reserves all shares
+    for the static stop, preventing attach_trailing_stop() from creating a
+    separate trailing stop order (Alpaca error: "insufficient qty available").
+    Fix: After the FIX-M 30-min delay, cancel the OTO stop and attach a
+    trailing stop in its place.
+    """
+    r = _http_session.get(f"{ALPACA_BASE}/v2/orders",
+                     headers=alpaca_headers(),
+                     params={"status": "open", "symbols": symbol, "limit": 50},
+                     timeout=10)
+    if not r.ok:
+        return 0
+    orders = r.json() if isinstance(r.json(), list) else []
+    cancelled = 0
+    for o in orders:
+        if o.get("symbol") != symbol:
+            continue
+        if o.get("side") == "sell" and o.get("type") in ("stop", "trailing_stop"):
+            if cancel_order(o["id"]):
+                cancelled += 1
+                logging.info(f"[FIX-X] Cancelled {o.get('type')} order {o['id']} for {symbol}")
+    return cancelled
+
+
 def close_position_order(symbol: str, qty: int) -> dict:
     """Close an existing long position, cancelling any open stop/limit orders for
     the symbol first so all shares are freed up before the market close is placed."""
@@ -2088,6 +2116,35 @@ def _upgrade_trail_to_breakeven(
 
             if not current_price or qty < 1:
                 continue
+
+            # ── FIX-X v9.2: Activate trailing stop after 30-min delay ──────────
+            # Root cause: place_order() creates an OTO bracket stop that reserves
+            # all shares, preventing attach_trailing_stop() from succeeding.
+            # After the 30-min FIX-M delay, if no trailing stop is attached,
+            # cancel the OTO stop and attach a trailing stop.
+            if not trail_id:
+                # Cancel ALL sell orders (including OTO static stop) to free shares
+                n_freed = cancel_all_sell_orders_for_symbol(sym)
+                if n_freed > 0:
+                    print(f"  [FIX-X] Cancelled {n_freed} sell order(s) for {sym} to free shares for trailing stop")
+                # Attach initial trailing stop (0.5xATR)
+                init_trail_dist = max(round(entry_atr * PROFIT_LOCK_ATR_MULT, 2), 0.05)
+                init_trail = attach_trailing_stop(sym, qty, init_trail_dist)
+                init_id = init_trail.get("id", "")
+                if init_id:
+                    tag["trail_order_id"] = init_id
+                    trail_id = init_id
+                    logging.info(
+                        f"[FIX-X] {sym}: trailing stop activated after 30-min delay "
+                        f"trail=${init_trail_dist:.2f} id={init_id}"
+                    )
+                    print(f"  [FIX-X] {sym}: trailing stop ACTIVATED trail=${init_trail_dist:.2f} id={init_id}")
+                    # Persist tags immediately
+                    write_github_log(EOD_TAG_FILE, position_tags)
+                else:
+                    logging.warning(f"[FIX-X] {sym}: failed to attach trailing stop after cancelling OTO")
+                    continue  # No trail, can't upgrade — try again next cycle
+            # ── end FIX-X ────────────────────────────────────────────────────────
 
             # Has price cleared the upgrade threshold?
             upgrade_threshold = entry_price + BREAKEVEN_ATR_TRIGGER * entry_atr
