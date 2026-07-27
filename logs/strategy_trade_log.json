@@ -664,5 +664,40 @@
       "strev21": 0.0077
     },
     "logged_at": "2026-07-27T16:59:10.204600+00:00"
+  },
+  {
+    "symbol": "XLF",
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-27T10:15:36.149254-04:00",
+    "entry_price": 57.0,
+    "exit_time": "2026-07-27T17:03:53.595Z",
+    "exit_price": 56.645,
+    "qty": 51.0,
+    "pnl": -18.1,
+    "pnl_pct": -0.623,
+    "hold_minutes": 168.3,
+    "exit_reason": "signal_or_manual",
+    "entry_vix": 18.79,
+    "entry_atr": 0.1746,
+    "entry_stop_price": 56.65,
+    "entry_tp_price": 57.52,
+    "entry_indicators": {
+      "roc": 1.496,
+      "roc_prev": 1.317,
+      "threshold": 0.8,
+      "ma50": 56.01,
+      "price_vs_ma50": 1.754,
+      "vol_ratio": 1.62,
+      "bar_open": 56.91,
+      "bar_move": 0.08,
+      "atr_val": 0.175,
+      "atr_ext_ok": "True",
+      "roc_max_extension": 1.8,
+      "roc_not_extended": "True",
+      "imax20": 0.895,
+      "strev21": -0.0112
+    },
+    "logged_at": "2026-07-27T17:15:33.614703+00:00"
   }
 ]
