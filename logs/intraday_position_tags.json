@@ -151,5 +151,33 @@
       "imax20": 0.947,
       "strev21": -0.0073
     }
+  },
+  "AAPL": {
+    "strategy": "momentum_roc_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-27T10:15:36.149254-04:00",
+    "entry_price": 336.64,
+    "entry_vix": 18.79,
+    "entry_atr": 1.2643,
+    "stop_price": 334.11,
+    "tp_price": 340.43,
+    "trail_order_id": "",
+    "trail_price": 2.529,
+    "entry_indicators": {
+      "roc": 1.238,
+      "roc_prev": 0.835,
+      "threshold": 0.8,
+      "ma50": 328.72,
+      "price_vs_ma50": 2.409,
+      "vol_ratio": 1.69,
+      "bar_open": 335.71,
+      "bar_move": 0.925,
+      "atr_val": 1.264,
+      "atr_ext_ok": "True",
+      "roc_max_extension": 1.8,
+      "roc_not_extended": "True",
+      "imax20": 0.895,
+      "strev21": -0.0092
+    }
   }
 }
