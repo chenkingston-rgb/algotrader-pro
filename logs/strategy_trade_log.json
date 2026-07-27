@@ -610,5 +610,59 @@
       "strev21": -0.0092
     },
     "logged_at": "2026-07-27T15:30:47.587063+00:00"
+  },
+  {
+    "symbol": "QQQ",
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-27T10:45:34.710005-04:00",
+    "entry_price": 676.32,
+    "exit_time": "2026-07-27T16:50:14.469Z",
+    "exit_price": 679.8501,
+    "qty": 4.0,
+    "pnl": 14.12,
+    "pnl_pct": 0.522,
+    "hold_minutes": 124.7,
+    "exit_reason": "signal_or_manual",
+    "entry_vix": 19.4,
+    "entry_atr": 3.0311,
+    "entry_stop_price": 670.26,
+    "entry_tp_price": 685.41,
+    "entry_indicators": {
+      "price": 676.32,
+      "bb_lower": 677.67,
+      "bb_mid": 686.15,
+      "bb_upper": 694.63,
+      "rsi8": 21.7,
+      "strev21": 0.0195
+    },
+    "logged_at": "2026-07-27T16:59:10.148975+00:00"
+  },
+  {
+    "symbol": "XLU",
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-27T11:00:53.498445-04:00",
+    "entry_price": 46.0,
+    "exit_time": "2026-07-27T16:50:13.982Z",
+    "exit_price": 45.7433,
+    "qty": 64.0,
+    "pnl": -16.43,
+    "pnl_pct": -0.558,
+    "hold_minutes": 109.3,
+    "exit_reason": "signal_or_manual",
+    "entry_vix": 19.75,
+    "entry_atr": 0.1334,
+    "entry_stop_price": 45.73,
+    "entry_tp_price": 46.4,
+    "entry_indicators": {
+      "price": 45.99,
+      "bb_lower": 46.02,
+      "bb_mid": 46.18,
+      "bb_upper": 46.34,
+      "rsi8": 34.6,
+      "strev21": 0.0077
+    },
+    "logged_at": "2026-07-27T16:59:10.204600+00:00"
   }
 ]
