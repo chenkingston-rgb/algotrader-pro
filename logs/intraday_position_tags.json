@@ -136,7 +136,7 @@
     "entry_atr": 0.1334,
     "stop_price": 45.73,
     "tp_price": 46.4,
-    "trail_order_id": "",
+    "trail_order_id": "466edb07-bc53-48bd-97b5-5cdcebd3b490",
     "trail_price": 0.267,
     "entry_indicators": {
       "price": 45.99,
