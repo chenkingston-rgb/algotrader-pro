@@ -60,6 +60,7 @@ jobs:
           ALPACA_PAPER_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
           ALPACA_LIVE_KEY:     ${{ secrets.ALPACA_LIVE_KEY }}
           ALPACA_LIVE_SECRET:  ${{ secrets.ALPACA_LIVE_SECRET }}
+          ALPACA_IS_PAPER:     "false"
           GITHUB_TOKEN:        ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY:   ${{ github.repository }}
           TRADING_MODE:        ${{ github.event.inputs.mode || 'live' }}
