@@ -45,7 +45,7 @@
     "entry_atr": 0.2455,
     "stop_price": 58.56,
     "tp_price": 59.79,
-    "trail_order_id": "",
+    "trail_order_id": "f0fc1b84-7fc5-4df1-9449-9d231ecffc88",
     "trail_price": 0.491,
     "entry_indicators": {
       "price": 59.05,
@@ -54,7 +54,8 @@
       "bb_upper": 60.01,
       "rsi8": 20.4,
       "strev21": 0.012
-    }
+    },
+    "trail_widened_at": "2026-07-27T10:31:37.923721-04:00"
   },
   "XLU": {
     "strategy": "bollinger_bands_15m",
@@ -65,7 +66,7 @@
     "entry_atr": 0.1049,
     "stop_price": 45.82,
     "tp_price": 46.34,
-    "trail_order_id": "",
+    "trail_order_id": "8d374b7e-cabd-4ce6-a1ff-c5659c897040",
     "trail_price": 0.21,
     "entry_indicators": {
       "price": 46.03,
@@ -74,7 +75,8 @@
       "bb_upper": 46.4,
       "rsi8": 29.4,
       "strev21": 0.0088
-    }
+    },
+    "trail_widened_at": "2026-07-27T10:31:37.923711-04:00"
   },
   "XLK": {
     "strategy": "bollinger_bands_15m",
@@ -85,7 +87,7 @@
     "entry_atr": 0.9993,
     "stop_price": 172.51,
     "tp_price": 177.51,
-    "trail_order_id": "",
+    "trail_order_id": "ed7e9365-ffba-4daf-80bf-f85a0b0ef2ce",
     "trail_price": 1.999,
     "entry_indicators": {
       "price": 174.51,
@@ -94,7 +96,8 @@
       "bb_upper": 179.02,
       "rsi8": 28.1,
       "strev21": 0.0174
-    }
+    },
+    "trail_widened_at": "2026-07-27T10:31:37.923702-04:00"
   },
   "XLF": {
     "strategy": "momentum_roc_15m",
@@ -105,7 +108,7 @@
     "entry_atr": 0.1746,
     "stop_price": 56.65,
     "tp_price": 57.52,
-    "trail_order_id": "",
+    "trail_order_id": "d6468dec-c3e5-4b67-b5ad-f1b13b745266",
     "trail_price": 0.349,
     "entry_indicators": {
       "roc": 1.496,
@@ -122,7 +125,8 @@
       "roc_not_extended": "True",
       "imax20": 0.895,
       "strev21": -0.0112
-    }
+    },
+    "trail_widened_at": "2026-07-27T10:31:37.923692-04:00"
   },
   "XLP": {
     "strategy": "momentum_roc_15m",
@@ -133,7 +137,7 @@
     "entry_atr": 0.2205,
     "stop_price": 84.43,
     "tp_price": 85.53,
-    "trail_order_id": "",
+    "trail_order_id": "f434eab9-5785-429f-85e9-5924b04b7f76",
     "trail_price": 0.441,
     "entry_indicators": {
       "roc": 1.084,
@@ -150,7 +154,8 @@
       "roc_not_extended": "True",
       "imax20": 0.947,
       "strev21": -0.0073
-    }
+    },
+    "trail_widened_at": "2026-07-27T10:31:37.923679-04:00"
   },
   "AAPL": {
     "strategy": "momentum_roc_15m",
@@ -161,7 +166,7 @@
     "entry_atr": 1.2643,
     "stop_price": 334.11,
     "tp_price": 340.43,
-    "trail_order_id": "",
+    "trail_order_id": "c36d6c90-7ac8-4529-8b62-114668cda7f3",
     "trail_price": 2.529,
     "entry_indicators": {
       "roc": 1.238,
@@ -178,6 +183,7 @@
       "roc_not_extended": "True",
       "imax20": 0.895,
       "strev21": -0.0092
-    }
+    },
+    "trail_widened_at": "2026-07-27T10:31:37.923605-04:00"
   }
 }
