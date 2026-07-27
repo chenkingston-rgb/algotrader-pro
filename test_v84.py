@@ -55,7 +55,7 @@ def test_fix_k_concurrency():
     assert "concurrency:" in wf, f"Concurrency guard missing in {wf_name}"
     assert "cancel-in-progress: false" in wf
     with open(".github/workflows/daily.yml") as f: wf2 = f.read()
-    assert "concurrency:" in wf, f"Concurrency guard missing in {wf_name}"2
+    assert "concurrency:" in wf, f"Concurrency guard missing in {wf_name}"
 
 def test_fix_k_failure_alert():
     with open(".github/workflows/intraday.yml") as f: wf = f.read()
