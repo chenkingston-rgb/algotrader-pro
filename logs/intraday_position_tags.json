@@ -116,7 +116,7 @@
     "entry_atr": 3.0311,
     "stop_price": 670.26,
     "tp_price": 685.41,
-    "trail_order_id": "8c7fe824-45fc-4657-916f-9e30ca9619df",
+    "trail_order_id": "c21fa5eb-70e6-4f39-859e-6f2ab0df3754",
     "trail_price": 6.062,
     "entry_indicators": {
       "price": 676.32,
@@ -125,7 +125,11 @@
       "bb_upper": 694.63,
       "rsi8": 21.7,
       "strev21": 0.0195
-    }
+    },
+    "trail_upgraded_to_breakeven": true,
+    "trail_upgrade_price": 681.81,
+    "trail_upgrade_atr": 3.0311,
+    "trail_upgrade_floor": 679.54
   },
   "XLU": {
     "strategy": "bollinger_bands_15m",
