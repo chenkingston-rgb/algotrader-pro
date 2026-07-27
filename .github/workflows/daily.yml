@@ -1,17 +1,14 @@
-name: AlgoTrader — Daily Strategies (v3 — live trading)
-# V3: Switched to live trading mode.
-# ALPACA_IS_PAPER=false hardcoded. TRADING_MODE defaults to live.
+name: AlgoTrader — Daily Strategies (v4 — concurrency guard)
+# V4: Added concurrency guard (P0 from Claude audit) + failure notification
 
 on:
   schedule:
-    # Run hourly 10:05 AM–3:35 PM ET (Mon–Fri). 5-min offset avoids exact-hour congestion.
-    # ET = UTC-4 (EDT summer) / UTC-5 (EST winter). Times below are EDT (UTC-4).
-    - cron: '5 14 * * 1-5'   # 10:05 AM ET
-    - cron: '5 15 * * 1-5'   # 11:05 AM ET
-    - cron: '5 16 * * 1-5'   # 12:05 PM ET
-    - cron: '5 17 * * 1-5'   #  1:05 PM ET
-    - cron: '5 18 * * 1-5'   #  2:05 PM ET
-    - cron: '5 19 * * 1-5'   #  3:05 PM ET
+    - cron: '5 14 * * 1-5'
+    - cron: '5 15 * * 1-5'
+    - cron: '5 16 * * 1-5'
+    - cron: '5 17 * * 1-5'
+    - cron: '5 18 * * 1-5'
+    - cron: '5 19 * * 1-5'
   workflow_dispatch:
     inputs:
       mode:
@@ -19,12 +16,16 @@ on:
         required: true
         default: 'live'
 
+concurrency:
+  group: daily-trading
+  cancel-in-progress: false
+
 jobs:
   run-daily-strategies:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     permissions:
-      contents: write   # needed to commit log files back to repo
+      contents: write
 
     steps:
       - name: Checkout repo
@@ -44,7 +45,7 @@ jobs:
           if now.weekday() >= 5:
               open("market_open.txt","w").write("false")
               print("Weekend — skipping"); sys.exit(0)
-          open_t  = now.replace(hour=10, minute=0,  second=0, microsecond=0)
+          open_t  = now.replace(hour=10, minute=0, second=0, microsecond=0)
           close_t = now.replace(hour=15, minute=45, second=0, microsecond=0)
           ok = open_t <= now <= close_t
           open("market_open.txt","w").write("true" if ok else "false")
@@ -59,10 +60,24 @@ jobs:
           ALPACA_PAPER_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
           ALPACA_LIVE_KEY:     ${{ secrets.ALPACA_LIVE_KEY }}
           ALPACA_LIVE_SECRET:  ${{ secrets.ALPACA_LIVE_SECRET }}
-          ALPACA_IS_PAPER:     "false"
-          BASE44_APP_ID:       69f60c0cd56ea2902b494394
-          TRADING_MODE:        ${{ github.event.inputs.mode || 'live' }}
-          STRATEGY_MODE:       daily
           GITHUB_TOKEN:        ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY:   ${{ github.repository }}
+          TRADING_MODE:        ${{ github.event.inputs.mode || 'live' }}
+          STRATEGY_MODE:       daily
         run: python3 scripts/run_strategies.py
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          {
+            echo "## AlgoTrader run FAILED"
+            echo "Workflow: ${{ github.workflow }}  Run: ${{ github.run_id }}"
+            echo "Time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$SLACK_WEBHOOK_URL" ]; then
+            curl -fsS -X POST -H 'Content-type: application/json' \
+              --data "{\"text\":\"AlgoTrader ${{ github.workflow }} FAILED — run ${{ github.run_id }}\"}" \
+              "$SLACK_WEBHOOK_URL"
+          fi
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
