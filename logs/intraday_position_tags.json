@@ -137,7 +137,7 @@
     "entry_atr": 0.2205,
     "stop_price": 84.43,
     "tp_price": 85.53,
-    "trail_order_id": "f434eab9-5785-429f-85e9-5924b04b7f76",
+    "trail_order_id": "37fc7aca-14c1-4fcb-893a-ba206765a58a",
     "trail_price": 0.441,
     "entry_indicators": {
       "roc": 1.084,
@@ -155,7 +155,11 @@
       "imax20": 0.947,
       "strev21": -0.0073
     },
-    "trail_widened_at": "2026-07-27T10:31:37.923679-04:00"
+    "trail_widened_at": "2026-07-27T10:31:37.923679-04:00",
+    "trail_upgraded_to_breakeven": true,
+    "trail_upgrade_price": 85.59,
+    "trail_upgrade_atr": 0.2205,
+    "trail_upgrade_floor": 85.42
   },
   "AAPL": {
     "strategy": "momentum_roc_15m",
