@@ -55,7 +55,7 @@ def test_fix_k_concurrency():
     assert "concurrency:" in wf, "Concurrency guard missing in workflow"
     assert "cancel-in-progress: false" in wf
     with open(".github/workflows/daily.yml") as f: wf2 = f.read()
-    assert "concurrency:" in wf, "Concurrency guard missing in workflow"
+    assert "concurrency:" in wf2, "Concurrency guard missing in workflow"
 
 def test_fix_k_failure_alert():
     with open(".github/workflows/intraday.yml") as f: wf = f.read()
@@ -186,7 +186,19 @@ def test_fix_w_intraday_execution_path():
     Fix: Move weekly cap check inside the buy catch-all (`elif signal == "buy":`).
     """
     import os, requests, base64
-    for line in open('/app/.agents/.env').read().split('\n'):
+    # CI-compatible env loading (Claude audit fix)
+GH_TOKEN = os.environ.get('GITHUB_TOKEN') or os.environ.get('GITHUB_ACCESS_TOKEN', '')
+if not GH_TOKEN:
+    _env_path = '/app/.agents/.env'
+    if os.path.exists(_env_path):
+        for line in open(_env_path).read().split('\n'):
+            line = line.strip()
+            if not line or line.startswith('#'): continue
+            line = line.replace('export ', '')
+            if '=' in line:
+                k, v = line.split('=', 1)
+                os.environ.setdefault(k.strip(), v.strip())
+        GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN', '')
         line = line.strip()
         if not line or line.startswith('#'): continue
         line = line.replace('export ', '')
@@ -258,7 +270,19 @@ def test_fix_x_oto_stop_trail_activation():
     cancel_all_sell_orders_for_symbol(), then attach a trailing stop.
     """
     import os, requests, base64
-    for line in open('/app/.agents/.env').read().split('\n'):
+    # CI-compatible env loading (Claude audit fix)
+GH_TOKEN = os.environ.get('GITHUB_TOKEN') or os.environ.get('GITHUB_ACCESS_TOKEN', '')
+if not GH_TOKEN:
+    _env_path = '/app/.agents/.env'
+    if os.path.exists(_env_path):
+        for line in open(_env_path).read().split('\n'):
+            line = line.strip()
+            if not line or line.startswith('#'): continue
+            line = line.replace('export ', '')
+            if '=' in line:
+                k, v = line.split('=', 1)
+                os.environ.setdefault(k.strip(), v.strip())
+        GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN', '')
         line = line.strip()
         if not line or line.startswith('#'): continue
         line = line.replace('export ', '')
@@ -305,7 +329,19 @@ def test_fix_z_signal_persistence_direction():
     Fix: Cache stores [direction, count]. On hold, persists the ORIGINAL direction.
     """
     import os, requests, base64
-    for line in open('/app/.agents/.env').read().split('\n'):
+    # CI-compatible env loading (Claude audit fix)
+GH_TOKEN = os.environ.get('GITHUB_TOKEN') or os.environ.get('GITHUB_ACCESS_TOKEN', '')
+if not GH_TOKEN:
+    _env_path = '/app/.agents/.env'
+    if os.path.exists(_env_path):
+        for line in open(_env_path).read().split('\n'):
+            line = line.strip()
+            if not line or line.startswith('#'): continue
+            line = line.replace('export ', '')
+            if '=' in line:
+                k, v = line.split('=', 1)
+                os.environ.setdefault(k.strip(), v.strip())
+        GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN', '')
         line = line.strip()
         if not line or line.startswith('#'): continue
         line = line.replace('export ', '')
