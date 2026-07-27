@@ -52,10 +52,10 @@ def test_fix_k_cron():
 
 def test_fix_k_concurrency():
     with open(".github/workflows/intraday.yml") as f: wf = f.read()
-    assert "concurrency:" in wf, f"Concurrency guard missing in {wf_name}"
+    assert "concurrency:" in wf, "Concurrency guard missing in workflow"
     assert "cancel-in-progress: false" in wf
     with open(".github/workflows/daily.yml") as f: wf2 = f.read()
-    assert "concurrency:" in wf, f"Concurrency guard missing in {wf_name}"
+    assert "concurrency:" in wf, "Concurrency guard missing in workflow"
 
 def test_fix_k_failure_alert():
     with open(".github/workflows/intraday.yml") as f: wf = f.read()
