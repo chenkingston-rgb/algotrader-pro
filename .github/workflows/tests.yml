@@ -1,0 +1,11 @@
+name: Tests
+on: [push, pull_request]
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install --quiet pytest requests pandas numpy python-dateutil pytz
+      - run: python3 -m pytest test_v84.py -v
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
