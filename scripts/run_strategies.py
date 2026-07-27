@@ -2151,13 +2151,13 @@ def _upgrade_trail_to_breakeven(
                     write_github_log(EOD_TAG_FILE, position_tags)
                 else:
                     logging.warning(f"[FIX-X] {sym}: failed to attach trailing stop after cancelling OTO")
-    tag["trail_attach_failures"] = tag.get("trail_attach_failures", 0) + 1
-    n_fail = tag["trail_attach_failures"]
-    logging.warning(f"[FIX-X] {sym}: attach failed (attempt {n_fail})")
-    if n_fail >= 3:
-        logging.critical(f"[FIX-X] {sym}: trailing stop attach failed {n_fail}x — needs manual attention")
-    write_github_log(EOD_TAG_FILE, position_tags)
-    continue
+                    tag["trail_attach_failures"] = tag.get("trail_attach_failures", 0) + 1
+                    n_fail = tag["trail_attach_failures"]
+                    logging.warning(f"[FIX-X] {sym}: attach failed (attempt {n_fail})")
+                    if n_fail >= 3:
+                        logging.critical(f"[FIX-X] {sym}: trailing stop attach failed {n_fail}x — needs manual attention")
+                    write_github_log(EOD_TAG_FILE, position_tags)
+                    continue
             # ── end FIX-X ────────────────────────────────────────────────────────
 
             # Has price cleared the upgrade threshold?
