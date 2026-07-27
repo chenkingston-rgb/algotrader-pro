@@ -34,8 +34,8 @@
   "peak_equity": 29801.07,
   "regime_label": "BULL",
   "stop_cooldowns": {},
-  "last_heartbeat": "2026-07-27T10:01:28.700820-04:00",
-  "last_heartbeat_et": "2026-07-27 10:01 ET",
+  "last_heartbeat": "2026-07-27T10:15:54.693866-04:00",
+  "last_heartbeat_et": "2026-07-27 10:15 ET",
   "engine_version": "v8.4-FIX-K",
   "weekly_symbol_counts": {
     "PANW:2026-W28": 2,
@@ -51,6 +51,10 @@
     "XLI:2026-W29": 1,
     "XOM:2026-W29": 1,
     "XLE:2026-W30": 1,
-    "XLU:2026-W30": 1
+    "XLU:2026-W30": 1,
+    "XLK:2026-W30": 1,
+    "XLF:2026-W30": 1,
+    "XLP:2026-W30": 1,
+    "AAPL:2026-W30": 1
   }
 }
