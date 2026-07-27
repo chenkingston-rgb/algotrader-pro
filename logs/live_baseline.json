@@ -34,8 +34,8 @@
   "peak_equity": 29801.07,
   "regime_label": "BULL",
   "stop_cooldowns": {},
-  "last_heartbeat": "2026-07-27T11:46:06.509500-04:00",
-  "last_heartbeat_et": "2026-07-27 11:46 ET",
+  "last_heartbeat": "2026-07-27T12:01:19.755351-04:00",
+  "last_heartbeat_et": "2026-07-27 12:01 ET",
   "engine_version": "v8.4-FIX-K",
   "weekly_symbol_counts": {
     "PANW:2026-W28": 2,
@@ -57,5 +57,7 @@
     "XLP:2026-W30": 1,
     "AAPL:2026-W30": 1,
     "QQQ:2026-W30": 1
-  }
+  },
+  "day_open_date": "2026-07-27",
+  "day_open_equity": 29452.65
 }
