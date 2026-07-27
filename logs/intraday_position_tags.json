@@ -57,27 +57,6 @@
     },
     "trail_widened_at": "2026-07-27T10:31:37.923721-04:00"
   },
-  "XLU": {
-    "strategy": "bollinger_bands_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-07-27T10:01:00.833610-04:00",
-    "entry_price": 46.03,
-    "entry_vix": 18.2,
-    "entry_atr": 0.1049,
-    "stop_price": 45.82,
-    "tp_price": 46.34,
-    "trail_order_id": "8d374b7e-cabd-4ce6-a1ff-c5659c897040",
-    "trail_price": 0.21,
-    "entry_indicators": {
-      "price": 46.03,
-      "bb_lower": 46.06,
-      "bb_mid": 46.23,
-      "bb_upper": 46.4,
-      "rsi8": 29.4,
-      "strev21": 0.0088
-    },
-    "trail_widened_at": "2026-07-27T10:31:37.923711-04:00"
-  },
   "XLK": {
     "strategy": "bollinger_bands_15m",
     "strategy_type": "intraday",
@@ -127,39 +106,6 @@
       "strev21": -0.0112
     },
     "trail_widened_at": "2026-07-27T10:31:37.923692-04:00"
-  },
-  "XLP": {
-    "strategy": "momentum_roc_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-07-27T10:15:36.149254-04:00",
-    "entry_price": 84.87,
-    "entry_vix": 18.79,
-    "entry_atr": 0.2205,
-    "stop_price": 84.43,
-    "tp_price": 85.53,
-    "trail_order_id": "37fc7aca-14c1-4fcb-893a-ba206765a58a",
-    "trail_price": 0.441,
-    "entry_indicators": {
-      "roc": 1.084,
-      "roc_prev": 0.918,
-      "threshold": 0.8,
-      "ma50": 83.65,
-      "price_vs_ma50": 1.453,
-      "vol_ratio": 1.5,
-      "bar_open": 84.71,
-      "bar_move": 0.16,
-      "atr_val": 0.22,
-      "atr_ext_ok": "True",
-      "roc_max_extension": 1.8,
-      "roc_not_extended": "True",
-      "imax20": 0.947,
-      "strev21": -0.0073
-    },
-    "trail_widened_at": "2026-07-27T10:31:37.923679-04:00",
-    "trail_upgraded_to_breakeven": true,
-    "trail_upgrade_price": 85.59,
-    "trail_upgrade_atr": 0.2205,
-    "trail_upgrade_floor": 85.42
   },
   "AAPL": {
     "strategy": "momentum_roc_15m",
