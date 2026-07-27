@@ -189,5 +189,25 @@
       "strev21": -0.0092
     },
     "trail_widened_at": "2026-07-27T10:31:37.923605-04:00"
+  },
+  "QQQ": {
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-27T10:45:34.710005-04:00",
+    "entry_price": 676.32,
+    "entry_vix": 19.4,
+    "entry_atr": 3.0311,
+    "stop_price": 670.26,
+    "tp_price": 685.41,
+    "trail_order_id": "",
+    "trail_price": 6.062,
+    "entry_indicators": {
+      "price": 676.32,
+      "bb_lower": 677.67,
+      "bb_mid": 686.15,
+      "bb_upper": 694.63,
+      "rsi8": 21.7,
+      "strev21": 0.0195
+    }
   }
 }
