@@ -187,25 +187,18 @@ def test_fix_w_intraday_execution_path():
     """
     import os, requests, base64
     # CI-compatible env loading (Claude audit fix)
-GH_TOKEN = os.environ.get('GITHUB_TOKEN') or os.environ.get('GITHUB_ACCESS_TOKEN', '')
-if not GH_TOKEN:
-    _env_path = '/app/.agents/.env'
-    if os.path.exists(_env_path):
-        for line in open(_env_path).read().split('\n'):
-            line = line.strip()
-            if not line or line.startswith('#'): continue
-            line = line.replace('export ', '')
-            if '=' in line:
-                k, v = line.split('=', 1)
-                os.environ.setdefault(k.strip(), v.strip())
+    GH_TOKEN = os.environ.get('GITHUB_TOKEN') or os.environ.get('GITHUB_ACCESS_TOKEN', '')
+    if not GH_TOKEN:
+        _env_path = '/app/.agents/.env'
+        if os.path.exists(_env_path):
+            for line in open(_env_path).read().split('\n'):
+                line = line.strip()
+                if not line or line.startswith('#'): continue
+                line = line.replace('export ', '')
+                if '=' in line:
+                    k, v = line.split('=', 1)
+                    os.environ.setdefault(k.strip(), v.strip())
         GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN', '')
-        line = line.strip()
-        if not line or line.startswith('#'): continue
-        line = line.replace('export ', '')
-        if '=' in line:
-            k, v = line.split('=', 1)
-            os.environ.setdefault(k.strip(), v.strip())
-    GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN','')
     H_GH = {'Authorization': f'Bearer {GH_TOKEN}', 'Accept': 'application/vnd.github+json'}
     REPO = 'chenkingston-rgb/algotrader-pro'
     r = requests.get(f'https://raw.githubusercontent.com/{REPO}/main/scripts/run_strategies.py', timeout=15)
@@ -271,25 +264,18 @@ def test_fix_x_oto_stop_trail_activation():
     """
     import os, requests, base64
     # CI-compatible env loading (Claude audit fix)
-GH_TOKEN = os.environ.get('GITHUB_TOKEN') or os.environ.get('GITHUB_ACCESS_TOKEN', '')
-if not GH_TOKEN:
-    _env_path = '/app/.agents/.env'
-    if os.path.exists(_env_path):
-        for line in open(_env_path).read().split('\n'):
-            line = line.strip()
-            if not line or line.startswith('#'): continue
-            line = line.replace('export ', '')
-            if '=' in line:
-                k, v = line.split('=', 1)
-                os.environ.setdefault(k.strip(), v.strip())
+    GH_TOKEN = os.environ.get('GITHUB_TOKEN') or os.environ.get('GITHUB_ACCESS_TOKEN', '')
+    if not GH_TOKEN:
+        _env_path = '/app/.agents/.env'
+        if os.path.exists(_env_path):
+            for line in open(_env_path).read().split('\n'):
+                line = line.strip()
+                if not line or line.startswith('#'): continue
+                line = line.replace('export ', '')
+                if '=' in line:
+                    k, v = line.split('=', 1)
+                    os.environ.setdefault(k.strip(), v.strip())
         GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN', '')
-        line = line.strip()
-        if not line or line.startswith('#'): continue
-        line = line.replace('export ', '')
-        if '=' in line:
-            k, v = line.split('=', 1)
-            os.environ.setdefault(k.strip(), v.strip())
-    GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN','')
     H_GH = {'Authorization': f'Bearer {GH_TOKEN}', 'Accept': 'application/vnd.github+json'}
     REPO = 'chenkingston-rgb/algotrader-pro'
     r = requests.get(f'https://raw.githubusercontent.com/{REPO}/main/scripts/run_strategies.py', timeout=15)
@@ -330,25 +316,18 @@ def test_fix_z_signal_persistence_direction():
     """
     import os, requests, base64
     # CI-compatible env loading (Claude audit fix)
-GH_TOKEN = os.environ.get('GITHUB_TOKEN') or os.environ.get('GITHUB_ACCESS_TOKEN', '')
-if not GH_TOKEN:
-    _env_path = '/app/.agents/.env'
-    if os.path.exists(_env_path):
-        for line in open(_env_path).read().split('\n'):
-            line = line.strip()
-            if not line or line.startswith('#'): continue
-            line = line.replace('export ', '')
-            if '=' in line:
-                k, v = line.split('=', 1)
-                os.environ.setdefault(k.strip(), v.strip())
+    GH_TOKEN = os.environ.get('GITHUB_TOKEN') or os.environ.get('GITHUB_ACCESS_TOKEN', '')
+    if not GH_TOKEN:
+        _env_path = '/app/.agents/.env'
+        if os.path.exists(_env_path):
+            for line in open(_env_path).read().split('\n'):
+                line = line.strip()
+                if not line or line.startswith('#'): continue
+                line = line.replace('export ', '')
+                if '=' in line:
+                    k, v = line.split('=', 1)
+                    os.environ.setdefault(k.strip(), v.strip())
         GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN', '')
-        line = line.strip()
-        if not line or line.startswith('#'): continue
-        line = line.replace('export ', '')
-        if '=' in line:
-            k, v = line.split('=', 1)
-            os.environ.setdefault(k.strip(), v.strip())
-    GH_TOKEN = os.environ.get('GITHUB_ACCESS_TOKEN','')
     H_GH = {'Authorization': f'Bearer {GH_TOKEN}', 'Accept': 'application/vnd.github+json'}
     REPO = 'chenkingston-rgb/algotrader-pro'
     r = requests.get(f'https://raw.githubusercontent.com/{REPO}/main/scripts/run_strategies.py', timeout=15)
