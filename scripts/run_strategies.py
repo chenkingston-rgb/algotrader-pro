@@ -604,7 +604,7 @@ def get_positions() -> dict:
     return {p["symbol"]: p for p in r.json()}
 
 def place_order(symbol: str, qty: int, side: str,
-                stop_price: float, take_profit: float) -> dict:
+                stop_price: float) -> dict:
     """
     FIX-H v8.1: Submit a market buy with a static protective stop only.
     The take_profit bracket is removed — trailing stop is attached separately
@@ -1737,10 +1737,10 @@ def _run_streaming_strategy(
         stop_price = price - (ATR_STOP_MULT * eff_atr)
         tp_price   = price + (tp_mult * eff_atr)
         try:
-            place_order(symbol, qty, "buy", stop_price, tp_price)
+            place_order(symbol, qty, "buy", stop_price)
             logging.info(
                 f"[{strategy_name}] ✓ BUY {qty}×{symbol} @ {price:.2f} | "
-                f"stop={stop_price:.2f} tp={tp_price:.2f} tp_mult={tp_mult:.1f} | "
+                f"stop={stop_price:.2f} tp_mult={tp_mult:.1f} | "
                 f"regime={shared['regime_label']} rsi2_mult={shared['rsi2_mult']:.2f}"
             )
             _account_cache["last_updated"] = 0.0   # force refresh after trade
@@ -2646,15 +2646,53 @@ def main():
     else:
         peak_equity  = equity  # paper mode: no trailing watermark
     drawdown_pct = ((peak_equity - equity) / peak_equity * 100) if peak_equity > 0 else 0.0
+    # Daily loss limit (Claude audit): track opening equity per day
+    _today_str = run_start.strftime("%Y-%m-%d")
+    if not IS_PAPER and live_baseline is not None:
+        if live_baseline.get("day_open_date") != _today_str:
+            live_baseline["day_open_date"]   = _today_str
+            live_baseline["day_open_equity"] = equity
+        day_open_equity = float(live_baseline.get("day_open_equity", equity))
+    else:
+        day_open_equity = equity
+    daily_loss_pct = ((day_open_equity - equity) / day_open_equity * 100) if day_open_equity > 0 else 0.0
+
+    # Time-boxed kill switch disable (Claude audit): no permanent bypass
+    _disable_until_str = os.getenv("DISABLE_KILL_SWITCH_UNTIL", "")
+    _kill_switch_disabled = False
+    if _disable_until_str:
+        try:
+            _disable_until = datetime.fromisoformat(_disable_until_str)
+            _kill_switch_disabled = datetime.now(timezone.utc) < _disable_until
+            if _kill_switch_disabled:
+                logging.critical(f"[KILL_SWITCH] Manually DISABLED until {_disable_until_str}")
+        except Exception:
+            _kill_switch_disabled = False
+
     _kill_switch_active = (
-        os.getenv("DISABLE_KILL_SWITCH", "false").lower() != "true"
-        and drawdown_pct >= MAX_DRAWDOWN_PCT
+        not _kill_switch_disabled
+        and (drawdown_pct >= MAX_DRAWDOWN_PCT or daily_loss_pct >= MAX_DAILY_LOSS_PCT)
     )
     if _kill_switch_active:
-        print(f"[KILL_SWITCH] ⚠️  Drawdown {drawdown_pct:.2f}% >= {MAX_DRAWDOWN_PCT}% threshold. "
+        print(f"[KILL_SWITCH] Drawdown {drawdown_pct:.2f}% | Daily loss {daily_loss_pct:.2f}%. "
               f"Peak=${peak_equity:,.2f}  Current=${equity:,.2f}. "
-              f"All new BUY entries blocked. Existing stops remain active.")
+              f"All new BUY entries blocked.")
+        # Liquidate all positions on first trigger (Claude audit P1)
+        if not IS_PAPER and not live_baseline.get("kill_switch_liquidated", False):
+            logging.critical(f"[KILL_SWITCH] Liquidating all {len(positions)} open position(s)")
+            for _sym in list(positions.keys()):
+                try:
+                    close_position_order(_sym, int(float(positions[_sym].get("qty", 0))))
+                    logging.critical(f"[KILL_SWITCH] Liquidated {_sym}")
+                except Exception as _ke:
+                    logging.error(f"[KILL_SWITCH] Failed to liquidate {_sym}: {_ke}")
+            live_baseline["kill_switch_liquidated"] = True
+            write_github_log(LIVE_BASELINE_FILE, live_baseline)
+    elif not _kill_switch_active and live_baseline.get("kill_switch_liquidated", False):
+        live_baseline["kill_switch_liquidated"] = False
     else:
+        print(f"[DRAWDOWN] {drawdown_pct:.2f}% from peak ${peak_equity:,.2f} "
+              f"| Daily: {daily_loss_pct:.2f}% (thresholds: {MAX_DRAWDOWN_PCT}% / {MAX_DAILY_LOSS_PCT}%)")
         print(f"[DRAWDOWN] {drawdown_pct:.2f}% from peak ${peak_equity:,.2f} "
               f"(threshold: {MAX_DRAWDOWN_PCT}%)")
 
@@ -2918,6 +2956,13 @@ def main():
                 elif not skip_reason and _ma20_bear_block:
                     skip_reason = (f"ma20_bear_block "
                                    f"(SPY {spy_close_now:.2f} < MA20 {spy_ma20_now:.2f})")
+                elif not skip_reason and len(positions) >= MAX_CONCURRENT_POSITIONS:
+                    skip_reason = f"max_concurrent_positions ({len(positions)}/{MAX_CONCURRENT_POSITIONS})"
+                elif not skip_reason:
+                    _cur_exposure = sum(float(p.get("market_value") or (float(p.get("qty",0)) * float(p.get("current_price",0)))) for p in positions.values())
+                    _exp_pct = (_cur_exposure / equity * 100) if equity else 0
+                    if _exp_pct >= MAX_TOTAL_EXPOSURE_PCT * 100:
+                        skip_reason = f"max_total_exposure ({_exp_pct:.1f}% >= {MAX_TOTAL_EXPOSURE_PCT*100:.0f}%)"
                 elif not skip_reason:
                     # ── RULE 5: wide-open size reduction (FIX-E v7.8) ──────────────
                     # On wide-open days, 10:00–10:30 window, INTRADAY only: 50% size.
@@ -2949,7 +2994,7 @@ def main():
                 if not skip_reason:
                     eff_atr    = max(atr, price * 0.002)
                     stop_price = price - ATR_STOP_MULT * eff_atr
-                    tp_price   = price + ATR_TP_MULT   * eff_atr
+                    # tp_price removed (Claude audit): dead code, never submitted to broker
                     try:
                         order    = place_order(symbol, qty, "buy", stop_price, tp_price)
                         order_id = order.get("id"); executed = True
