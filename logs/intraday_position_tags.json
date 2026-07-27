@@ -35,47 +35,5 @@
     "tp_price": 166.24,
     "trail_order_id": "558aa932-7f92-4f2b-83ac-749be4388bc7",
     "trail_price": 6.351
-  },
-  "XLE": {
-    "strategy": "bollinger_bands_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-07-27T10:01:00.833610-04:00",
-    "entry_price": 59.05,
-    "entry_vix": 18.2,
-    "entry_atr": 0.2455,
-    "stop_price": 58.56,
-    "tp_price": 59.79,
-    "trail_order_id": "f0fc1b84-7fc5-4df1-9449-9d231ecffc88",
-    "trail_price": 0.491,
-    "entry_indicators": {
-      "price": 59.05,
-      "bb_lower": 59.2,
-      "bb_mid": 59.61,
-      "bb_upper": 60.01,
-      "rsi8": 20.4,
-      "strev21": 0.012
-    },
-    "trail_widened_at": "2026-07-27T10:31:37.923721-04:00"
-  },
-  "XLK": {
-    "strategy": "bollinger_bands_15m",
-    "strategy_type": "intraday",
-    "entry_time": "2026-07-27T10:15:36.149254-04:00",
-    "entry_price": 174.51,
-    "entry_vix": 18.79,
-    "entry_atr": 0.9993,
-    "stop_price": 172.51,
-    "tp_price": 177.51,
-    "trail_order_id": "ed7e9365-ffba-4daf-80bf-f85a0b0ef2ce",
-    "trail_price": 1.999,
-    "entry_indicators": {
-      "price": 174.51,
-      "bb_lower": 174.56,
-      "bb_mid": 176.79,
-      "bb_upper": 179.02,
-      "rsi8": 28.1,
-      "strev21": 0.0174
-    },
-    "trail_widened_at": "2026-07-27T10:31:37.923702-04:00"
   }
 }
