@@ -65,6 +65,9 @@ MAX_POSITION_PCT = 0.10    # Cap any single position at 10% of portfolio
 ATR_STOP_MULT    = 2.0   # FIX-H v8.1: raised from 1.5 — safety net for trailing stop     # Stop loss = entry ± 1.5 × ATR
 ATR_TP_MULT      = 3.0     # Take profit default (overridden by VWAP tp_mult)
 MAX_DRAWDOWN_PCT = 25.0    # Kill switch threshold
+MAX_DAILY_LOSS_PCT = 4.0       # NEW (Claude audit): halt + flatten if equity drops 4% from day open
+MAX_CONCURRENT_POSITIONS = 6  # NEW (Claude audit): cap concurrent open positions
+MAX_TOTAL_EXPOSURE_PCT = 0.60  # NEW (Claude audit): cap aggregate deployed capital at 60%
 
 # ── FIX-L v8.5: Breakeven trail upgrade ──────────────────────────────────────
 # Two-phase stop system: Phase 1 = static 2.0×ATR stop for entry breathing room.
@@ -2148,7 +2151,13 @@ def _upgrade_trail_to_breakeven(
                     write_github_log(EOD_TAG_FILE, position_tags)
                 else:
                     logging.warning(f"[FIX-X] {sym}: failed to attach trailing stop after cancelling OTO")
-                    continue  # No trail, can't upgrade — try again next cycle
+    tag["trail_attach_failures"] = tag.get("trail_attach_failures", 0) + 1
+    n_fail = tag["trail_attach_failures"]
+    logging.warning(f"[FIX-X] {sym}: attach failed (attempt {n_fail})")
+    if n_fail >= 3:
+        logging.critical(f"[FIX-X] {sym}: trailing stop attach failed {n_fail}x — needs manual attention")
+    write_github_log(EOD_TAG_FILE, position_tags)
+    continue
             # ── end FIX-X ────────────────────────────────────────────────────────
 
             # Has price cleared the upgrade threshold?
@@ -2584,6 +2593,21 @@ def main():
     # Fresh positions on every loop start (Rule: never stale)
     positions     = get_positions()
     position_tags = load_json_from_github(EOD_TAG_FILE)
+
+    # NEW (Claude audit): Reconcile live positions against local tags
+    _orphans = [s for s in positions if s not in position_tags]
+    if _orphans:
+        logging.critical(f"[RECONCILE] Untagged live position(s): {_orphans} — likely crash between order and tag write")
+        for _sym in _orphans:
+            _p = positions[_sym]
+            position_tags[_sym] = {
+                "strategy": "unknown_recovered", "strategy_type": "intraday",
+                "entry_time": datetime.now(ET).isoformat(),
+                "entry_price": float(_p.get("avg_entry_price", 0)),
+                "entry_atr": max(float(_p.get("avg_entry_price", 0)) * 0.01, 0.05),
+                "trail_order_id": "",
+            }
+        write_github_log(EOD_TAG_FILE, position_tags)
     position_tags = reconcile_closed_trades(positions, position_tags)  # v7.5: log stop/tp fills before this run's logic
 
     # Live mode: deposit detection
@@ -3260,4 +3284,14 @@ def write_dashboard_payload(run_log: dict, live_baseline: dict, position_details
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as _fatal_e:
+        import traceback
+        logging.critical(f"[FATAL] Uncaught exception in main(): {_fatal_e}")
+        traceback.print_exc()
+        try:
+            write_github_log("logs/last_crash.json", {"error": str(_fatal_e), "traceback": traceback.format_exc(), "timestamp": datetime.now(timezone.utc).isoformat()})
+        except Exception:
+            pass
+        sys.exit(1)
