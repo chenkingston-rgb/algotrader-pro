@@ -75,5 +75,25 @@
       "rsi8": 29.4,
       "strev21": 0.0088
     }
+  },
+  "XLK": {
+    "strategy": "bollinger_bands_15m",
+    "strategy_type": "intraday",
+    "entry_time": "2026-07-27T10:15:36.149254-04:00",
+    "entry_price": 174.51,
+    "entry_vix": 18.79,
+    "entry_atr": 0.9993,
+    "stop_price": 172.51,
+    "tp_price": 177.51,
+    "trail_order_id": "",
+    "trail_price": 1.999,
+    "entry_indicators": {
+      "price": 174.51,
+      "bb_lower": 174.56,
+      "bb_mid": 176.79,
+      "bb_upper": 179.02,
+      "rsi8": 28.1,
+      "strev21": 0.0174
+    }
   }
 }
