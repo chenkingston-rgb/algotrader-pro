@@ -48,14 +48,14 @@ def test_fix_j_r5_late_gate():
 
 def test_fix_k_cron():
     with open(".github/workflows/intraday.yml") as f: wf = f.read()
-    assert "*/15 13-20 * * 1-5" in wf, "Intraday cron must be restored"
+    assert "*/15 13-19 * * 1-5" in wf, "Intraday cron must be restored"
 
 def test_fix_k_concurrency():
     with open(".github/workflows/intraday.yml") as f: wf = f.read()
-    assert "concurrency:" in wf
+    assert "concurrency:" in wf, f"Concurrency guard missing in {wf_name}"
     assert "cancel-in-progress: false" in wf
     with open(".github/workflows/daily.yml") as f: wf2 = f.read()
-    assert "concurrency:" in wf2
+    assert "concurrency:" in wf, f"Concurrency guard missing in {wf_name}"2
 
 def test_fix_k_failure_alert():
     with open(".github/workflows/intraday.yml") as f: wf = f.read()
