@@ -29,3 +29,13 @@ The live system is now **`algotrader-pro-v2`** (private) running
 This repository's Actions secrets previously held **live** Alpaca trading
 credentials. Those keys must be rotated in the Alpaca dashboard; the current
 system uses separately-issued keys stored only in `algotrader-pro-v2`.
+
+## Front-end removed (2 Aug 2026)
+
+The v9 dashboard front-end (`src/`, `functions/getLivePortfolio.ts`, `base44/`)
+has also been removed. It read `logs/` from this retired engine and called an
+Alpaca sync targeting the dead system, so every number it displayed was stale
+or wrong. The live dashboard is the Base44 app reading the **V3** entities fed
+by `algotrader-pro-v2`.
+
+Everything here remains recoverable from tag `v9.1-final-sunset`.
