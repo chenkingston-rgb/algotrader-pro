@@ -1,34 +1,31 @@
-# AlgoTrader Pro — Dashboard
+# AlgoTrader Pro — RETIRED
 
-Live algorithmic trading dashboard. Built with React + Vite + Base44.
+This repository held the **v9.x multi-strategy intraday engine**. It is
+**retired and no longer trades**. Do not re-enable anything here.
 
-## Architecture
+- Final code state: tag **`v9.1-final-sunset`** (commit `09d9a99`, 27 Jul 2026).
+- All trading workflows and engine scripts have been removed from `main`.
+- Historical logs are preserved in `logs_v9_archive/` for the record.
 
-- **Engine** → runs on Render (Python, every 15 min intraday / 9:15am daily)
-- **Backend function** → `functions/getLivePortfolio.ts` (Base44, deployed)
-- **Dashboard** → this repo (`src/pages/Dashboard.jsx`), synced to Base44 app
+## Why it was retired
 
-## Dashboard Features (v8.0)
+An independent audit (Parts One–Seven) found the system had no statistically
+defensible edge and a negative live record: **101 trades between 29 Jun and
+21 Jul 2026 — 49% win rate, profit factor 0.79, −$715 realized**, a loss
+substantially explained by transaction costs alone at ~1,600 round-trips/year.
+Further audit rounds catalogued critical execution defects including a
+naked-stop window, an inverted RSI(2) position-size multiplier, a
+dimensionally miscalibrated volatility target, and a force-close that raised
+a TypeError on every invocation.
 
-- **Realized Today** — locked-in closed trade P&L only (green/red)
-- **Unrealized** — floating open position MTM (amber)  
-- **Bear Block** — SPY vs MA20 regime indicator (OFF 🟢 / ON 🔴)
-- **VIX** — volatility score with size label: `full` / `half` / `blocked`
-- Overnight carry banner + CARRY badge on positions entered before today
-- Kill switch banner when drawdown ≥ 25% of peak equity
+## What replaced it
 
-## VIX Thresholds (matches engine logic)
+The live system is now **`algotrader-pro-v2`** (private) running
+**v3.0-ensemble**: a three-sleeve, monthly-rebalanced ETF portfolio
+(momentum rotation / trend-gated QQQ / static 60-40), ~12 trades a year.
 
-| VIX | Label | Position Size |
-|-----|-------|---------------|
-| < 20 | `full` 🟢 | 100% |
-| 20–27 | `half` 🟡 | ~50% |
-| ≥ 28 | `blocked` 🔴 | 0% (no new entries) |
+## Security note
 
-## Bear Block (MA20 Regime)
-
-Engine halts new buy signals when `SPY_close < MA20(20d)`.  
-Dashboard shows live gap % so you know how far above/below the threshold is.
-
----
-_Last updated by agent: 2026-06-18_
+This repository's Actions secrets previously held **live** Alpaca trading
+credentials. Those keys must be rotated in the Alpaca dashboard; the current
+system uses separately-issued keys stored only in `algotrader-pro-v2`.
