@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>AlgoTrader v3 — Monitor</title>
+<!--
+  Single self-contained file. No build step, no framework, no dependencies.
+  Reads v3_dashboard.json from this folder, which the private trading repo
+  (algotrader-pro-v2) republishes on every run.
+
+  Panel order is deliberate: is the machine ALIVE -> is it IN SYNC with the
+  broker -> what does it hold -> how is it doing. This strategy trades about
+  twelve times a year, so daily performance is noise and comes last.
+-->
+<style>
+  :root{--bg:#0b1120;--card:#111a2e;--line:#1e293b;--txt:#e2e8f0;--mut:#94a3b8;
+        --dim:#64748b;--good:#34d399;--bad:#f87171;--warn:#fbbf24}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+       font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:1200px;margin:0 auto;padding:24px}
+  h1{font-size:22px;margin:0}
+  .sub{color:var(--mut);font-size:13px;margin-top:2px}
+  .row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .grid{display:grid;gap:12px;margin-bottom:16px}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.g4,.g3,.g2{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.g4,.g3,.g2{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .lbl{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+  .val{font-size:19px;font-weight:700;margin-top:3px}
+  .val.big{font-size:25px}
+  .sm{font-size:11px;color:var(--dim);margin-top:3px}
+  .good{color:var(--good)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+  .pill{padding:3px 11px;border-radius:999px;font-size:12px;font-weight:700}
+  .pill.ok{background:#065f46;color:#d1fae5}.pill.no{background:#7f1d1d;color:#fee2e2}
+  .banner{border-radius:10px;padding:14px;margin-bottom:16px;border:1px solid}
+  .banner.bad{background:#450a0a;border-color:#991b1b;color:#fecaca}
+  .banner.ok{background:#052e2b;border-color:#047857;color:#a7f3d0}
+  .banner ul{margin:8px 0 0;padding-left:20px}.banner li{margin:3px 0}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;color:var(--mut);font-weight:600;font-size:11px;
+     text-transform:uppercase;padding:6px 8px;border-bottom:1px solid var(--line)}
+  td{padding:8px;border-bottom:1px solid #16203a}
+  tr.out{background:#3f2d0a}
+  .ttl{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--txt)}
+  .sleeve{border:1px solid var(--line);border-radius:8px;padding:11px}
+  .hold{display:flex;justify-content:space-between;font-size:13px;padding:1px 0}
+  .foot{color:var(--dim);font-size:11px;line-height:1.6;margin-top:18px}
+  code{background:#0f172a;padding:1px 5px;border-radius:4px;font-size:11px}
+  a{color:#60a5fa}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"><p style="color:#94a3b8">Loading…</p></div>
+
+<script>
+const DATA_URL = "v3_dashboard.json";
+const REFRESH_MS = 900000; // 15 min; the engine writes at most once a day
+
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money = (n) => n==null ? "—" : Number(n).toLocaleString("en-US",{style:"currency",currency:"USD"});
+const pct = (n,d=2) => n==null ? "—" : Number(n).toFixed(d)+"%";
+const tone = (c) => c==="good" ? "good" : c==="bad" ? "bad" : "";
+
+function stat(label, value, opts={}) {
+  return `<div class="card"><div class="lbl">${esc(label)}</div>
+    <div class="val ${opts.big?"big":""} ${tone(opts.tone)}">${esc(value)}</div>
+    ${opts.sub?`<div class="sm">${esc(opts.sub)}</div>`:""}</div>`;
+}
+
+async function load() {
+  const app = document.getElementById("app");
+  let d;
+  try {
+    const r = await fetch(DATA_URL + "?t=" + Date.now(), {cache:"no-store"});
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    d = await r.json();
+  } catch (e) {
+    app.innerHTML = `<div class="banner bad"><b>Cannot reach the data file</b>
+      <div class="sm" style="color:inherit;margin-top:6px">${esc(e.message)} —
+      the trading system publishes <code>${DATA_URL}</code> on every run.
+      If this persists, the job may have stopped.</div></div>`;
+    return;
+  }
+
+  const acct=d.account||{}, risk=d.risk||{}, reg=d.regime||{},
+        sch=d.schedule||{}, hp=d.health||{}, pos=d.positions||[], sl=d.sleeves||{};
+
+  // Staleness computed here, from the payload's own timestamp. A dashboard
+  // that looks fine while the engine is dead is worse than no dashboard.
+  const ageH = d.generated_at ? (Date.now()-new Date(d.generated_at))/3600000 : null;
+  const stale = ageH!=null && ageH>26;
+
+  const target = new Set(pos.filter(p=>(p.target_weight_pct||0)>0).map(p=>p.symbol));
+  const held   = new Set(pos.filter(p=>(p.market_value||0)>0).map(p=>p.symbol));
+  const inSync = [...target].every(s=>held.has(s)) && [...held].every(s=>target.has(s));
+
+  const alerts=[];
+  if(stale) alerts.push(`Payload is ${ageH.toFixed(1)} hours old — the trading job may have stopped.`);
+  if(hp.last_run_ok===false) alerts.push("Last run FAILED — check GitHub Actions.");
+  if(!inSync) alerts.push(`Book differs from target — holding [${[...held].join(", ")||"nothing"}], target [${[...target].join(", ")}].`);
+  if(risk.kill_switch_active) alerts.push("KILL SWITCH ACTIVE — all trading halted, human review required.");
+  if(risk.halt_active) alerts.push("DRAWDOWN HALT ACTIVE — awaiting acknowledgement.");
+  if(hp.alert_webhook_configured===false) alerts.push("ALERT_WEBHOOK not configured — failures reach the log only.");
+  if(hp.heartbeat_configured===false) alerts.push("HEARTBEAT_URL not configured — no dead-man's switch.");
+  const healthy = !stale && hp.last_run_ok!==false && inSync && !risk.kill_switch_active;
+
+  let h = `<div class="row" style="justify-content:space-between;margin-bottom:18px">
+    <div><h1>AlgoTrader v3 — Ensemble</h1>
+      <div class="sub">${esc(d.strategy_version||"")} · payload ${esc((d.generated_at||"").slice(0,19).replace("T"," "))} UTC
+      · refreshed ${new Date().toLocaleTimeString()}</div></div>
+    <span class="pill ${healthy?"ok":"no"}">${healthy?"HEALTHY":"NEEDS ATTENTION"}</span></div>`;
+
+  h += alerts.length
+    ? `<div class="banner bad"><b>${alerts.length} item${alerts.length>1?"s":""} need attention</b>
+       <ul>${alerts.map(a=>`<li>${esc(a)}</li>`).join("")}</ul></div>`
+    : `<div class="banner ok"><b>All systems normal</b></div>`;
+
+  // 1 — alive
+  h += `<div class="grid g4">
+    ${stat("Last run", hp.last_run_ok===false?"FAILED":"success", {tone:hp.last_run_ok===false?"bad":"good"})}
+    ${stat("Data age", ageH==null?"—":ageH.toFixed(1)+"h", {tone:stale?"bad":"good", sub:stale?"job may have stopped":"fresh"})}
+    ${stat("Broker in sync", inSync?"yes":"no", {tone:inSync?"good":"bad"})}
+    ${stat("Next rebalance", sch.next_rebalance||"—", {sub:sch.days_to_next_rebalance!=null?sch.days_to_next_rebalance+" days":""})}
+  </div>`;
+
+  // 2 — money
+  h += `<div class="grid g4">
+    ${stat("Equity", money(acct.equity), {big:true})}
+    ${stat("Cash", money(acct.cash), {sub:pct(acct.invested_pct)+" invested"})}
+    ${stat("P&L vs deposits", money(d.total_pnl), {big:true, tone:(d.total_pnl||0)>=0?"good":"bad",
+       sub:d.deposit_basis?("basis "+money(d.deposit_basis)):""})}
+    ${stat("Positions held", acct.position_count ?? held.size)}
+  </div>`;
+
+  // 3 — regime + drawdown
+  h += `<div class="grid g2">
+    <div class="card"><div class="ttl">Regime gate</div>
+      <div class="row"><span class="pill ${reg.on?"ok":"no"}">${esc(reg.label||"UNKNOWN")}</span>
+        <span class="sm" style="margin:0">SPY ${esc(reg.close??"—")} vs 200-day avg ${esc(reg.ma??"—")}</span></div>
+      <div class="val big" style="margin-top:8px">${pct(reg.gap_pct)}</div>
+      <div class="sm">How far the S&amp;P 500 sits above its 200-day average. If this turns
+        negative, two of the three sleeves move fully to cash at the next month-end.
+        ${reg.gap_pct!=null&&reg.gap_pct<2?'<span class="warn"><b> ⚠ Close to flipping.</b></span>':""}</div>
+      ${reg.as_of?`<div class="sm">as of ${esc(reg.as_of)}</div>`:""}</div>
+
+    <div class="card"><div class="ttl">Drawdown</div>
+      <div class="val big">${pct(risk.drawdown_pct)}</div>
+      <div class="sm">Peak ${money(risk.peak_equity)} · ${pct(risk.distance_to_halt_pct)} of room
+        before the ${pct(risk.halt_threshold_pct,0)} halt · kill at ${pct(risk.kill_threshold_pct,0)}</div>
+      <div class="sm">Backtested worst case was ${pct(risk.backtested_max_drawdown_pct,1)} — a drawdown
+        near that size is expected behaviour, not a malfunction.</div></div>
+  </div>`;
+
+  // 4 — sleeves
+  h += `<div class="card" style="margin-bottom:16px"><div class="ttl">Three sleeves, one third of capital each</div>
+    <div class="grid g3" style="margin:0">
+    ${Object.entries(sl).map(([n,s])=>`<div class="sleeve">
+      <div style="font-weight:700;text-transform:capitalize">${esc(n.replace(/_/g," "))}</div>
+      <div class="sm" style="margin-bottom:6px">${pct(s.capital_share_pct,1)} of capital</div>
+      ${Object.entries(s.holdings||{}).map(([sym,w])=>
+        `<div class="hold"><span>${esc(sym)}</span><span style="color:#94a3b8">${pct(w,1)}</span></div>`).join("")}
+    </div>`).join("")}</div></div>`;
+
+  // 5 — positions
+  h += `<div class="card" style="margin-bottom:16px"><div class="ttl">Positions — target vs actual</div>
+    <div style="overflow-x:auto"><table><thead><tr>
+      <th>Symbol</th><th>Qty</th><th>Value</th><th>Target</th><th>Actual</th><th>Drift</th><th>Sleeves</th>
+    </tr></thead><tbody>
+    ${[...pos].sort((a,b)=>(b.target_weight_pct||0)-(a.target_weight_pct||0)).map(p=>{
+      const dr=p.drift_pct||0, sv=Object.keys(p.sleeves||{}).join(", ")||"—";
+      return `<tr class="${p.in_target?"":"out"}">
+        <td><b>${esc(p.symbol)}</b>${p.in_target?"":' <span class="warn" style="font-size:11px">to be sold</span>'}</td>
+        <td>${esc(p.qty??0)}</td><td>${money(p.market_value)}</td>
+        <td>${pct(p.target_weight_pct)}</td><td>${pct(p.actual_weight_pct)}</td>
+        <td class="${Math.abs(dr)>2?"bad":""}"><b>${pct(dr)}</b></td>
+        <td style="font-size:11px;color:#64748b">${esc(sv)}</td></tr>`;
+    }).join("")}
+    </tbody></table></div></div>`;
+
+  h += `<div class="foot">${esc((d.expectations||{}).note||
+    "This strategy rebalances twelve times a year. Most days the correct status is 'nothing to do'.")}
+    <br><br>Source: <code>${DATA_URL}</code> in this repository, republished by the private
+    trading repo on every run. Static page — no server, no database, no paid service.
+    <a href="https://github.com/chenkingston-rgb/algotrader-pro-v2/actions" target="_blank" rel="noreferrer">GitHub Actions ↗</a>
+  </div>`;
+
+  app.innerHTML = h;
+}
+
+load();
+setInterval(load, REFRESH_MS);
+</script>
+</body>
+</html>
