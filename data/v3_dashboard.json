@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-08-03T12:59:40.194557+00:00",
+  "generated_at": "2026-08-03T13:05:07.562508+00:00",
   "account": {
     "equity": 29366.45,
     "cash": 26448.22,
@@ -160,7 +160,7 @@
     "last_rebalance_date": "2026-08-03"
   },
   "health": {
-    "last_run_utc": "2026-08-03T12:59:40.194557+00:00",
+    "last_run_utc": "2026-08-03T13:05:07.562508+00:00",
     "last_run_ok": true,
     "last_run_detail": "Rebalanced [v3.0-ensemble]: regime=ON | A(rotation)={'VLUE': 0.175, 'MTUM': 0.175, 'IWM': 0.175, 'QQQ': 0.175, 'BIL': 0.3} | B(gated_qqq)={'QQQ': 1.0} | C(balanced)={'SPY': 0.6, 'AGG': 0.4} | combined={'AGG': 0.1333, 'BIL': 0.1, 'IWM': 0.0583, 'MTUM': 0.0583, 'QQQ': 0.3917, 'SPY': 0.2, 'VLUE': 0.0583} | sells=['BAC'] buys=['VLUE', 'MTUM', 'IWM', 'QQQ', 'BIL', 'SPY', 'AGG']",
     "price_source": "alpaca-iex",
