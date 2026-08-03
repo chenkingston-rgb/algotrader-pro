@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-08-03T13:07:13.936211+00:00",
+  "generated_at": "2026-08-03T14:54:35.029662+00:00",
   "account": {
-    "equity": 29385.72,
-    "cash": 26448.22,
-    "invested": 2937.5,
-    "invested_pct": 10.0,
-    "position_count": 1
+    "equity": 29412.61,
+    "cash": 342.99,
+    "invested": 29069.62,
+    "invested_pct": 98.83,
+    "position_count": 8
   },
   "risk": {
-    "peak_equity": 29801.07,
-    "drawdown_pct": -1.48,
+    "peak_equity": 29412.61,
+    "drawdown_pct": 0.0,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 25.52,
-    "distance_to_kill_pct": 28.52,
+    "distance_to_halt_pct": 27.0,
+    "distance_to_kill_pct": 30.0,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
@@ -58,82 +58,12 @@
   },
   "positions": [
     {
-      "symbol": "BAC",
-      "qty": 47.0,
-      "market_value": 2937.5,
-      "actual_weight_pct": 10.0,
-      "target_weight_pct": 0.0,
-      "drift_pct": 10.0,
-      "sleeves": {},
-      "in_target": false
-    },
-    {
-      "symbol": "VLUE",
-      "qty": 0,
-      "market_value": 0.0,
-      "actual_weight_pct": 0.0,
-      "target_weight_pct": 5.83,
-      "drift_pct": -5.83,
-      "sleeves": {
-        "rotation": 0.058333
-      },
-      "in_target": true
-    },
-    {
-      "symbol": "XLE",
-      "qty": 0,
-      "market_value": 0.0,
-      "actual_weight_pct": 0.0,
-      "target_weight_pct": 5.83,
-      "drift_pct": -5.83,
-      "sleeves": {
-        "rotation": 0.058333
-      },
-      "in_target": true
-    },
-    {
-      "symbol": "XLK",
-      "qty": 0,
-      "market_value": 0.0,
-      "actual_weight_pct": 0.0,
-      "target_weight_pct": 5.83,
-      "drift_pct": -5.83,
-      "sleeves": {
-        "rotation": 0.058333
-      },
-      "in_target": true
-    },
-    {
-      "symbol": "IWM",
-      "qty": 0,
-      "market_value": 0.0,
-      "actual_weight_pct": 0.0,
-      "target_weight_pct": 5.83,
-      "drift_pct": -5.83,
-      "sleeves": {
-        "rotation": 0.058333
-      },
-      "in_target": true
-    },
-    {
-      "symbol": "BIL",
-      "qty": 0,
-      "market_value": 0.0,
-      "actual_weight_pct": 0.0,
-      "target_weight_pct": 10.0,
-      "drift_pct": -10.0,
-      "sleeves": {
-        "rotation": 0.1
-      },
-      "in_target": true
-    },
-    {
       "symbol": "QQQ",
-      "qty": 0,
-      "market_value": 0.0,
-      "actual_weight_pct": 0.0,
+      "qty": 13.0,
+      "market_value": 9064.25,
+      "actual_weight_pct": 30.82,
       "target_weight_pct": 33.33,
-      "drift_pct": -33.33,
+      "drift_pct": -2.52,
       "sleeves": {
         "gated_qqq": 0.333333
       },
@@ -141,25 +71,85 @@
     },
     {
       "symbol": "SPY",
-      "qty": 0,
-      "market_value": 0.0,
-      "actual_weight_pct": 0.0,
+      "qty": 7.0,
+      "market_value": 5285.0,
+      "actual_weight_pct": 17.97,
       "target_weight_pct": 20.0,
-      "drift_pct": -20.0,
+      "drift_pct": -2.03,
       "sleeves": {
         "balanced": 0.2
       },
       "in_target": true
     },
     {
+      "symbol": "BIL",
+      "qty": 51.0,
+      "market_value": 4662.68,
+      "actual_weight_pct": 15.85,
+      "target_weight_pct": 10.0,
+      "drift_pct": 5.85,
+      "sleeves": {
+        "rotation": 0.1
+      },
+      "in_target": true
+    },
+    {
       "symbol": "AGG",
-      "qty": 0,
-      "market_value": 0.0,
-      "actual_weight_pct": 0.0,
+      "qty": 39.0,
+      "market_value": 3793.05,
+      "actual_weight_pct": 12.9,
       "target_weight_pct": 13.33,
-      "drift_pct": -13.33,
+      "drift_pct": -0.44,
       "sleeves": {
         "balanced": 0.133333
+      },
+      "in_target": true
+    },
+    {
+      "symbol": "XLE",
+      "qty": 28.0,
+      "market_value": 1650.76,
+      "actual_weight_pct": 5.61,
+      "target_weight_pct": 5.83,
+      "drift_pct": -0.22,
+      "sleeves": {
+        "rotation": 0.058333
+      },
+      "in_target": true
+    },
+    {
+      "symbol": "XLK",
+      "qty": 9.0,
+      "market_value": 1596.06,
+      "actual_weight_pct": 5.43,
+      "target_weight_pct": 5.83,
+      "drift_pct": -0.41,
+      "sleeves": {
+        "rotation": 0.058333
+      },
+      "in_target": true
+    },
+    {
+      "symbol": "VLUE",
+      "qty": 8.0,
+      "market_value": 1538.88,
+      "actual_weight_pct": 5.23,
+      "target_weight_pct": 5.83,
+      "drift_pct": -0.6,
+      "sleeves": {
+        "rotation": 0.058333
+      },
+      "in_target": true
+    },
+    {
+      "symbol": "IWM",
+      "qty": 5.0,
+      "market_value": 1478.95,
+      "actual_weight_pct": 5.03,
+      "target_weight_pct": 5.83,
+      "drift_pct": -0.81,
+      "sleeves": {
+        "rotation": 0.058333
       },
       "in_target": true
     }
@@ -168,22 +158,29 @@
     "cadence": "last trading session of each month",
     "next_rebalance": "2026-08-31",
     "days_to_next_rebalance": 28,
-    "last_rebalance_date": null
+    "last_rebalance_date": "2026-08-03"
   },
   "health": {
-    "last_run_utc": "2026-08-03T13:07:13.936211+00:00",
+    "last_run_utc": "2026-08-03T14:54:35.029662+00:00",
     "last_run_ok": true,
-    "last_run_detail": "Awaiting catch-up rebalance.",
+    "last_run_detail": "Not a rebalance day. No-op.",
     "price_source": "alpaca-iex",
-    "expected_symbols": [],
+    "expected_symbols": [
+      "VLUE",
+      "XLE",
+      "XLK",
+      "IWM",
+      "BIL",
+      "QQQ",
+      "SPY",
+      "AGG"
+    ],
     "alert_webhook_configured": false,
-    "heartbeat_configured": false
+    "heartbeat_configured": true
   },
   "expectations": {
     "note": "Backtest 8.16%/yr with a -21.5% worst drawdown. Honest forward median is ~5.5%/yr; roughly one year in four is negative, and the system is DESIGNED to lag the S&P in strong up years because it holds bonds and cash. Judge it over years, not months.",
     "backtest_cagr_pct": 8.16,
     "forward_median_cagr_pct": 5.5
-  },
-  "total_pnl": -541.16,
-  "deposit_basis": 29926.88
+  }
 }
