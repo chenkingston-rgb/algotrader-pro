@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-08-03T13:05:07.562508+00:00",
+  "generated_at": "2026-08-03T13:07:13.936211+00:00",
   "account": {
-    "equity": 29366.45,
+    "equity": 29385.72,
     "cash": 26448.22,
-    "invested": 2918.23,
-    "invested_pct": 9.94,
+    "invested": 2937.5,
+    "invested_pct": 10.0,
     "position_count": 1
   },
   "risk": {
-    "peak_equity": 29366.45,
-    "drawdown_pct": 0.0,
+    "peak_equity": 29801.07,
+    "drawdown_pct": -1.48,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 27.0,
-    "distance_to_kill_pct": 30.0,
+    "distance_to_halt_pct": 25.52,
+    "distance_to_kill_pct": 28.52,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
@@ -25,20 +25,20 @@
     "on": true,
     "ticker": "SPY",
     "ma_window": 200,
-    "close": 204.13,
-    "ma": 172.34,
-    "gap_pct": 18.45,
+    "close": 746.79,
+    "ma": 697.36,
+    "gap_pct": 7.09,
     "label": "RISK-ON",
-    "as_of": "2026-08-03"
+    "as_of": "2026-07-31"
   },
   "sleeves": {
     "rotation": {
       "capital_share_pct": 33.33,
       "holdings": {
         "VLUE": 17.5,
-        "MTUM": 17.5,
+        "XLE": 17.5,
+        "XLK": 17.5,
         "IWM": 17.5,
-        "QQQ": 17.5,
         "BIL": 30.0
       }
     },
@@ -60,10 +60,10 @@
     {
       "symbol": "BAC",
       "qty": 47.0,
-      "market_value": 2918.23,
-      "actual_weight_pct": 9.94,
+      "market_value": 2937.5,
+      "actual_weight_pct": 10.0,
       "target_weight_pct": 0.0,
-      "drift_pct": 9.94,
+      "drift_pct": 10.0,
       "sleeves": {},
       "in_target": false
     },
@@ -80,7 +80,19 @@
       "in_target": true
     },
     {
-      "symbol": "MTUM",
+      "symbol": "XLE",
+      "qty": 0,
+      "market_value": 0.0,
+      "actual_weight_pct": 0.0,
+      "target_weight_pct": 5.83,
+      "drift_pct": -5.83,
+      "sleeves": {
+        "rotation": 0.058333
+      },
+      "in_target": true
+    },
+    {
+      "symbol": "XLK",
       "qty": 0,
       "market_value": 0.0,
       "actual_weight_pct": 0.0,
@@ -104,19 +116,6 @@
       "in_target": true
     },
     {
-      "symbol": "QQQ",
-      "qty": 0,
-      "market_value": 0.0,
-      "actual_weight_pct": 0.0,
-      "target_weight_pct": 39.17,
-      "drift_pct": -39.17,
-      "sleeves": {
-        "rotation": 0.058333,
-        "gated_qqq": 0.333333
-      },
-      "in_target": true
-    },
-    {
       "symbol": "BIL",
       "qty": 0,
       "market_value": 0.0,
@@ -125,6 +124,18 @@
       "drift_pct": -10.0,
       "sleeves": {
         "rotation": 0.1
+      },
+      "in_target": true
+    },
+    {
+      "symbol": "QQQ",
+      "qty": 0,
+      "market_value": 0.0,
+      "actual_weight_pct": 0.0,
+      "target_weight_pct": 33.33,
+      "drift_pct": -33.33,
+      "sleeves": {
+        "gated_qqq": 0.333333
       },
       "in_target": true
     },
@@ -155,24 +166,16 @@
   ],
   "schedule": {
     "cadence": "last trading session of each month",
-    "next_rebalance": "2026-08-03",
-    "days_to_next_rebalance": 0,
-    "last_rebalance_date": "2026-08-03"
+    "next_rebalance": "2026-08-31",
+    "days_to_next_rebalance": 28,
+    "last_rebalance_date": null
   },
   "health": {
-    "last_run_utc": "2026-08-03T13:05:07.562508+00:00",
+    "last_run_utc": "2026-08-03T13:07:13.936211+00:00",
     "last_run_ok": true,
-    "last_run_detail": "Rebalanced [v3.0-ensemble]: regime=ON | A(rotation)={'VLUE': 0.175, 'MTUM': 0.175, 'IWM': 0.175, 'QQQ': 0.175, 'BIL': 0.3} | B(gated_qqq)={'QQQ': 1.0} | C(balanced)={'SPY': 0.6, 'AGG': 0.4} | combined={'AGG': 0.1333, 'BIL': 0.1, 'IWM': 0.0583, 'MTUM': 0.0583, 'QQQ': 0.3917, 'SPY': 0.2, 'VLUE': 0.0583} | sells=['BAC'] buys=['VLUE', 'MTUM', 'IWM', 'QQQ', 'BIL', 'SPY', 'AGG']",
+    "last_run_detail": "Awaiting catch-up rebalance.",
     "price_source": "alpaca-iex",
-    "expected_symbols": [
-      "VLUE",
-      "MTUM",
-      "IWM",
-      "QQQ",
-      "BIL",
-      "SPY",
-      "AGG"
-    ],
+    "expected_symbols": [],
     "alert_webhook_configured": false,
     "heartbeat_configured": false
   },
@@ -181,6 +184,6 @@
     "backtest_cagr_pct": 8.16,
     "forward_median_cagr_pct": 5.5
   },
-  "total_pnl": -560.43,
+  "total_pnl": -541.16,
   "deposit_basis": 29926.88
 }
