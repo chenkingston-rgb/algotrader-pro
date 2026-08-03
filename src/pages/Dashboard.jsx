@@ -17,7 +17,7 @@ import { useState, useEffect, useCallback } from "react";
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DATA_URL =
-  "https://raw.githubusercontent.com/chenkingston-rgb/algotrader-pro/main/logs/v3_dashboard.json";
+  "https://raw.githubusercontent.com/chenkingston-rgb/algotrader-pro/main/data/v3_dashboard.json";
 const REFRESH_MS = 900_000; // 15 min — the engine writes at most once a day
 
 const money = (n) =>
@@ -56,7 +56,7 @@ export default function Dashboard() {
     return (
       <Shell>
         <Banner tone="bad" title="Cannot reach the data file">
-          {err}. The trading system publishes <code>logs/v3_dashboard.json</code> to
+          {err}. The trading system publishes <code>data/v3_dashboard.json</code> to
           this repository on every run. If this persists, the job may have stopped.
         </Banner>
       </Shell>
@@ -235,7 +235,7 @@ export default function Dashboard() {
           "This strategy rebalances twelve times a year. Most days the correct status is 'nothing to do'."}
       </p>
       <p className="text-xs text-slate-600 mt-2">
-        Source: <code>logs/v3_dashboard.json</code> in this repository, published by
+        Source: <code>data/v3_dashboard.json</code> in this repository, published by
         the private trading repo on every run. Read directly from GitHub — no Base44
         integration credits are consumed by this page.
       </p>
