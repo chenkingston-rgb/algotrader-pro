@@ -34,6 +34,7 @@
   .lbl{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
   .val{font-size:19px;font-weight:700;margin-top:3px}
   .val.big{font-size:25px}
+  .val2{font-size:15px;font-weight:600;margin-top:1px}
   .sm{font-size:11px;color:var(--dim);margin-top:3px}
   .good{color:var(--good)}.bad{color:var(--bad)}.warn{color:var(--warn)}
   .pill{padding:3px 11px;border-radius:999px;font-size:12px;font-weight:700}
@@ -77,9 +78,14 @@ const money = (n) => n==null ? "—" : Number(n).toLocaleString("en-US",{style:"
 const pct = (n,d=2) => n==null ? "—" : Number(n).toFixed(d)+"%";
 const tone = (c) => c==="good" ? "good" : c==="bad" ? "bad" : "";
 
+// A signed percentage: gains must read "+1.47%", not "1.47%". Without the
+// explicit plus a positive and a negative return look alike at a glance.
+const spct = (n,d=2) => n==null ? "—" : (n>=0?"+":"") + Number(n).toFixed(d) + "%";
+
 function stat(label, value, opts={}) {
   return `<div class="card"><div class="lbl">${esc(label)}</div>
     <div class="val ${opts.big?"big":""} ${tone(opts.tone)}">${esc(value)}</div>
+    ${opts.line2?`<div class="val2 ${tone(opts.tone)}">${esc(opts.line2)}</div>`:""}
     ${opts.sub?`<div class="sm">${esc(opts.sub)}</div>`:""}</div>`;
 }
 
@@ -151,6 +157,7 @@ async function load() {
     ${stat("Equity", money(acct.equity), {big:true})}
     ${stat("Cash", money(acct.cash), {sub:pct(acct.invested_pct)+" invested"})}
     ${stat("P&L vs deposits", money(d.total_pnl), {big:true, tone:(d.total_pnl||0)>=0?"good":"bad",
+       line2: spct(d.total_pnl_pct ?? (d.deposit_basis ? 100*(d.total_pnl||0)/d.deposit_basis : null)),
        sub:d.deposit_basis?("basis "+money(d.deposit_basis)):""})}
     ${stat("Positions held", acct.position_count ?? held.size)}
   </div>`;
@@ -290,15 +297,24 @@ function drawChart(){
   const chg=last.equity-first.equity;
   document.getElementById("chartnote").innerHTML =
     `${rows.length} samples · ${esc(first.date)} → ${esc(last.date)} · ` +
-    `change <b class="${chg>=0?"good":"bad"}">${chg>=0?"+":""}${money(chg)}</b>` +
+    `change <b class="${chg>=0?"good":"bad"}">${chg>=0?"+":""}${money(chg)}` +
+      `${first.equity?" ("+spct(100*chg/first.equity)+")":""}</b>` +
     (showCut ? ` · dashed line marks the switch from the retired v9.x engine — ${esc(hist.note||"")}` : "");
+}
+
+// Percent is precomputed per row by build_history.py; the fallback covers
+// history files written before that field existed.
+function pnlPct(r){
+  if (r.pnl_vs_deposits_pct != null) return r.pnl_vs_deposits_pct;
+  const b=(window.__hist||{}).deposit_basis;
+  return b ? 100*r.pnl_vs_deposits/b : null;
 }
 
 function showTip(ev,i){
   const rows=(window.__hist||{})[RES]||[]; const r=rows[i]; if(!r) return;
   const t=document.getElementById("tip"), w=t.parentElement.getBoundingClientRect();
   t.innerHTML = `<b>${money(r.equity)}</b><br>${esc(r.ts.replace("T"," ").slice(0,16))} UTC` +
-                `<br>P&L ${money(r.pnl_vs_deposits)}<br><span style="color:#64748b">${esc(r.phase||"")}</span>`;
+                `<br>P&L ${money(r.pnl_vs_deposits)} ${esc(spct(pnlPct(r)))}<br><span style="color:#64748b">${esc(r.phase||"")}</span>`;
   t.style.left = Math.min(ev.clientX-w.left+12, w.width-170)+"px";
   t.style.top  = (ev.clientY-w.top-10)+"px";
   t.style.opacity = 1;
@@ -308,9 +324,10 @@ function hideTip(){ const t=document.getElementById("tip"); if(t) t.style.opacit
 function exportCSV(){
   const hist=window.__hist; if(!hist) return;
   const rows=hist[RES]||[];
-  const head=["timestamp_utc","date","equity","cash","positions","pnl_vs_deposits","phase"];
+  const head=["timestamp_utc","date","equity","cash","positions","pnl_vs_deposits","pnl_vs_deposits_pct","phase"];
   const csv=[head.join(",")].concat(rows.map(r=>[
-    r.ts, r.date, r.equity, r.cash ?? "", r.positions ?? "", r.pnl_vs_deposits, `"${r.phase||""}"`
+    r.ts, r.date, r.equity, r.cash ?? "", r.positions ?? "", r.pnl_vs_deposits,
+    pnlPct(r)==null ? "" : Number(pnlPct(r)).toFixed(2), `"${r.phase||""}"`
   ].join(","))).join("\n");
   const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
   const a=document.createElement("a");
