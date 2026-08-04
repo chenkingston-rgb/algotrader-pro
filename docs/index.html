@@ -53,6 +53,15 @@
   .foot{color:var(--dim);font-size:11px;line-height:1.6;margin-top:18px}
   code{background:#0f172a;padding:1px 5px;border-radius:4px;font-size:11px}
   a{color:#60a5fa}
+  .btn{background:#1e293b;border:1px solid #334155;color:var(--mut);padding:5px 12px;
+       border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit}
+  .btn:hover{background:#27374d;color:var(--txt)}
+  .btn.on{background:#1d4ed8;border-color:#3b82f6;color:#fff;font-weight:600}
+  .chartwrap{position:relative}
+  svg text{font-size:10px;fill:#64748b}
+  .tip{position:absolute;pointer-events:none;background:#0f172a;border:1px solid #334155;
+       border-radius:6px;padding:6px 9px;font-size:11px;color:var(--txt);white-space:nowrap;
+       opacity:0;transition:opacity .1s}
 </style>
 </head>
 <body>
@@ -60,6 +69,7 @@
 
 <script>
 const DATA_URL = "v3_dashboard.json";
+const HIST_URL = "equity_history.json";
 const REFRESH_MS = 900000; // 15 min; the engine writes at most once a day
 
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -87,6 +97,13 @@ async function load() {
       If this persists, the job may have stopped.</div></div>`;
     return;
   }
+
+  // History is optional — the page must still render if it is missing.
+  let hist=null;
+  try {
+    const hr = await fetch(HIST_URL + "?t=" + Date.now(), {cache:"no-store"});
+    if (hr.ok) hist = await hr.json();
+  } catch(e) { /* chart simply omitted */ }
 
   const acct=d.account||{}, risk=d.risk||{}, reg=d.regime||{},
         sch=d.schedule||{}, hp=d.health||{}, pos=d.positions||[], sl=d.sleeves||{};
@@ -183,6 +200,21 @@ async function load() {
     }).join("")}
     </tbody></table></div></div>`;
 
+  // 6 — equity curve
+  if (hist && (hist.twelve_hourly||[]).length > 1) {
+    window.__hist = hist;
+    h += `<div class="card" style="margin-bottom:16px">
+      <div class="row" style="justify-content:space-between;margin-bottom:10px">
+        <div class="ttl" style="margin:0">Equity curve</div>
+        <div class="row" style="gap:6px">
+          <button class="btn" id="b12" onclick="setRes('twelve_hourly')">12-hourly</button>
+          <button class="btn" id="bd" onclick="setRes('daily')">Daily</button>
+          <button class="btn" onclick="exportCSV()">Export CSV</button>
+        </div></div>
+      <div class="chartwrap"><div id="chart"></div><div class="tip" id="tip"></div></div>
+      <div class="sm" id="chartnote"></div></div>`;
+  }
+
   h += `<div class="foot">${esc((d.expectations||{}).note||
     "This strategy rebalances twelve times a year. Most days the correct status is 'nothing to do'.")}
     <br><br>Source: <code>${DATA_URL}</code> in this repository, republished by the private
@@ -193,8 +225,102 @@ async function load() {
   app.innerHTML = h;
 }
 
-load();
-setInterval(load, REFRESH_MS);
+let RES = "daily";
+
+function setRes(r){ RES = r; drawChart(); }
+
+function drawChart(){
+  const hist = window.__hist; if(!hist) return;
+  const rows = hist[RES] || [];
+  const el = document.getElementById("chart"); if(!el) return;
+  document.getElementById("b12").className = "btn" + (RES==="twelve_hourly"?" on":"");
+  document.getElementById("bd").className  = "btn" + (RES==="daily"?" on":"");
+
+  if(rows.length < 2){ el.innerHTML = `<div class="sm">Not enough samples yet.</div>`; return; }
+
+  const W=1100, H=280, L=64, R=16, T=14, B=30;
+  const xs = rows.map(r => new Date(r.ts).getTime());
+  const ys = rows.map(r => r.equity);
+  const x0=Math.min(...xs), x1=Math.max(...xs);
+  let y0=Math.min(...ys), y1=Math.max(...ys);
+  const pad=(y1-y0)*0.12 || 50; y0-=pad; y1+=pad;
+  const px = t => L + (W-L-R) * (x1===x0 ? 0.5 : (t-x0)/(x1-x0));
+  const py = v => T + (H-T-B) * (1 - (v-y0)/(y1-y0));
+
+  // v9 -> v3 divider: the two eras are different strategies, never one record
+  const cut = new Date(hist.v3_start + "T00:00:00Z").getTime();
+  const showCut = cut>x0 && cut<x1;
+
+  const line = rows.map((r,i)=>`${i?"L":"M"}${px(xs[i]).toFixed(1)},${py(ys[i]).toFixed(1)}`).join(" ");
+  const area = `${line} L${px(x1).toFixed(1)},${py(y0).toFixed(1)} L${px(x0).toFixed(1)},${py(y0).toFixed(1)} Z`;
+
+  const ticks=[];
+  for(let i=0;i<=4;i++){ const v=y0+(y1-y0)*i/4;
+    ticks.push(`<line x1="${L}" y1="${py(v)}" x2="${W-R}" y2="${py(v)}" stroke="#1e293b"/>
+      <text x="${L-8}" y="${py(v)+3}" text-anchor="end">$${Math.round(v).toLocaleString()}</text>`); }
+
+  const nlab = Math.min(6, rows.length);
+  const xlab=[];
+  for(let i=0;i<nlab;i++){
+    const idx = Math.round(i*(rows.length-1)/(nlab-1||1)), t=xs[idx];
+    const dte = new Date(t);
+    const lab = RES==="daily" ? dte.toISOString().slice(5,10)
+              : dte.toISOString().slice(5,10)+" "+String(dte.getUTCHours()).padStart(2,"0")+"h";
+    xlab.push(`<text x="${px(t)}" y="${H-10}" text-anchor="middle">${lab}</text>`);
+  }
+
+  const dots = rows.map((r,i)=>
+    `<circle cx="${px(xs[i]).toFixed(1)}" cy="${py(ys[i]).toFixed(1)}" r="7" fill="transparent"
+       onmousemove="showTip(event,${i})" onmouseleave="hideTip()"/>`).join("");
+
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" preserveAspectRatio="none">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/></linearGradient></defs>
+    ${ticks.join("")}
+    ${showCut?`<line x1="${px(cut)}" y1="${T}" x2="${px(cut)}" y2="${H-B}" stroke="#f59e0b"
+       stroke-dasharray="4 4"/><text x="${px(cut)+5}" y="${T+11}" fill="#f59e0b">v3 starts</text>`:""}
+    <path d="${area}" fill="url(#g)"/>
+    <path d="${line}" fill="none" stroke="#60a5fa" stroke-width="2"
+          stroke-linejoin="round" stroke-linecap="round"/>
+    ${xlab.join("")}${dots}
+  </svg>`;
+
+  const first=rows[0], last=rows[rows.length-1];
+  const chg=last.equity-first.equity;
+  document.getElementById("chartnote").innerHTML =
+    `${rows.length} samples · ${esc(first.date)} → ${esc(last.date)} · ` +
+    `change <b class="${chg>=0?"good":"bad"}">${chg>=0?"+":""}${money(chg)}</b>` +
+    (showCut ? ` · dashed line marks the switch from the retired v9.x engine — ${esc(hist.note||"")}` : "");
+}
+
+function showTip(ev,i){
+  const rows=(window.__hist||{})[RES]||[]; const r=rows[i]; if(!r) return;
+  const t=document.getElementById("tip"), w=t.parentElement.getBoundingClientRect();
+  t.innerHTML = `<b>${money(r.equity)}</b><br>${esc(r.ts.replace("T"," ").slice(0,16))} UTC` +
+                `<br>P&L ${money(r.pnl_vs_deposits)}<br><span style="color:#64748b">${esc(r.phase||"")}</span>`;
+  t.style.left = Math.min(ev.clientX-w.left+12, w.width-170)+"px";
+  t.style.top  = (ev.clientY-w.top-10)+"px";
+  t.style.opacity = 1;
+}
+function hideTip(){ const t=document.getElementById("tip"); if(t) t.style.opacity=0; }
+
+function exportCSV(){
+  const hist=window.__hist; if(!hist) return;
+  const rows=hist[RES]||[];
+  const head=["timestamp_utc","date","equity","cash","positions","pnl_vs_deposits","phase"];
+  const csv=[head.join(",")].concat(rows.map(r=>[
+    r.ts, r.date, r.equity, r.cash ?? "", r.positions ?? "", r.pnl_vs_deposits, `"${r.phase||""}"`
+  ].join(","))).join("\n");
+  const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  const a=document.createElement("a");
+  a.href=url; a.download=`algotrader_v3_equity_${RES}_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+load().then(drawChart);
+setInterval(()=>load().then(drawChart), REFRESH_MS);
 </script>
 </body>
 </html>
