@@ -1,0 +1,44 @@
+name: deploy-pages
+
+# WHY THIS EXISTS (6 Aug 2026): the legacy branch-based Pages builder for
+# this repo started failing every build with a generic, undiagnosable
+# "Page build failed" (no logs, duration 0) starting 6 Aug — outlasting a
+# fix for the double-commit race that had been causing occasional, usually
+# self-healing "errored" builds since 5 Aug. Even a manually requested
+# rebuild of an already-good commit failed the same way. GitHub gives no
+# further detail on legacy Pages build failures, so it could not be
+# diagnosed further from here.
+#
+# This replaces the legacy Jekyll build pipeline with a plain, fully-visible
+# GitHub Actions deployment: upload docs/ as a Pages artifact, deploy it.
+# Same URLs (docs/ becomes the site root either way), but every step now has
+# real logs instead of an opaque black box.
+on:
+  push:
+    branches: [main]
+    paths: ["docs/**"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - id: deployment
+        uses: actions/deploy-pages@v4
