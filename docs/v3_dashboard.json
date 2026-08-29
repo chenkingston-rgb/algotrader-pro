@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-08-29T00:48:38.372267+00:00",
+  "generated_at": "2026-08-29T11:27:00.265817+00:00",
   "deposit_basis": 29926.88,
-  "total_pnl": 104.33,
-  "total_pnl_pct": 0.35,
+  "total_pnl": 106.73,
+  "total_pnl_pct": 0.36,
   "account": {
-    "equity": 30031.21,
+    "equity": 30033.61,
     "cash": 342.99,
-    "invested": 29688.22,
+    "invested": 29690.62,
     "invested_pct": 98.86,
     "position_count": 8
   },
   "risk": {
     "peak_equity": 30399.69,
-    "drawdown_pct": -1.21,
+    "drawdown_pct": -1.2,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 25.79,
-    "distance_to_kill_pct": 28.79,
+    "distance_to_halt_pct": 25.8,
+    "distance_to_kill_pct": 28.8,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
@@ -63,7 +63,7 @@
     {
       "symbol": "QQQ",
       "qty": 13.0,
-      "market_value": 9311.19,
+      "market_value": 9313.59,
       "actual_weight_pct": 31.01,
       "target_weight_pct": 39.17,
       "drift_pct": -8.16,
@@ -163,7 +163,7 @@
     "last_rebalance_date": "2026-08-03"
   },
   "health": {
-    "last_run_utc": "2026-08-29T00:48:38.372267+00:00",
+    "last_run_utc": "2026-08-29T11:27:00.265817+00:00",
     "last_run_ok": true,
     "last_run_detail": "Intraday snapshot (market closed) \u2014 equity, cash and positions refreshed from Alpaca; target weights and regime unchanged since the last rebalance.",
     "price_source": "alpaca (intraday snapshot, no signal recompute)",
