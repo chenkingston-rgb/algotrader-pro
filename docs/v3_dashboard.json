@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-08-31T11:18:07.328710+00:00",
+  "generated_at": "2026-08-31T21:42:28.064367+00:00",
   "deposit_basis": 29926.88,
-  "total_pnl": 108.59,
-  "total_pnl_pct": 0.36,
+  "total_pnl": 130.58,
+  "total_pnl_pct": 0.44,
   "account": {
-    "equity": 30035.47,
+    "equity": 30057.46,
     "cash": 342.99,
-    "invested": 29692.48,
+    "invested": 29714.47,
     "invested_pct": 98.86,
     "position_count": 8
   },
   "risk": {
     "peak_equity": 30399.69,
-    "drawdown_pct": -1.2,
+    "drawdown_pct": -1.13,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 25.8,
-    "distance_to_kill_pct": 28.8,
+    "distance_to_halt_pct": 25.87,
+    "distance_to_kill_pct": 28.87,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
@@ -63,10 +63,10 @@
     {
       "symbol": "QQQ",
       "qty": 13.0,
-      "market_value": 9300.99,
-      "actual_weight_pct": 30.97,
+      "market_value": 9320.48,
+      "actual_weight_pct": 31.01,
       "target_weight_pct": 39.17,
-      "drift_pct": -8.2,
+      "drift_pct": -8.16,
       "sleeves": {
         "rotation": 0.058333,
         "gated_qqq": 0.333333
@@ -76,10 +76,10 @@
     {
       "symbol": "SPY",
       "qty": 7.0,
-      "market_value": 5376.84,
-      "actual_weight_pct": 17.9,
+      "market_value": 5372.01,
+      "actual_weight_pct": 17.87,
       "target_weight_pct": 20.0,
-      "drift_pct": -2.1,
+      "drift_pct": -2.13,
       "sleeves": {
         "balanced": 0.2
       },
@@ -88,10 +88,10 @@
     {
       "symbol": "BIL",
       "qty": 51.0,
-      "market_value": 4674.66,
-      "actual_weight_pct": 15.56,
+      "market_value": 4673.64,
+      "actual_weight_pct": 15.55,
       "target_weight_pct": 10.0,
-      "drift_pct": 5.56,
+      "drift_pct": 5.55,
       "sleeves": {
         "rotation": 0.1
       },
@@ -100,10 +100,10 @@
     {
       "symbol": "AGG",
       "qty": 39.0,
-      "market_value": 3802.11,
-      "actual_weight_pct": 12.66,
+      "market_value": 3796.65,
+      "actual_weight_pct": 12.63,
       "target_weight_pct": 13.33,
-      "drift_pct": -0.67,
+      "drift_pct": -0.7,
       "sleeves": {
         "balanced": 0.133333
       },
@@ -112,10 +112,10 @@
     {
       "symbol": "XLE",
       "qty": 28.0,
-      "market_value": 1779.96,
-      "actual_weight_pct": 5.93,
+      "market_value": 1790.85,
+      "actual_weight_pct": 5.96,
       "target_weight_pct": 5.83,
-      "drift_pct": 0.1,
+      "drift_pct": 0.13,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -124,10 +124,10 @@
     {
       "symbol": "XLK",
       "qty": 9.0,
-      "market_value": 1669.5,
-      "actual_weight_pct": 5.56,
+      "market_value": 1678.42,
+      "actual_weight_pct": 5.58,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.27,
+      "drift_pct": -0.25,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -136,7 +136,7 @@
     {
       "symbol": "VLUE",
       "qty": 8.0,
-      "market_value": 1610.32,
+      "market_value": 1612.32,
       "actual_weight_pct": 5.36,
       "target_weight_pct": 5.83,
       "drift_pct": -0.47,
@@ -148,10 +148,10 @@
     {
       "symbol": "IWM",
       "qty": 5.0,
-      "market_value": 1478.1,
-      "actual_weight_pct": 4.92,
+      "market_value": 1470.1,
+      "actual_weight_pct": 4.89,
       "target_weight_pct": 0.0,
-      "drift_pct": 4.92,
+      "drift_pct": 4.89,
       "sleeves": {},
       "in_target": false
     }
@@ -163,7 +163,7 @@
     "last_rebalance_date": "2026-08-03"
   },
   "health": {
-    "last_run_utc": "2026-08-31T11:18:07.328710+00:00",
+    "last_run_utc": "2026-08-31T21:42:28.064367+00:00",
     "last_run_ok": true,
     "last_run_detail": "Intraday snapshot (market closed) \u2014 equity, cash and positions refreshed from Alpaca; target weights and regime unchanged since the last rebalance.",
     "price_source": "alpaca (intraday snapshot, no signal recompute)",
