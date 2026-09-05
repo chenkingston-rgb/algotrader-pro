@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-09-05T08:45:25.226456+00:00",
+  "generated_at": "2026-09-05T18:41:42.367451+00:00",
   "deposit_basis": 29926.88,
   "total_pnl": 204.96,
   "total_pnl_pct": 0.68,
@@ -153,7 +153,7 @@
     "last_rebalance_date": "2026-08-03"
   },
   "health": {
-    "last_run_utc": "2026-09-05T08:45:25.226456+00:00",
+    "last_run_utc": "2026-09-05T18:41:42.367451+00:00",
     "last_run_ok": true,
     "last_run_detail": "Intraday snapshot (market closed) \u2014 equity, cash and positions refreshed from Alpaca; target weights and regime unchanged since the last rebalance.",
     "price_source": "alpaca (intraday snapshot, no signal recompute)",
