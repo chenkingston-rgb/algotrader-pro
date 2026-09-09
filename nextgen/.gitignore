@@ -1,0 +1,13 @@
+.env
+state/
+__pycache__/
+.pytest_cache/
+*.pyc
+.venv/
+.ruff_cache/
+cloudflare/wrangler.toml
+cloudflare/.dev.vars
+cloudflare/node_modules/
+vercel/.env
+vercel/.env.local
+vercel/.vercel/
