@@ -1,8 +1,24 @@
 from datetime import datetime, timezone
+from pathlib import Path
 
 import pytest
 
 from trader.state import RunStore
+
+
+def test_existing_parent_directory_is_not_chmodded(tmp_path, monkeypatch):
+    parent = tmp_path / "existing"
+    parent.mkdir()
+    real_chmod = __import__("os").chmod
+
+    def guarded_chmod(path, mode):
+        if Path(path) == parent:
+            raise AssertionError("RunStore tried to chmod a caller-owned parent")
+        return real_chmod(path, mode)
+
+    monkeypatch.setattr("trader.state.os.chmod", guarded_chmod)
+    store = RunStore(str(parent / "state.sqlite3"))
+    store.conn.close()
 
 
 def test_state_machine_is_durable_atomic_and_idempotent(tmp_path):
