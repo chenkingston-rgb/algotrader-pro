@@ -33,8 +33,8 @@ jobs:
       ALPACA_QUOTE_FEED: iex
       STATE_API_URL: ${{ vars.STATE_API_URL }}
       STATE_API_WRITE_TOKEN: ${{ secrets.STATE_API_WRITE_TOKEN }}
-      STATE_DB: /tmp/trend3_qqq20.sqlite3
-      STATUS_PATH: /tmp/dashboard.json
+      STATE_DB: /tmp/trend3-qqq20/state.sqlite3
+      STATUS_PATH: /tmp/trend3-qqq20/dashboard.json
       INITIAL_PEAK_EQUITY: ${{ vars.INITIAL_PEAK_EQUITY }}
       CUMULATIVE_EXTERNAL_CASH_FLOW: ${{ vars.CUMULATIVE_EXTERNAL_CASH_FLOW }}
       STRATEGY_ALLOCATION: ${{ vars.STRATEGY_ALLOCATION }}

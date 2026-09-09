@@ -30,8 +30,12 @@ TRANSITIONS = {
 class RunStore:
     def __init__(self, path: str):
         parent = Path(path).parent
+        parent_existed = parent.exists()
         parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        os.chmod(parent, 0o700)
+        # Never chmod a caller-owned system directory such as /tmp.  Tighten
+        # permissions only when this process created the dedicated state dir.
+        if not parent_existed:
+            os.chmod(parent, 0o700)
         self.conn = sqlite3.connect(path, timeout=30, isolation_level=None)
         os.chmod(path, 0o600)
         self.conn.execute("PRAGMA journal_mode=WAL")
