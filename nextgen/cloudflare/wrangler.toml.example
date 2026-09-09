@@ -1,0 +1,25 @@
+name = "trend3-qqq20-state"
+main = "src/index.js"
+compatibility_date = "2026-08-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "trend3-qqq20-state"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[triggers]
+# One trigger definition; the handler only acts at 10:10-10:29 New York time.
+# Both UTC windows cover EST and EDT without relying on a fixed offset.
+crons = ["10,20 13-15 * * *"]
+
+[vars]
+GH_OWNER = "chenkingston-rgb"
+GH_REPO = "algotrader-pro"
+GH_WORKFLOW_FILE = "trade.yml"
+GH_REF = "main"
+
+# Add secrets with `npx wrangler secret put NAME`; never write them here:
+# STATE_API_WRITE_TOKEN
+# STATE_API_READ_TOKEN
+# HEARTBEAT_SECRET
+# GH_ACTIONS_DISPATCH_TOKEN

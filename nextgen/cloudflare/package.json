@@ -1,0 +1,13 @@
+{
+  "name": "trend3-qqq20-state-service",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check src/index.js",
+    "deploy": "wrangler deploy",
+    "db:init": "wrangler d1 execute trend3-qqq20-state --remote --file=schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "4.130.0"
+  }
+}

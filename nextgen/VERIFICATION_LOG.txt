@@ -1,0 +1,84 @@
+TREND-3 + QQQ20 RELEASE VERIFICATION
+====================================
+Verification date: 2026-09-09
+Strategy: trend3-qqq20-v1
+Execution policy: t3q20-exec-v1
+Python: 3.12
+
+FINAL RESULTS
+-------------
+Python compile: PASS
+Ruff static analysis: PASS
+Pytest: PASS — 61 tests
+Dependency-light smoke test: PASS
+Frozen historical backtest reproduction: PASS
+Execution-delay sensitivity reproduction: PASS
+Bandit security scan: PASS — zero findings
+pip-audit production dependency scan: PASS — no known vulnerabilities
+Dashboard JavaScript syntax: PASS
+Fresh-environment installation from requirements-dev.lock: PASS
+Fresh-environment 61-test suite, smoke test, backtest and security scans: PASS
+
+REPRODUCED HISTORICAL METRICS
+-----------------------------
+Period: 2007-01-03 through 2026-07-31
+Cost assumption: 10 bps per traded side
+CAGR: 11.3386393622%
+Annualized volatility: 12.1014651507%
+Sharpe: 0.9547619709
+Excess Sharpe over BIL: 0.8265278179
+Maximum drawdown: -19.8774751493%
+Calmar: 0.5704265394
+Annual turnover: 2.6348356694x
+SPY beta: 0.4729264128
+SPY correlation: 0.7664137607
+Terminal multiple: 8.1849164714x
+Observations: 4,925
+
+EXECUTION-DELAY SENSITIVITY
+---------------------------
+0 sessions: CAGR 11.3386%, max drawdown -19.8775%
+1 session:  CAGR 11.4008%, max drawdown -19.1419%
+2 sessions: CAGR 11.2491%, max drawdown -20.2604%
+
+SECURITY REPAIR MADE DURING RELEASE VERIFICATION
+------------------------------------------------
+The first dependency scan identified two advisories in requests 2.32.3.
+The build was upgraded to requests 2.33.0, both production and development
+lockfiles were regenerated with hashes, and the scans were rerun cleanly.
+Outbound webhook/heartbeat URLs now require HTTPS, reject embedded credentials,
+and do not follow redirects. Cancellation/startup fallback errors are logged.
+
+COMMAND SET
+-----------
+python -m compileall -q trader tests selftest.py research/backtest
+ruff check trader tests selftest.py research/backtest
+pytest -q
+python selftest.py
+python research/backtest/reproduce.py
+python research/backtest/delay_sensitivity.py
+bandit -q -r trader
+pip-audit -r requirements.lock
+
+REMAINING NON-SIMULATED DEPLOYMENT GATES
+----------------------------------------
+Alpaca paper credentials and SIP entitlement were not available in this build
+environment. Three paper month-end cycles, a broker-accepted restart drill,
+actual fill/slippage measurement, alert/heartbeat delivery, and private-repo/VPS
+cutover therefore remain required before live activation.
+
+=== ZERO-SUBSCRIPTION CLOUD ADAPTATION — 2026-09-09 ===
+Python compile: PASS
+Ruff: PASS
+Pytest: 67 passed
+Selftest: PASS
+Frozen backtest reproduction: PASS (CAGR 11.338639%, Sharpe 0.954762, max DD -19.877475%)
+Delay sensitivity: PASS (0/1/2 sessions: 11.34% / 11.40% / 11.25% CAGR)
+Bandit: PASS
+pip-audit: PASS (no known vulnerabilities)
+Cloudflare Worker syntax: PASS
+Cloudflare D1 schema local execution: PASS (9 statements)
+Cloudflare local API smoke: PASS (authorized paths; 401 unauthorized; 409 illegal transition)
+Vercel API syntax/auth proxy smoke: PASS
+GitHub workflow YAML parse: PASS
+Unexecuted live gates: real Alpaca Basic data, three paper month ends, Cloudflare remote deploy/restore, Vercel production login, actual dead-man dispatch.

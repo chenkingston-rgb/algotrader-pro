@@ -1,0 +1,6 @@
+{
+  "name": "trend3-qqq20-dashboard",
+  "private": true,
+  "type": "module",
+  "engines": { "node": "22.x" }
+}
