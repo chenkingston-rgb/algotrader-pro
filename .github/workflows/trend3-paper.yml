@@ -28,9 +28,9 @@ jobs:
       run:
         working-directory: nextgen
     env:
-      ALPACA_API_KEY: ${{ secrets.TREND3_PAPER_ALPACA_API_KEY }}
-      ALPACA_SECRET_KEY: ${{ secrets.TREND3_PAPER_ALPACA_SECRET_KEY }}
-      EXPECTED_ALPACA_ACCOUNT_ID: ${{ secrets.TREND3_PAPER_ACCOUNT_ID }}
+      ALPACA_API_KEY: ${{ secrets.ALPACA_PAPER_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_PAPER_SECRET }}
+      EXPECTED_ALPACA_ACCOUNT_ID: ""
       ALPACA_PAPER: "true"
       ALPACA_SIGNAL_FEED: sip_delayed
       ALPACA_QUOTE_FEED: iex
@@ -58,4 +58,3 @@ jobs:
         run: python -m pip install --require-hashes -r requirements.lock
       - name: Execute paper candidate or safely no-op
         run: python -m trader.rebalance
-

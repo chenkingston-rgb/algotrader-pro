@@ -4,7 +4,8 @@ This branch stages the independently tested candidate under `nextgen/` without m
 
 Safety defaults:
 
-- Paper account credentials use separate `TREND3_PAPER_*` secrets.
+- Paper account credentials reuse the existing `ALPACA_PAPER_KEY` and
+  `ALPACA_PAPER_SECRET` repository secrets.
 - `ALPACA_PAPER` is hard-coded true.
 - Live authorization variables are blank.
 - The strategy allocation is 10%.
