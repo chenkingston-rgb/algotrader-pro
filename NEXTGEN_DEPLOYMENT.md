@@ -9,6 +9,8 @@ Safety defaults:
 - `ALPACA_PAPER` is hard-coded true.
 - Live authorization variables are blank.
 - The strategy allocation is 10%.
+- The paper workflow is manual-only until durable Cloudflare state and alerting
+  have been deployed and smoke-tested.
 - Merge/cutover is blocked until the deployment runbook gates pass.
 
 See `nextgen/DEPLOYMENT_RUNBOOK.md`.

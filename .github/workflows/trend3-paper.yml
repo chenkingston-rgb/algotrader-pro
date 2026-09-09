@@ -7,11 +7,6 @@ on:
         description: "Reason for the paper run"
         required: false
         default: "manual-paper-validation"
-  schedule:
-    - cron: "35,50 9 * * 1-5"
-      timezone: "America/New_York"
-    - cron: "5 10 * * 1-5"
-      timezone: "America/New_York"
 
 permissions:
   contents: read
