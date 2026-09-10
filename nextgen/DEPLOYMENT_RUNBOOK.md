@@ -78,6 +78,19 @@ npx wrangler deploy
 
 `GH_ACTIONS_DISPATCH_TOKEN` must be a fine-grained GitHub token restricted to the one repository and Actions workflow enable/dispatch permissions. It must not have repository-content write permission and must not be an Alpaca credential.
 
+The deployed token expires on **2026-10-10**. Rotate it before that date using
+the same one-repository permission boundary, then replace only the encrypted
+Cloudflare secret. Never copy it into GitHub Actions, source control, logs, or
+the operator dashboard.
+
+Cloudflare cron contract (all UTC; the Worker re-checks America/New_York):
+
+- `0 12 * * MON-FRI`: credential/workflow verification only;
+- `10,25 14 * * MON-FRI`: EDT fallback probes;
+- `10,25 15 * * MON-FRI`: EST fallback probes.
+
+Only a probe that lands between 10:10 and 10:29 New York time may dispatch.
+
 Smoke checks:
 
 ```bash
@@ -152,7 +165,9 @@ For every paper cycle retain:
 7. final maximum drift no greater than 50 bps;
 8. visible Discord/Slack test alert and Cloudflare heartbeat;
 9. a forced retry after simulated network uncertainty with zero duplicate orders;
-10. one Cloudflare dead-man dispatch drill after temporarily disabling the primary schedule;
+10. one Worker-originated Cloudflare dead-man dispatch drill after temporarily
+    disabling the primary schedule (the restricted-token workflow-read and
+    direct paper-dispatch permission checks are already complete);
 11. one session-two or session-three catch-up drill;
 12. restored D1 state using Cloudflare's point-in-time recovery procedure.
 

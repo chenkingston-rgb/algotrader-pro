@@ -1,6 +1,6 @@
 # Verification report
 
-**Build:** `trend3-qqq20-v1-zero-cost-cloud-rc1`  
+**Build:** `trend3-qqq20-v1-zero-cost-cloud-rc2`
 **Verification date:** 2026-09-10  
 **Status:** code-complete reference implementation; paper/shadow deployment candidate; not activated live
 
@@ -8,7 +8,7 @@
 
 - Python compile check: PASS
 - Ruff static analysis: PASS
-- Pytest: **71 passed**
+- Pytest: **73 passed**
 - Dependency-light deployment smoke test: PASS
 - Frozen slow backtest reproduction: PASS (11.338639% CAGR; 0.954762 Sharpe; -19.877475% max drawdown)
 - One-/two-session execution delay reproduction: PASS (11.40% / 11.25% CAGR)
@@ -23,6 +23,12 @@
 - Remote Cloudflare deployment smoke (2026-09-10): PASS; dashboard 200, unauthorized status 401, authenticated D1 read path reached, no service-secret names in delivered HTML
 - Remote native-alert smoke (2026-09-10): PASS; authenticated POST stored a test alert and authenticated dashboard status returned it
 - GitHub/Alpaca/Cloudflare paper smokes #7 and #8: PASS; both authenticated to the paper account and published remote fail-closed status; #8 delivered a real reconciliation alert to D1
+- Restricted GitHub token permission drill (2026-09-10): PASS; authenticated
+  workflow read returned active and a paper-only dispatch was accepted. GitHub
+  run #34444054580 completed successfully on attempt one.
+- Cloudflare dead-man cron deployment: PASS; weekday 12:00 UTC credential check
+  plus DST-safe 14:10/14:25 and 15:10/15:25 UTC fallback triggers deployed in
+  Worker version `3cba0be7-49c3-4c35-8291-e1ccc2dbc000`.
 
 ## Behaviors covered
 
@@ -49,11 +55,16 @@ The following are deployment gates, not simulated pass claims:
 3. Cloudflare D1 schema/API deployment, transition concurrency and point-in-time restore drill.
 4. Kill/restart drill after broker acceptance but before remote state transition.
 5. Three actual paper month-end rebalances and one missed-timer catch-up.
-6. Discord/Slack alert delivery and Cloudflare dead-man GitHub dispatch.
+6. First automatic Cloudflare cron invocation and one Worker-originated
+   dead-man GitHub dispatch. Token permission and direct paper dispatch already
+   passed; native D1 alert delivery already passed.
 7. Cloudflare dashboard browser audit confirming that no broker/write/read service credential is embedded.
 8. Independent reproduction of the historical backtest from broker-vended data.
 
-The first remote Cloudflare API and Alpaca paper authentication smoke checks are complete. The remaining real-infrastructure gates above remain open until their scheduled or supervised test windows.
+The remote Cloudflare API, dashboard, native alert, Alpaca paper authentication,
+and restricted-token dispatch checks are complete. The remaining
+real-infrastructure gates above remain open until their scheduled or supervised
+test windows.
 
 
 

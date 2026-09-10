@@ -5,6 +5,13 @@
   "compatibility_date": "2026-09-10",
   "workers_dev": true,
   "preview_urls": false,
+  "triggers": {
+    "crons": [
+      "0 12 * * MON-FRI",
+      "10,25 14 * * MON-FRI",
+      "10,25 15 * * MON-FRI"
+    ]
+  },
   "d1_databases": [
     {
       "binding": "DB",

@@ -425,12 +425,11 @@ export default {
   async scheduled(_event, env, ctx) {
     ctx.waitUntil((async () => {
       const now = new Date();
-      const local = newYorkParts(now);
-      const minuteOfDay = Number(local.hour) * 60 + Number(local.minute);
-      if (minuteOfDay >= 610 && minuteOfDay <= 629) {
-        await verifyGithubWorkflow(env, now);
-        await dispatchFallback(env, now);
-      }
+      // Every configured trigger verifies the credential and workflow first.
+      // dispatchFallback applies the 10:10-10:29 America/New_York gate itself,
+      // so the 12:00 UTC credential check can never dispatch a trade run.
+      await verifyGithubWorkflow(env, now);
+      await dispatchFallback(env, now);
     })().catch(async (error) => {
       const now = new Date().toISOString();
       const encoded = JSON.stringify({ error: String(error) }).slice(0, 2000);

@@ -95,6 +95,6 @@ Rejected for live use. GitHub explicitly describes schedule delay risk. The Clou
 
 ## Approval status
 
-The package is approved as a **zero-subscription paper deployment candidate**. It is not approved for immediate live trading. Remaining gates are external by nature: real Alpaca Basic/Yahoo agreement, three clean paper month ends, one state-restore drill, one dead-man dispatch drill and observed execution slippage within 20 bps per side.
+The package is approved as a **zero-subscription paper deployment candidate**. It is not approved for immediate live trading. Remaining gates are external by nature: real Alpaca Basic/Yahoo agreement, three clean paper month ends, one state-restore drill, one Worker-originated dead-man dispatch drill (after a successful restricted-token permission/direct-paper-dispatch check) and observed execution slippage within 20 bps per side.
 
 The frozen 11.34% historical CAGR belongs to the investment model, not to the hosting provider. Removing subscriptions avoids approximately $1,668/year of Base44 Builder plus Alpaca Plus fees from the prior proposal, but no cloud architecture can guarantee that the strategy will earn its backtest return.

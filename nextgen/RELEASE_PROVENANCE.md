@@ -1,6 +1,6 @@
 # Release provenance
 
-- Release candidate: `trend3-qqq20-v1-zero-cost-cloud-rc1`
+- Release candidate: `trend3-qqq20-v1-zero-cost-cloud-rc2`
 - Strategy version: `trend3-qqq20-v1`
 - Execution-policy version: `t3q20-exec-v1`
 - Assembly date: 2026-09-09
@@ -18,5 +18,8 @@ D1/Worker tests and the first manual Alpaca paper workflow smoke test passed on
 2026-09-10. The authenticated Cloudflare dashboard is deployed and the GitHub
 Worker URL and encrypted action secrets are configured. Two authenticated paper
 smokes, native alert delivery and the DST-safe paper schedule are verified.
-Independent scheduler dispatch, month-end paper evidence, and live-capital gates remain incomplete. This release is not authorization to
-activate live capital.
+The independent scheduler's repository-restricted token passed workflow-read and
+paper-dispatch permission checks, and its Cloudflare cron triggers are deployed.
+The first automatic cron invocation, month-end paper evidence, and live-capital
+gates remain incomplete. This release is not authorization to activate live
+capital.
