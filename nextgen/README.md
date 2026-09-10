@@ -69,7 +69,7 @@ Live mode also requires the exact Alpaca account ID in `EXPECTED_ALPACA_ACCOUNT_
 
 ## Production deployment
 
-No Base44 subscription or VPS is used. GitHub Actions is the only component with Alpaca credentials and executes the Python worker. Cloudflare Workers/D1 provides durable state plus an independent missed-run dispatch. Vercel Hobby serves a password-protected, read-only dashboard. All three run within their published free tiers at the expected workload. The Python engine itself enforces the New York clock and official Alpaca calendar.
+No Base44 subscription, Vercel project or VPS is used. GitHub Actions is the only component with Alpaca credentials and executes the Python worker. Cloudflare Workers/D1 provides durable state, an independent missed-run dispatch and a password-protected read-only dashboard. Both services run within their published free tiers at the expected workload. The Python engine itself enforces the New York clock and official Alpaca calendar.
 
 Do not merge this into the legacy engine. Migration order:
 
@@ -83,7 +83,7 @@ Do not merge this into the legacy engine. Migration order:
 
 ## Dashboard
 
-`vercel/index.html` independently rechecks the canonical status contract. `vercel/api/status.js` requires operator credentials and obtains telemetry with a Cloudflare read-only token. Vercel never receives Alpaca credentials or the D1 write token.
+Open the Worker at `/dashboard`. The page independently rechecks the canonical status contract and sends operator Basic credentials only to `/dashboard/status`. Cloudflare validates them server-side and reads D1 directly. Browser code never receives Alpaca, GitHub, D1 write or D1 read credentials. The `vercel/` directory is retained only as an optional fallback.
 
 Read `BUILD_SPEC.md`, the authoritative `DEPLOYMENT_RUNBOOK.md` and `SAFETY_TRACEABILITY.md` before any deployment. `LEGACY_VPS_RUNBOOK.md` is retained only for provenance and is not the selected architecture.
 

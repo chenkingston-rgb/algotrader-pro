@@ -59,12 +59,12 @@ The 11.34% column assumes the past repeats exactly. It is not the operating budg
 - Added drawdown high-water-mark import for safe migration.
 - Added a fail-closed private dashboard, alert and dead-man heartbeat contract.
 - Added cash-flow-adjusted high-water accounting so deposits and withdrawals do not falsify drawdown controls.
-- Added pinned dependency locks, timezone-aware serialized GitHub execution, Cloudflare D1 state/dead-man service and Vercel read-only console.
+- Added pinned dependency locks, timezone-aware serialized GitHub execution, and a Cloudflare D1 state/dead-man service with an authenticated read-only console.
 - Added a runnable slow backtest reproducer, source price snapshot, monthly target ledger and one-/two-session delay study.
 
 ## What implementation does not mean
 
-The zero-subscription adaptation is complete as a reference package, but it has not been connected to real GitHub, Cloudflare, Vercel or Alpaca credentials. It must not be described as live-deployed until the D1/API smoke checks, three paper month ends and cutover gates in `DEPLOYMENT_RUNBOOK.md` are completed.
+The zero-subscription adaptation is code-complete and has passed its first remote Cloudflare and Alpaca-paper authentication smoke checks. It must not be described as live-capital deployed until three paper month ends and the cutover gates in `DEPLOYMENT_RUNBOOK.md` are completed.
 
 
 

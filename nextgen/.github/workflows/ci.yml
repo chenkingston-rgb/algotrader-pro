@@ -28,3 +28,5 @@ jobs:
       - run: python research/backtest/reproduce.py
       - run: python research/backtest/delay_sensitivity.py
       - run: node --check cloudflare/src/index.js
+      - run: node --check cloudflare/src/dashboard.js
+      - run: node --check vercel/api/status.js

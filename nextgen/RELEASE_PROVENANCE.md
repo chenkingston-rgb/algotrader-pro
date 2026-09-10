@@ -15,6 +15,7 @@ This is a clean standalone implementation. It was not derived by editing the pri
 
 The package is code-complete and independently reproducible. Remote Cloudflare
 D1/Worker tests and the first manual Alpaca paper workflow smoke test passed on
-2026-09-10. Vercel, independent scheduler dispatch, scheduled paper operation,
-and live-capital gates remain incomplete. This release is not authorization to
+2026-09-10. The authenticated Cloudflare dashboard is deployed and the GitHub
+Worker URL variable is configured. Independent scheduler dispatch, scheduled
+paper operation, and live-capital gates remain incomplete. This release is not authorization to
 activate live capital.

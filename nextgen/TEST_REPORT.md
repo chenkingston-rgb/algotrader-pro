@@ -1,25 +1,26 @@
 # Verification report
 
 **Build:** `trend3-qqq20-v1-zero-cost-cloud-rc1`  
-**Verification date:** 2026-09-09  
+**Verification date:** 2026-09-10  
 **Status:** code-complete reference implementation; paper/shadow deployment candidate; not activated live
 
 ## Automated results
 
 - Python compile check: PASS
 - Ruff static analysis: PASS
-- Pytest: **67 passed**
+- Pytest: **70 passed**
 - Dependency-light deployment smoke test: PASS
 - Frozen slow backtest reproduction: PASS (11.338639% CAGR; 0.954762 Sharpe; -19.877475% max drawdown)
 - One-/two-session execution delay reproduction: PASS (11.40% / 11.25% CAGR)
 - Bandit Python security scan: PASS (no reported findings)
 - `pip-audit` against the production lock file: PASS (no reported vulnerability)
 - Cloudflare Worker JavaScript syntax check: PASS
-- Vercel status API JavaScript syntax check: PASS
+- Cloudflare embedded dashboard JavaScript syntax check: PASS
 - Cloudflare D1 schema local execution: PASS (9 statements)
 - Cloudflare local API smoke: PASS (health, authenticated start/transition/read/equity/status/heartbeat)
 - Cloudflare negative API checks: PASS (unauthorized 401; illegal transition 409)
-- Vercel authenticated status-proxy smoke: PASS (unauthorized 401; authorized 200)
+- Cloudflare authenticated dashboard/status smoke: PASS (public shell 200; unauthorized status 401; authorized status reaches D1)
+- Remote Cloudflare deployment smoke (2026-09-10): PASS; dashboard 200, unauthorized status 401, authenticated D1 read path reached, no service-secret names in delivered HTML
 
 ## Behaviors covered
 
@@ -47,10 +48,10 @@ The following are deployment gates, not simulated pass claims:
 4. Kill/restart drill after broker acceptance but before remote state transition.
 5. Three actual paper month-end rebalances and one missed-timer catch-up.
 6. Discord/Slack alert delivery and Cloudflare dead-man GitHub dispatch.
-7. Vercel authentication and confirmation that no broker/write credential is present.
+7. Cloudflare dashboard browser audit confirming that no broker/write/read service credential is embedded.
 8. Independent reproduction of the historical backtest from broker-vended data.
 
-No real API credentials were available to this build environment, so these gates remain open by design.
+The first remote Cloudflare API and Alpaca paper authentication smoke checks are complete. The remaining real-infrastructure gates above remain open until their scheduled or supervised test windows.
 
 
 
