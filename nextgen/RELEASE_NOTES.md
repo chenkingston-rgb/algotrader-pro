@@ -1,4 +1,4 @@
-# Release notes — `trend3-qqq20-v1-zero-cost-cloud-rc1`
+# Release notes — `trend3-qqq20-v1-zero-cost-cloud-rc2`
 
 ## Delivered
 
@@ -10,6 +10,9 @@
 - Password-protected Cloudflare read-only dashboard; broker secrets remain in GitHub only and no Vercel project is required.
 - Fail-closed dual-source data validation, account/asset/order preflight, health telemetry, free webhook alerts and heartbeat.
 - Reproducible frozen backtest inputs and output ledgers.
+- Repository-restricted GitHub Actions dispatch credential, weekday credential
+  verification, and DST-safe Cloudflare backup schedules. The credential has no
+  content-write permission and requires rotation before 2026-10-10.
 - Hashed production and development dependency locks, pinned CI actions, 71 automated tests and clean Python security audits.
 
 ## Intentionally excluded

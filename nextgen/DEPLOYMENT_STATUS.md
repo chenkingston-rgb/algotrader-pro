@@ -6,7 +6,8 @@ Last updated: 2026-09-10
 
 - Candidate source merged into `main` under `nextgen/` without replacing the
   existing live engine.
-- GitHub candidate CI passed four consecutive runs.
+- GitHub candidate CI passed seven consecutive merged-PR runs before this
+  deployment update.
 - Existing repository secrets `ALPACA_PAPER_KEY` and
   `ALPACA_PAPER_SECRET` are wired into the manual paper workflow.
 - GitHub paper smoke run #6 completed successfully and returned the expected
@@ -32,14 +33,28 @@ Last updated: 2026-09-10
   no month-end target exists yet.
 - The paper-only workflow now has DST-safe UTC schedules. The engine remains the
   final authority and cannot trade outside the official New York execution window.
+- A fine-grained GitHub token restricted to `chenkingston-rgb/algotrader-pro`
+  with Actions read/write and mandatory Metadata read-only access is stored only
+  as the encrypted Cloudflare Worker secret `GH_ACTIONS_DISPATCH_TOKEN`. It has
+  no repository-content write permission and expires on 2026-10-10.
+- The restricted token passed an authenticated workflow-read check and a real
+  paper-only workflow-dispatch permission drill. GitHub run #34444054580 was
+  accepted and completed successfully on the first attempt.
+- Cloudflare Worker version `3cba0be7-49c3-4c35-8291-e1ccc2dbc000` is deployed
+  with one weekday credential check and DST-safe 10:10/10:25 New York fallback
+  schedules. The public health route still returns OK and the dashboard status
+  route still rejects unauthenticated requests with HTTP 401.
 
 ## Intentionally not active yet
 
-- The independent Cloudflare dead-man scheduler has no GitHub dispatch token
-  and has no cron trigger yet.
+- The first automatic Cloudflare scheduled invocation has not yet occurred;
+  Cloudflare notes that new cron triggers can take up to 15 minutes to propagate.
 - Vercel is no longer required; its source remains an optional fallback only.
 - The first valid month-end signal/order cycle has not yet occurred.
+- Three clean paper month ends, the D1 restore drill, and measured live-paper
+  execution slippage remain required evidence.
 - Live trading authorization remains blank and cannot activate.
 
-These remaining controls must be completed and tested before the scheduled
-paper phase begins. Live capital remains gated by the deployment runbook.
+The scheduled paper phase is active. These remaining controls must be completed
+before any live-capital decision. Live capital remains gated by the deployment
+runbook.

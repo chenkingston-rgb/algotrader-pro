@@ -281,7 +281,8 @@ The zero-subscription deployment is finished only when it supplies:
 - an unresolved-risk register;
 - an explicit statement that the legacy workflow is disabled.
 - Cloudflare D1 schema and authenticated write/read smoke tests;
-- a Cloudflare dead-man dispatch drill;
+- a Worker-originated Cloudflare dead-man dispatch drill (the restricted-token
+  workflow-read and direct paper-dispatch permission checks are already complete);
 - a Cloudflare dashboard check proving browser code has no Alpaca, GitHub-dispatch or state-write credential.
 
 Do not accept a prose claim that the strategy was built. Verify the repository, tests, broker state and paper fills directly.
