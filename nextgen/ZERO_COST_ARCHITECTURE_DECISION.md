@@ -14,7 +14,7 @@
 | Human dashboard | Cloudflare Worker | Password-protected read-only status UI on the same free Worker; no trading key and no additional account. |
 | Broker, calendar, delayed signal bars, current quote | Alpaca Basic | Free historical SIP is usable when the explicit end is at least 15 minutes old; current IEX is sufficient for bounded protected-limit pricing subject to paper validation. |
 | Independent adjusted-price check | Yahoo Finance chart endpoint | Used only to reject a discrepant signal, never to price an order. |
-| Immediate notification | Discord or Slack free webhook | Out-of-band visible failure alert without a subscription. |
+| Alerting | Cloudflare D1 alert journal; optional Discord/Slack webhook | Built-in durable visible alerts at no additional account; optional true out-of-band push. |
 
 Official constraints checked for this decision:
 
@@ -90,7 +90,7 @@ Rejected for live use. GitHub explicitly describes schedule delay risk. The Clou
 6. Added timezone-aware, serialized GitHub trade scheduling with multiple attempts.
 7. Added a Cloudflare D1 schema, state API, daily heartbeat, daily GitHub-token verification and missed-run dispatch.
 8. Added a password-protected Cloudflare read-only dashboard route; Vercel is optional.
-9. Added free Discord webhook support without changing the alert contract.
+9. Added native Cloudflare alert ingestion/history plus optional free Discord/Slack support without changing the alert contract.
 10. Added tests for feed enforcement, mandatory remote state, remote API mapping and authenticated status publication.
 
 ## Approval status

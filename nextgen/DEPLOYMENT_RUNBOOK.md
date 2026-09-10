@@ -39,7 +39,7 @@ Create or retain:
 1. GitHub Free account and a **private** repository.
 2. Cloudflare Free account with Workers and D1 enabled.
 3. Alpaca Trading API Basic account.
-4. Optional free Discord channel webhook for immediate alerts.
+4. The built-in Cloudflare alert journal; optionally add a free Discord/Slack webhook for true out-of-band push alerts.
 
 Set GitHub Actions' usage budget to **$0 with “stop usage when the budget limit is reached”**. The design normally consumes a small fraction of the included private-repository minutes. Cloudflare usage is expected to be a few hundred requests and rows per month, far below its free limits. The dashboard reads D1 through the Worker only while it is open.
 
@@ -86,6 +86,11 @@ curl -H "Authorization: Bearer READ_TOKEN" https://YOUR-WORKER.workers.dev/v1/st
 ```
 
 The second request should return 404 until the trader has published its first status. A 200 before any trader run is a deployment error.
+
+For the subscription-free built-in alert journal, set GitHub `ALERT_WEBHOOK_URL`
+to the same secret heartbeat URL. `GET` records health heartbeats; `POST` stores
+alerts in D1 and the dashboard displays the newest ten. A Discord/Slack webhook
+may replace the alert URL later without changing trading logic.
 
 ## 4. GitHub repository configuration
 
