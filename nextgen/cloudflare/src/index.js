@@ -256,6 +256,13 @@ async function getStatus(env) {
     problems.push("independent scheduler reported an error");
   }
   status.health = { healthy: status.health?.healthy === true && problems.length === 0, problems };
+  const alerts = await env.DB.prepare(
+    "SELECT payload,created_at FROM events WHERE event='ALERT' ORDER BY id DESC LIMIT 10"
+  ).all();
+  status.alerts = (alerts.results || []).map((row) => ({
+    created_at: row.created_at,
+    message: decodePayload(row.payload)?.message || "Alert details unavailable",
+  }));
   return json({ ok: true, status });
 }
 
@@ -265,6 +272,14 @@ async function heartbeat(env, request, url) {
     throw Object.assign(new Error("unauthorized"), { status: 401 });
   }
   const now = new Date().toISOString();
+  if (request.method === "POST") {
+    const body = await bodyObject(request);
+    const message = requiredString(body.text || body.content, "alert", 2_000);
+    await env.DB.prepare(
+      "INSERT INTO events(run_id,event,payload,created_at) VALUES(NULL,'ALERT',?1,?2)"
+    ).bind(JSON.stringify({ message }), now).run();
+    return json({ ok: true });
+  }
   await env.DB.prepare(
     "INSERT INTO control(key,value,updated_at) VALUES('last_heartbeat',?1,?1) "
       + "ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_at=excluded.updated_at"
@@ -284,7 +299,7 @@ async function handle(request, env) {
   if (request.method === "GET" && url.pathname === "/v1/health") {
     return json({ ok: true, service: "trend3-qqq20-state" });
   }
-  if (request.method === "GET" && url.pathname.startsWith("/v1/heartbeat/")) {
+  if (["GET", "POST"].includes(request.method) && url.pathname.startsWith("/v1/heartbeat/")) {
     return heartbeat(env, request, url);
   }
   if (request.method === "GET" && url.pathname === "/v1/status") {

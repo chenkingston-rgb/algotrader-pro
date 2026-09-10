@@ -19,7 +19,7 @@
 | S15 | Cash-flow-adjusted drawdown governance, no panic liquidation | `_account_snapshot`, `_effective_frozen_target`, `record_equity` | peak-floor, deposit-adjustment and no-risk-increase tests |
 | S16 | Live/paper interlock | `Settings.from_env` | manual deployment gate |
 | S17 | Fail-closed health/status | `telemetry.py`, `monitor/index.html` | health/stale/orders/risk tests |
-| S18 | Dead-man, alerts and an independent scheduling path | GitHub schedule, Cloudflare cron enable/dispatch, heartbeat, Discord/Slack alerts, status schema | startup-red-status and alert tests; real dispatch/delivery gate |
+| S18 | Dead-man, alerts and an independent scheduling path | GitHub schedule, Cloudflare cron enable/dispatch, heartbeat, native D1 alert journal, optional Discord/Slack alerts, status schema | startup-red-status and alert tests; native delivery passed; real dispatch gate open |
 | S19 | Reproducible dependencies | pinned requirement files + CI | install and CI gate |
 | S20 | Legacy isolation | standalone package/service | cutover checklist |
 | S21 | Private authenticated monitoring | `cloudflare/src/index.js`, Basic authorization, direct server-side D1 read, independent browser checks | JavaScript syntax check; remote unauthorized/authorized dashboard tests |

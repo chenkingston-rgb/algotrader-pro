@@ -24,14 +24,21 @@ Last updated: 2026-09-10
   returned 401, authorized access reached D1, and no service-secret names were
   present in browser-delivered HTML.
 - GitHub repository variable `TREND3_STATE_API_URL` points to the deployed Worker.
+- GitHub Actions secrets now contain the Cloudflare write token, heartbeat URL
+  and native alert URL. No secret value is committed to the repository.
+- Manual paper runs #7 and #8 completed successfully with authenticated Alpaca
+  paper access and Cloudflare status publication. Run #8 also proved native
+  alert ingestion; the outside-window run correctly remained unhealthy because
+  no month-end target exists yet.
+- The paper-only workflow now has DST-safe UTC schedules. The engine remains the
+  final authority and cannot trade outside the official New York execution window.
 
 ## Intentionally not active yet
 
-- GitHub is not yet configured with the Worker write token and heartbeat URL.
 - The independent Cloudflare dead-man scheduler has no GitHub dispatch token
   and has no cron trigger yet.
 - Vercel is no longer required; its source remains an optional fallback only.
-- The paper workflow remains manual-only.
+- The first valid month-end signal/order cycle has not yet occurred.
 - Live trading authorization remains blank and cannot activate.
 
 These remaining controls must be completed and tested before the scheduled

@@ -10,7 +10,7 @@
 - Password-protected Cloudflare read-only dashboard; broker secrets remain in GitHub only and no Vercel project is required.
 - Fail-closed dual-source data validation, account/asset/order preflight, health telemetry, free webhook alerts and heartbeat.
 - Reproducible frozen backtest inputs and output ledgers.
-- Hashed production and development dependency locks, pinned CI actions, 70 automated tests and clean Python security audits.
+- Hashed production and development dependency locks, pinned CI actions, 71 automated tests and clean Python security audits.
 
 ## Intentionally excluded
 

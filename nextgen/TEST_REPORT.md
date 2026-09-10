@@ -8,7 +8,7 @@
 
 - Python compile check: PASS
 - Ruff static analysis: PASS
-- Pytest: **70 passed**
+- Pytest: **71 passed**
 - Dependency-light deployment smoke test: PASS
 - Frozen slow backtest reproduction: PASS (11.338639% CAGR; 0.954762 Sharpe; -19.877475% max drawdown)
 - One-/two-session execution delay reproduction: PASS (11.40% / 11.25% CAGR)
@@ -21,6 +21,8 @@
 - Cloudflare negative API checks: PASS (unauthorized 401; illegal transition 409)
 - Cloudflare authenticated dashboard/status smoke: PASS (public shell 200; unauthorized status 401; authorized status reaches D1)
 - Remote Cloudflare deployment smoke (2026-09-10): PASS; dashboard 200, unauthorized status 401, authenticated D1 read path reached, no service-secret names in delivered HTML
+- Remote native-alert smoke (2026-09-10): PASS; authenticated POST stored a test alert and authenticated dashboard status returned it
+- GitHub/Alpaca/Cloudflare paper smokes #7 and #8: PASS; both authenticated to the paper account and published remote fail-closed status; #8 delivered a real reconciliation alert to D1
 
 ## Behaviors covered
 

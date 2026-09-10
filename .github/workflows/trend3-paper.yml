@@ -1,6 +1,12 @@
 name: trend3-qqq20-paper-candidate
 
 on:
+  schedule:
+    # GitHub schedules are UTC. Both New York offsets are included and the
+    # Python engine enforces the official exchange session before any order.
+    - cron: "35,50 13 * * *"
+    - cron: "5,35,50 14 * * *"
+    - cron: "5 15 * * *"
   workflow_dispatch:
     inputs:
       reason:
