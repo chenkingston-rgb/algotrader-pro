@@ -41,9 +41,12 @@ def restore_signal_snapshot(snapshot: dict) -> pd.DataFrame:
     if supplied_hash != actual_hash:
         raise RuntimeError("Signal snapshot hash mismatch")
     frame = pd.DataFrame(body["adjusted_closes"], index=pd.to_datetime(body["dates"]))
-    if list(frame.columns) != list(ALLOWED_ASSETS) or len(frame) != SMA_DAYS:
+    # Durable stores are allowed to canonicalize JSON object keys.  Validate
+    # the symbol set, then restore the frozen model order explicitly instead
+    # of mistaking harmless key sorting for schema corruption.
+    if set(frame.columns) != set(ALLOWED_ASSETS) or len(frame) != SMA_DAYS:
         raise RuntimeError("Signal snapshot schema mismatch")
-    return frame.astype(float)
+    return frame.loc[:, list(ALLOWED_ASSETS)].astype(float)
 
 
 def fetch_adjusted_closes(settings, end: datetime) -> pd.DataFrame:

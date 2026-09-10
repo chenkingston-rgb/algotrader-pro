@@ -5,6 +5,10 @@
   "compatibility_date": "2026-09-10",
   "workers_dev": true,
   "preview_urls": false,
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
   "triggers": {
     "crons": [
       "0 12 * * MON-FRI",

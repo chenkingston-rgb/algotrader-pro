@@ -2,6 +2,9 @@ name: trend3-qqq20-paper-candidate
 
 on:
   schedule:
+    # Twice-daily read-only broker snapshots at 08:00 and 20:00 Singapore
+    # time. Outside the guarded NY rebalance window the engine cannot trade.
+    - cron: "0 0,12 * * *"
     # GitHub schedules are UTC. Both New York offsets are included and the
     # Python engine enforces the official exchange session before any order.
     - cron: "35,50 13 * * *"
