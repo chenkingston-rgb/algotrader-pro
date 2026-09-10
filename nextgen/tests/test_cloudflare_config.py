@@ -39,6 +39,8 @@ def test_mobile_dashboard_is_installable_and_operator_refresh_is_paper_only() ->
     assert 'apple-mobile-web-app-capable' in dashboard
     assert "Sync broker now" in dashboard
     assert "PAPER TRADING" in dashboard
+    assert "Tracked account P/L" in dashboard
+    assert "since dashboard tracking" in dashboard
 
 
 def test_dashboard_status_includes_equity_history_and_sanitized_event_log() -> None:
