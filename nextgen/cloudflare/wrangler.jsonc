@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "trend3-qqq20-state",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-10",
+  "workers_dev": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "trend3-qqq20-state",
+      "database_id": "07119296-0717-4702-b12e-f28a09b625ba"
+    }
+  ],
+  "vars": {
+    "GH_OWNER": "chenkingston-rgb",
+    "GH_REPO": "algotrader-pro",
+    "GH_WORKFLOW_FILE": "trend3-paper.yml",
+    "GH_REF": "main"
+  }
+}
