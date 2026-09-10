@@ -7,10 +7,10 @@
 - Standalone Alpaca execution service with sell-first cash rebuilding, no margin, deterministic order recovery and transactional Cloudflare D1 state.
 - Alpaca Basic data path: delayed historical adjusted SIP signals, independent Yahoo verification and current IEX quotes for protected limit orders.
 - Timezone-aware serialized GitHub Actions execution, plus an independent Cloudflare missed-run enable/dispatch path.
-- Password-protected Vercel Hobby read-only dashboard; broker secrets remain in GitHub only.
+- Password-protected Cloudflare read-only dashboard; broker secrets remain in GitHub only and no Vercel project is required.
 - Fail-closed dual-source data validation, account/asset/order preflight, health telemetry, free webhook alerts and heartbeat.
 - Reproducible frozen backtest inputs and output ledgers.
-- Hashed production and development dependency locks, pinned CI actions, 67 automated tests and clean Python security audits.
+- Hashed production and development dependency locks, pinned CI actions, 70 automated tests and clean Python security audits.
 
 ## Intentionally excluded
 

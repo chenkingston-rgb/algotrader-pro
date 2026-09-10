@@ -22,9 +22,9 @@
 | S18 | Dead-man, alerts and an independent scheduling path | GitHub schedule, Cloudflare cron enable/dispatch, heartbeat, Discord/Slack alerts, status schema | startup-red-status and alert tests; real dispatch/delivery gate |
 | S19 | Reproducible dependencies | pinned requirement files + CI | install and CI gate |
 | S20 | Legacy isolation | standalone package/service | cutover checklist |
-| S21 | Private authenticated monitoring | `vercel/api/status.js`, Basic authorization, Cloudflare read-only token, independent browser checks | JavaScript syntax check; Vercel deployment gate |
+| S21 | Private authenticated monitoring | `cloudflare/src/index.js`, Basic authorization, direct server-side D1 read, independent browser checks | JavaScript syntax check; remote unauthorized/authorized dashboard tests |
 | S22 | Persistent state recovery | D1 state/event/equity schema and seven-day point-in-time recovery on the current Free plan | schema review, remote contract tests, restore drill |
-| S23 | Broker-secret containment | Alpaca credentials only in GitHub Actions; Cloudflare cannot trade; Vercel is read-only | secret inventory and cutover gate |
+| S23 | Broker-secret containment | Alpaca credentials only in GitHub Actions; Cloudflare cannot trade; browser dashboard has no service token | secret inventory and cutover gate |
 | S24 | Free-tier fail-closed behavior | live mode requires remote state; no automatic paid-feed or wider-limit fallback | configuration tests and paper cost/quote gate |
 
 ## Deliberately not automated

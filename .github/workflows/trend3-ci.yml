@@ -38,4 +38,8 @@ jobs:
       - name: Reproduce frozen backtest
         run: python research/backtest/reproduce.py
       - name: Static checks
-        run: ruff check trader tests selftest.py
+        run: |
+          ruff check trader tests selftest.py
+          node --check cloudflare/src/index.js
+          node --check cloudflare/src/dashboard.js
+          node --check vercel/api/status.js

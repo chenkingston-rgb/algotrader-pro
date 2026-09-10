@@ -1,6 +1,6 @@
 # Zero-subscription deployment runbook — `trend3-qqq20-v1`
 
-**Authoritative deployment:** GitHub Actions + Cloudflare Workers/D1 + Vercel Hobby + Alpaca Basic  
+**Authoritative deployment:** GitHub Actions + Cloudflare Workers/D1 + Alpaca Basic  
 **Recurring infrastructure subscriptions:** **$0** within published free-tier limits  
 **Base44:** not used  
 **VPS:** not used  
@@ -23,17 +23,14 @@ Cloudflare Worker + D1 (free)
   ├─ latest fail-closed dashboard status
   ├─ daily heartbeat endpoint
   └─ 10:10–10:29 New York dead-man dispatch to GitHub
-               │ read-only token
-               ▼
-Vercel Hobby dashboard (free)
-  └─ password-protected, read-only; no broker credentials
+  └─ password-protected operator dashboard at `/dashboard`; no broker credentials
 
 GitHub Actions ───────────────► Alpaca Basic (free)
   delayed completed SIP bars     account/calendar/orders
   + Yahoo independent check      + current IEX quotes
 ```
 
-Only GitHub receives the Alpaca keys. Cloudflare cannot trade. Vercel cannot trade. A compromise of either dashboard service therefore cannot submit an order.
+Only GitHub receives the Alpaca keys. Cloudflare cannot trade. The browser dashboard receives only a short-lived Basic authorization header and never receives a state-write, GitHub or broker credential.
 
 ## 2. Accounts and free-tier boundaries
 
@@ -41,11 +38,10 @@ Create or retain:
 
 1. GitHub Free account and a **private** repository.
 2. Cloudflare Free account with Workers and D1 enabled.
-3. Vercel Hobby account for this personal, non-commercial dashboard.
-4. Alpaca Trading API Basic account.
-5. Optional free Discord channel webhook for immediate alerts.
+3. Alpaca Trading API Basic account.
+4. Optional free Discord channel webhook for immediate alerts.
 
-Set GitHub Actions' usage budget to **$0 with “stop usage when the budget limit is reached”**. The design normally consumes a small fraction of the 2,000 included private-repository minutes. Cloudflare usage is expected to be a few hundred requests and rows per month, far below its free limits. Vercel makes one small status request per displayed minute.
+Set GitHub Actions' usage budget to **$0 with “stop usage when the budget limit is reached”**. The design normally consumes a small fraction of the included private-repository minutes. Cloudflare usage is expected to be a few hundred requests and rows per month, far below its free limits. The dashboard reads D1 through the Worker only while it is open.
 
 Free tiers are external dependencies, not service-level agreements. The dual scheduler, durable state, deterministic broker IDs and three-session catch-up are the mitigations; they do not create a guarantee of availability.
 
@@ -62,7 +58,7 @@ cp wrangler.toml.example wrangler.toml
 npx wrangler d1 execute trend3-qqq20-state --remote --file=schema.sql
 ```
 
-Generate three unrelated random values of at least 32 bytes:
+Generate five unrelated random values of at least 32 bytes:
 
 ```bash
 python -c "import secrets; print(secrets.token_urlsafe(48))"
@@ -74,6 +70,8 @@ Set Worker secrets, entering the value only at the prompt:
 npx wrangler secret put STATE_API_WRITE_TOKEN
 npx wrangler secret put STATE_API_READ_TOKEN
 npx wrangler secret put HEARTBEAT_SECRET
+npx wrangler secret put DASHBOARD_USERNAME
+npx wrangler secret put DASHBOARD_PASSWORD
 npx wrangler secret put GH_ACTIONS_DISPATCH_TOKEN
 npx wrangler deploy
 ```
@@ -132,18 +130,9 @@ The no-subscription build deliberately separates signals from execution:
 
 The change from current SIP quotes to IEX quotes is an implementation change, not a new investment rule. It must pass three paper month ends. If IEX quote quality causes rejects, stale quotes, drift over 50 bps or all-in cost over 20 bps per side, the system remains paper-only; it does not silently subscribe or widen limits.
 
-## 6. Vercel read-only dashboard
+## 6. Cloudflare read-only dashboard
 
-Import the `vercel/` directory as a Vercel project and set:
-
-| Environment variable | Purpose |
-|---|---|
-| `STATE_API_URL` | Cloudflare Worker origin |
-| `STATE_API_READ_TOKEN` | read-only token; never the write token |
-| `DASHBOARD_USERNAME` | unique operator name |
-| `DASHBOARD_PASSWORD` | unique 20+ character password |
-
-Deploy on Hobby. Open the production URL, sign in and confirm it shows **UNHEALTHY** before the first valid status exists. Vercel has no Alpaca key, GitHub token or state-write token.
+Open `https://YOUR-WORKER.workers.dev/dashboard`, sign in with the two dashboard secrets, and confirm it shows **UNHEALTHY** before the first valid status exists. The Worker checks the credentials server-side and reads D1 directly. The HTML/JavaScript contains no Alpaca key, GitHub token, D1 write token or D1 read token. The old `vercel/` directory is retained only as an optional fallback and is not part of the authoritative deployment.
 
 ## 7. Paper acceptance — minimum three completed month ends
 
@@ -183,7 +172,7 @@ Scaling rules are unchanged: three clean live rebalances before 50%; at least 12
 
 - GitHub unavailable: Cloudflare attempts one enable-and-dispatch during the 10:10–10:29 New York window.
 - Cloudflare unavailable: the trader refuses live startup because durable state is mandatory; it does not trade from an empty local file.
-- Vercel unavailable: trading can continue; view broker and GitHub logs directly.
+- Dashboard route unavailable: trading can continue; view broker and GitHub logs directly.
 - Yahoo or delayed SIP unavailable/disagreeing: no new orders.
 - IEX quote stale/crossed/missing: no new orders.
 - Order state uncertain: cancel, reconcile by deterministic client ID and require review; no blind retry.
@@ -192,6 +181,6 @@ Scaling rules are unchanged: three clean live rebalances before 50%; at least 12
 
 ## 10. What remains free—and what is not promised
 
-No Base44, paid Vercel, paid GitHub, VPS or Alpaca SIP subscription is required for this design at the expected traffic level. Domain registration is optional and not included. Free-tier quotas and provider terms can change; review them quarterly.
+No Base44, Vercel, paid GitHub, VPS or Alpaca SIP subscription is required for this design at the expected traffic level. Domain registration is optional and not included. Free-tier quotas and provider terms can change; review them quarterly.
 
 The historical 11.34% CAGR is unchanged as a research result because the investment signal is unchanged. It is not a forward guarantee. The free execution path adds IEX quote-basis risk, which is bounded by limits and must be measured in paper trading before any live authorization.

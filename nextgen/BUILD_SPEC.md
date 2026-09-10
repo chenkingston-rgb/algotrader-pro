@@ -135,12 +135,12 @@ Alpaca market calendar ----> first 3 sessions after month end?
                                           |
                                Cloudflare D1 durable state
                                           |
-                               Vercel read-only dashboard
+                         Cloudflare authenticated dashboard
 
 Cloudflare dead-man cron ----------> enable/dispatch missed GitHub run
 ```
 
-Base44 and a VPS are not used. Only GitHub holds broker credentials. Cloudflare holds execution state but cannot trade; Vercel is read-only.
+Base44, Vercel and a VPS are not required. Only GitHub holds broker credentials. Cloudflare holds execution state and serves the authenticated read-only dashboard, but cannot trade.
 
 ## 7. Data contract
 
@@ -211,7 +211,7 @@ Every transition is committed through an authenticated Cloudflare Worker to D1 b
 - Independent Cloudflare cron enables and dispatches the GitHub workflow if the primary run is missing or unhealthy.
 - Pinned dependencies and monthly security review.
 - Structured logs; no silent exceptions.
-- Vercel is read-only and never receives broker credentials.
+- The Cloudflare dashboard is read-only and never receives broker credentials or the state-write token in browser code.
 
 ## 11. Acceptance tests the implementation must deliver
 
@@ -282,7 +282,7 @@ The zero-subscription deployment is finished only when it supplies:
 - an explicit statement that the legacy workflow is disabled.
 - Cloudflare D1 schema and authenticated write/read smoke tests;
 - a Cloudflare dead-man dispatch drill;
-- a Vercel dashboard check proving it has no Alpaca or state-write credentials.
+- a Cloudflare dashboard check proving browser code has no Alpaca, GitHub-dispatch or state-write credential.
 
 Do not accept a prose claim that the strategy was built. Verify the repository, tests, broker state and paper fills directly.
 

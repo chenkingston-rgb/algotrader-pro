@@ -1,3 +1,5 @@
+import { DASHBOARD_HTML } from "./dashboard.js";
+
 const TRANSITIONS = Object.freeze({
   CREATED: ["DATA_VALIDATED", "ATTENTION", "FAILED"],
   DATA_VALIDATED: ["SIGNAL_LOCKED", "ATTENTION", "FAILED"],
@@ -24,6 +26,21 @@ function json(body, status = 200) {
   });
 }
 
+function dashboardPage() {
+  return new Response(DASHBOARD_HTML, {
+    status: 200,
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      "cache-control": "no-store, max-age=0",
+      "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "no-referrer",
+      "x-frame-options": "DENY",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
+    },
+  });
+}
+
 function safeEqual(left, right) {
   const a = String(left || "");
   const b = String(right || "");
@@ -39,6 +56,24 @@ function safeEqual(left, right) {
 function bearer(request) {
   const value = request.headers.get("authorization") || "";
   return value.startsWith("Bearer ") ? value.slice(7) : "";
+}
+
+function requireDashboardAuth(request, env) {
+  const supplied = request.headers.get("authorization") || "";
+  const expectedUser = String(env.DASHBOARD_USERNAME || "");
+  const expectedPassword = String(env.DASHBOARD_PASSWORD || "");
+  if (!supplied.startsWith("Basic ") || !expectedUser || !expectedPassword) {
+    throw Object.assign(new Error("unauthorized"), { status: 401 });
+  }
+  let decoded = "";
+  try {
+    decoded = atob(supplied.slice(6));
+  } catch (_error) {
+    throw Object.assign(new Error("unauthorized"), { status: 401 });
+  }
+  if (!safeEqual(decoded, `${expectedUser}:${expectedPassword}`)) {
+    throw Object.assign(new Error("unauthorized"), { status: 401 });
+  }
 }
 
 function requireToken(request, expected) {
@@ -239,6 +274,13 @@ async function heartbeat(env, request, url) {
 
 async function handle(request, env) {
   const url = new URL(request.url);
+  if (request.method === "GET" && ["/dashboard", "/dashboard/"].includes(url.pathname)) {
+    return dashboardPage();
+  }
+  if (request.method === "GET" && url.pathname === "/dashboard/status") {
+    requireDashboardAuth(request, env);
+    return getStatus(env);
+  }
   if (request.method === "GET" && url.pathname === "/v1/health") {
     return json({ ok: true, service: "trend3-qqq20-state" });
   }
