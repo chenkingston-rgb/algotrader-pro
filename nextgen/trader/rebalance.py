@@ -131,6 +131,54 @@ def _positions(trading_client) -> list[Position]:
     return [Position(str(p.symbol), float(p.qty), float(p.market_value)) for p in trading_client.get_all_positions()]
 
 
+def _optional_float(value) -> float | None:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    return number if number == number and number not in {float("inf"), float("-inf")} else None
+
+
+def _holding_snapshot(trading_client) -> list[dict]:
+    """Read-only broker marks for the mobile operator dashboard.
+
+    These values never participate in signal generation or order sizing.  They
+    are deliberately optional because Alpaca may omit a mark outside the
+    session or for an empty paper account.
+    """
+    rows: list[dict] = []
+    for position in trading_client.get_all_positions():
+        rows.append({
+            "symbol": str(position.symbol),
+            "qty": _optional_float(getattr(position, "qty", None)),
+            "market_value": _optional_float(getattr(position, "market_value", None)),
+            "current_price": _optional_float(getattr(position, "current_price", None)),
+            "avg_entry_price": _optional_float(getattr(position, "avg_entry_price", None)),
+            "unrealized_pl": _optional_float(getattr(position, "unrealized_pl", None)),
+            "unrealized_plpc": _optional_float(getattr(position, "unrealized_plpc", None)),
+            "change_today": _optional_float(getattr(position, "change_today", None)),
+        })
+    return sorted(rows, key=lambda row: row["symbol"])
+
+
+def _signal_summary(snapshot: dict | None) -> list[dict]:
+    if not snapshot:
+        return []
+    frame = restore_signal_snapshot(snapshot)
+    signal_date = date.fromisoformat(str(snapshot["signal_date"]))
+    decision = decide(frame, signal_date)
+    return [
+        {
+            "symbol": signal.symbol,
+            "close": signal.close,
+            "sma_200": signal.sma,
+            "distance_pct": (signal.close / signal.sma - 1.0) * 100.0,
+            "risk_on": signal.risk_on,
+        }
+        for signal in decision.signals
+    ]
+
+
 def _assert_account_identity_and_ready(trading_client, settings: Settings) -> None:
     account = trading_client.get_account()
     actual_id = str(getattr(account, "id", ""))
@@ -270,10 +318,24 @@ def _account_snapshot(trading_client, store: RunStore, now: datetime, settings: 
     risk["halt_active"] = risk["drawdown_pct"] <= -FREEZE_RISK_INCREASE_DRAWDOWN_PCT * 100
     risk["kill_switch_active"] = risk["drawdown_pct"] <= -CRITICAL_REAUDIT_DRAWDOWN_PCT * 100
     risk["policy"] = "review/freeze/re-audit; never auto-liquidate solely from account drawdown"
+    last_equity = _optional_float(getattr(account, "last_equity", None))
+    day_pl = equity - last_equity if last_equity and last_equity > 0 else None
+    basis = settings.initial_peak_equity
+    adjusted_equity = _optional_float(risk.get("adjusted_equity"))
+    total_pl = adjusted_equity - basis if adjusted_equity is not None and basis else None
     return {
         "equity": equity,
         "cash": cash,
         "buying_power": buying_power,
+        "last_equity": last_equity,
+        "day_pl": day_pl,
+        "day_pl_pct": day_pl / last_equity if day_pl is not None and last_equity else None,
+        "configured_basis_equity": basis,
+        "total_pl": total_pl,
+        "total_pl_pct": total_pl / basis if total_pl is not None and basis else None,
+        "long_market_value": _optional_float(getattr(account, "long_market_value", None)),
+        "portfolio_value": _optional_float(getattr(account, "portfolio_value", None)),
+        "positions": _holding_snapshot(trading_client),
         **risk,
     }
 
@@ -407,6 +469,7 @@ def _publish(
     reconciliation: dict,
     risk: dict,
     heartbeat_ok: bool,
+    signals: list[dict] | None = None,
 ) -> dict:
     payload = {
         "schema_version": SCHEMA_VERSION,
@@ -428,6 +491,7 @@ def _publish(
         "actual": actual,
         "reconciliation": reconciliation,
         "risk": risk,
+        "signals": signals or [],
         "services": {
             "alert_webhook_configured": bool(settings.alert_webhook_url),
             "heartbeat_configured": bool(settings.heartbeat_url),
@@ -457,6 +521,7 @@ def _publish_no_action(
     """
     latest = store.latest_terminal_payload()
     latest_signal = (latest or {}).get("signal_date")
+    signals = _signal_summary((latest or {}).get("primary_signal_snapshot"))
     missed = bool(
         window.reason == "catch-up window expired"
         and window.signal_date is not None
@@ -532,6 +597,7 @@ def _publish_no_action(
         reconciliation=reconciliation,
         risk=risk,
         heartbeat_ok=heartbeat_ok,
+        signals=signals,
     )
     if missed:
         _safe_alert(
@@ -758,6 +824,13 @@ def _run_once(now: datetime | None = None) -> dict:
                       "halt_active": account["halt_active"],
                       "kill_switch_active": account["kill_switch_active"]},
                 heartbeat_ok=heartbeat_ok,
+                signals=[{
+                    "symbol": row["symbol"],
+                    "close": row["close"],
+                    "sma_200": row["sma"],
+                    "distance_pct": (row["close"] / row["sma"] - 1.0) * 100.0,
+                    "risk_on": row["risk_on"],
+                } for row in payload.get("signals", [])],
             )
             return {
                 "status": terminal, "run_id": run_id, "signal_date": signal_date_text,

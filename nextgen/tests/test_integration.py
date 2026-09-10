@@ -1,4 +1,5 @@
 from datetime import date, datetime
+import json
 from types import SimpleNamespace
 
 import pandas as pd
@@ -24,11 +25,15 @@ class FakeTrading:
         return SimpleNamespace(
             id="paper-account", status="ACTIVE", equity=str(self.equity), cash=str(self.cash),
             buying_power=str(self.cash), account_blocked=False, trading_blocked=False,
-            trade_suspended_by_user=False,
+            trade_suspended_by_user=False, last_equity="10000",
+            long_market_value=str(self.equity - self.cash), portfolio_value=str(self.equity),
         )
 
     def get_all_positions(self):
-        return [SimpleNamespace(symbol=s, qty=str(q), market_value=str(q * 100.0))
+        return [SimpleNamespace(symbol=s, qty=str(q), market_value=str(q * 100.0),
+                                current_price="100", avg_entry_price="99",
+                                unrealized_pl=str(q), unrealized_plpc="0.010101",
+                                change_today="0.002")
                 for s, q in self.positions.items() if q > 0]
 
     def get_orders(self, filter):
@@ -84,6 +89,11 @@ def test_full_paper_orchestration_and_repeat_is_idempotent(monkeypatch, tmp_path
     result = rebalance.run(now)
     assert result["status"] == "COMPLETE"
     assert result["dashboard_health"]["healthy"] is True
+    dashboard = json.loads((tmp_path / "dashboard.json").read_text(encoding="utf-8"))
+    assert {row["symbol"] for row in dashboard["signals"]} == {"SPY", "QQQ", "GLD"}
+    assert dashboard["account"]["positions"]
+    assert dashboard["account"]["day_pl"] == 0
+    assert "total_pl" in dashboard["account"]
     before = dict(broker.positions)
     again = rebalance.run(datetime(2026, 1, 5, 9, 40, tzinfo=NY))
     assert again["status"] == "ALREADY_COMPLETE"

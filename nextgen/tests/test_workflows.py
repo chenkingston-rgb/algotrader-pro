@@ -32,6 +32,7 @@ def test_active_paper_workflow_covers_both_new_york_utc_offsets() -> None:
     doc = yaml.load(path.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
     schedules = {entry["cron"] for entry in doc["on"]["schedule"]}
     assert schedules == {
+        "0 0,12 * * *",
         "35,50 13 * * *",
         "5,35,50 14 * * *",
         "5 15 * * *",

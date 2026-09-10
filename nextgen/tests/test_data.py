@@ -1,3 +1,5 @@
+import json
+
 import pandas as pd
 import pytest
 
@@ -49,3 +51,13 @@ def test_signal_snapshot_is_hash_addressed_and_round_trips():
     snapshot["adjusted_closes"]["SPY"][-1] += 1
     with pytest.raises(RuntimeError, match="hash mismatch"):
         restore_signal_snapshot(snapshot)
+
+
+def test_signal_snapshot_survives_canonical_json_key_sorting():
+    x = prices()
+    captured = pd.Timestamp("2026-01-02T15:00:00Z").to_pydatetime()
+    snapshot = make_signal_snapshot(x, x.index[-1], "test", captured)
+    durable_copy = json.loads(json.dumps(snapshot, sort_keys=True))
+    restored = restore_signal_snapshot(durable_copy)
+    assert list(restored.columns) == ["SPY", "QQQ", "GLD", "BIL"]
+    pd.testing.assert_frame_equal(restored, x.iloc[-200:].astype(float), check_freq=False)

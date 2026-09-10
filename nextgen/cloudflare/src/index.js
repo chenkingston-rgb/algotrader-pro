@@ -1,4 +1,5 @@
 import { DASHBOARD_HTML } from "./dashboard.js";
+import { ICONS } from "./icons.js";
 
 const TRANSITIONS = Object.freeze({
   CREATED: ["DATA_VALIDATED", "ATTENTION", "FAILED"],
@@ -37,6 +38,45 @@ function dashboardPage() {
       "referrer-policy": "no-referrer",
       "x-frame-options": "DENY",
       "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
+    },
+  });
+}
+
+function manifest() {
+  return new Response(JSON.stringify({
+    name: "Trend-3 QQQ20 Operator",
+    short_name: "Trend-3",
+    description: "Read-only paper-trading status, P/L, positions, signals and operational logs.",
+    start_url: "/dashboard",
+    scope: "/",
+    display: "standalone",
+    background_color: "#07111f",
+    theme_color: "#07111f",
+    icons: [
+      { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
+      { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" },
+    ],
+  }), {
+    headers: {
+      "content-type": "application/manifest+json; charset=utf-8",
+      "cache-control": "public, max-age=3600",
+      "x-content-type-options": "nosniff",
+      "referrer-policy": "no-referrer",
+    },
+  });
+}
+
+function icon(size) {
+  const encoded = ICONS[size];
+  if (!encoded) return json({ ok: false, error: "not found" }, 404);
+  const raw = atob(encoded);
+  const bytes = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i += 1) bytes[i] = raw.charCodeAt(i);
+  return new Response(bytes, {
+    headers: {
+      "content-type": "image/png",
+      "cache-control": "public, max-age=86400",
+      "x-content-type-options": "nosniff",
     },
   });
 }
@@ -240,13 +280,14 @@ async function getStatus(env) {
   if (!row) throw Object.assign(new Error("status has never been published"), { status: 404 });
   const status = decodePayload(row.payload);
   const control = await env.DB.prepare(
-    "SELECT key,value,updated_at FROM control WHERE key IN ('last_deadman_check','last_deadman_error','last_fallback_date')"
+    "SELECT key,value,updated_at FROM control WHERE key IN ('last_deadman_check','last_deadman_error','last_fallback_date','last_dashboard_refresh')"
   ).all();
   const values = Object.fromEntries((control.results || []).map((x) => [x.key, x]));
   status.services = status.services || {};
   status.services.deadman_last_check_at = values.last_deadman_check?.updated_at || null;
   status.services.deadman_last_error = values.last_deadman_error?.value || null;
   status.services.last_fallback_date = values.last_fallback_date?.value || null;
+  status.services.last_dashboard_refresh_at = values.last_dashboard_refresh?.updated_at || null;
   const problems = [...(status.health?.problems || [])];
   const checkedAt = Date.parse(values.last_deadman_check?.updated_at || "");
   const checkAgeHours = (Date.now() - checkedAt) / 3_600_000;
@@ -263,6 +304,28 @@ async function getStatus(env) {
     created_at: row.created_at,
     message: decodePayload(row.payload)?.message || "Alert details unavailable",
   }));
+  const history = await env.DB.prepare(
+    "SELECT observed_at,equity,adjusted_equity FROM equity_snapshots ORDER BY observed_at DESC LIMIT 180"
+  ).all();
+  status.equity_history = (history.results || []).reverse().map((row) => ({
+    observed_at: row.observed_at,
+    equity: Number(row.equity),
+    adjusted_equity: Number(row.adjusted_equity),
+  }));
+  const events = await env.DB.prepare(
+    "SELECT run_id,event,payload,created_at FROM events ORDER BY id DESC LIMIT 30"
+  ).all();
+  status.recent_events = (events.results || []).map((row) => {
+    let payload = {};
+    try { payload = decodePayload(row.payload) || {}; } catch (_error) { payload = {}; }
+    const detail = payload.message || payload.error || payload.reason || payload.source || "";
+    return {
+      run_id: row.run_id || null,
+      event: String(row.event || "UNKNOWN").slice(0, 80),
+      detail: String(detail).slice(0, 500),
+      created_at: row.created_at,
+    };
+  });
   return json({ ok: true, status });
 }
 
@@ -289,12 +352,19 @@ async function heartbeat(env, request, url) {
 
 async function handle(request, env) {
   const url = new URL(request.url);
+  if (request.method === "GET" && url.pathname === "/manifest.webmanifest") return manifest();
+  if (request.method === "GET" && url.pathname === "/icon-192.png") return icon(192);
+  if (request.method === "GET" && url.pathname === "/icon-512.png") return icon(512);
   if (request.method === "GET" && ["/dashboard", "/dashboard/"].includes(url.pathname)) {
     return dashboardPage();
   }
   if (request.method === "GET" && url.pathname === "/dashboard/status") {
     requireDashboardAuth(request, env);
     return getStatus(env);
+  }
+  if (request.method === "POST" && url.pathname === "/dashboard/refresh") {
+    requireDashboardAuth(request, env);
+    return requestDashboardRefresh(env);
   }
   if (request.method === "GET" && url.pathname === "/v1/health") {
     return json({ ok: true, service: "trend3-qqq20-state" });
@@ -341,7 +411,54 @@ function githubHeaders(env) {
   };
 }
 
-async function verifyGithubWorkflow(env, now) {
+async function dispatchWorkflow(env, reason) {
+  const commonHeaders = githubHeaders(env);
+  const enableEndpoint = `https://api.github.com/repos/${env.GH_OWNER}/${env.GH_REPO}`
+    + `/actions/workflows/${env.GH_WORKFLOW_FILE}/enable`;
+  const enabled = await fetch(enableEndpoint, { method: "PUT", headers: commonHeaders });
+  if (enabled.status !== 204) {
+    const detail = (await enabled.text()).slice(0, 500);
+    throw new Error(`GitHub workflow enable failed: HTTP ${enabled.status}: ${detail}`);
+  }
+  const endpoint = `https://api.github.com/repos/${env.GH_OWNER}/${env.GH_REPO}`
+    + `/actions/workflows/${env.GH_WORKFLOW_FILE}/dispatches`;
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { ...commonHeaders, "content-type": "application/json" },
+    body: JSON.stringify({ ref: env.GH_REF || "main", inputs: { reason } }),
+  });
+  if (response.status !== 204) {
+    const detail = (await response.text()).slice(0, 500);
+    throw new Error(`GitHub workflow dispatch failed: HTTP ${response.status}: ${detail}`);
+  }
+}
+
+async function requestDashboardRefresh(env) {
+  if (env.GH_WORKFLOW_FILE !== "trend3-paper.yml") {
+    throw new Error("Dashboard refresh is locked to the paper workflow");
+  }
+  const now = new Date();
+  const prior = await env.DB.prepare("SELECT updated_at FROM control WHERE key='last_dashboard_refresh'").first();
+  const priorAt = Date.parse(prior?.updated_at || "");
+  if (Number.isFinite(priorAt) && now.getTime() - priorAt < 10 * 60 * 1000) {
+    return json({ ok: false, error: "A broker refresh was already requested within the last 10 minutes." }, 429);
+  }
+  await verifyGithubWorkflow(env, now, false);
+  await dispatchWorkflow(env, "dashboard-refresh");
+  const stamp = now.toISOString();
+  await env.DB.batch([
+    env.DB.prepare(
+      "INSERT INTO control(key,value,updated_at) VALUES('last_dashboard_refresh','requested',?1) "
+        + "ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_at=excluded.updated_at"
+    ).bind(stamp),
+    env.DB.prepare(
+      "INSERT INTO events(run_id,event,payload,created_at) VALUES(NULL,'DASHBOARD_REFRESH',?1,?2)"
+    ).bind(JSON.stringify({ source: "operator-dashboard" }), stamp),
+  ]);
+  return json({ ok: true, accepted: true, requested_at: stamp });
+}
+
+async function verifyGithubWorkflow(env, now, recordCheck = true) {
   const endpoint = `https://api.github.com/repos/${env.GH_OWNER}/${env.GH_REPO}`
     + `/actions/workflows/${env.GH_WORKFLOW_FILE}`;
   const response = await fetch(endpoint, { headers: githubHeaders(env) });
@@ -353,6 +470,7 @@ async function verifyGithubWorkflow(env, now) {
   if (!value?.id || !["active", "disabled_inactivity"].includes(value.state)) {
     throw new Error(`GitHub workflow is missing or unusable: ${JSON.stringify(value).slice(0, 500)}`);
   }
+  if (!recordCheck) return;
   const stamp = now.toISOString();
   await env.DB.batch([
     env.DB.prepare(
@@ -380,28 +498,7 @@ async function dispatchFallback(env, now) {
   }
   if (!needsFallback) return;
 
-  const endpoint = `https://api.github.com/repos/${env.GH_OWNER}/${env.GH_REPO}`
-    + `/actions/workflows/${env.GH_WORKFLOW_FILE}/dispatches`;
-  const commonHeaders = githubHeaders(env);
-  const enableEndpoint = `https://api.github.com/repos/${env.GH_OWNER}/${env.GH_REPO}`
-    + `/actions/workflows/${env.GH_WORKFLOW_FILE}/enable`;
-  const enabled = await fetch(enableEndpoint, { method: "PUT", headers: commonHeaders });
-  if (enabled.status !== 204) {
-    const detail = (await enabled.text()).slice(0, 500);
-    throw new Error(`GitHub workflow enable failed: HTTP ${enabled.status}: ${detail}`);
-  }
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: {
-      ...commonHeaders,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({ ref: env.GH_REF || "main", inputs: { reason: "cloudflare-deadman" } }),
-  });
-  if (response.status !== 204) {
-    const detail = (await response.text()).slice(0, 500);
-    throw new Error(`GitHub fallback dispatch failed: HTTP ${response.status}: ${detail}`);
-  }
+  await dispatchWorkflow(env, "cloudflare-deadman");
   const stamp = now.toISOString();
   await env.DB.batch([
     env.DB.prepare(
