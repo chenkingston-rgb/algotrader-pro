@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-09-17T09:47:10.479427+00:00",
+  "generated_at": "2026-09-17T18:29:58.855887+00:00",
   "deposit_basis": 29926.88,
-  "total_pnl": -72.04,
-  "total_pnl_pct": -0.24,
+  "total_pnl": 70.6,
+  "total_pnl_pct": 0.24,
   "account": {
-    "equity": 29854.84,
+    "equity": 29997.48,
     "cash": 3469.9,
-    "invested": 26384.93,
-    "invested_pct": 88.38,
+    "invested": 26527.58,
+    "invested_pct": 88.43,
     "position_count": 7
   },
   "risk": {
     "peak_equity": 30399.69,
-    "drawdown_pct": -1.79,
+    "drawdown_pct": -1.32,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 25.21,
-    "distance_to_kill_pct": 28.21,
+    "distance_to_halt_pct": 25.68,
+    "distance_to_kill_pct": 28.68,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
@@ -28,11 +28,11 @@
     "on": true,
     "ticker": "SPY",
     "ma_window": 200,
-    "close": 757.42,
-    "ma": 712.94,
-    "gap_pct": 6.24,
+    "close": 754.05,
+    "ma": 713.34,
+    "gap_pct": 5.71,
     "label": "RISK-ON",
-    "as_of": "2026-09-15"
+    "as_of": "2026-09-16"
   },
   "sleeves": {
     "rotation": {
@@ -63,10 +63,10 @@
     {
       "symbol": "QQQ",
       "qty": 13.0,
-      "market_value": 9257.3,
-      "actual_weight_pct": 31.01,
+      "market_value": 9312.42,
+      "actual_weight_pct": 31.04,
       "target_weight_pct": 33.33,
-      "drift_pct": -2.32,
+      "drift_pct": -2.29,
       "sleeves": {
         "gated_qqq": 0.333333
       },
@@ -75,10 +75,10 @@
     {
       "symbol": "SPY",
       "qty": 7.0,
-      "market_value": 5321.19,
-      "actual_weight_pct": 17.82,
+      "market_value": 5338.9,
+      "actual_weight_pct": 17.8,
       "target_weight_pct": 20.0,
-      "drift_pct": -2.18,
+      "drift_pct": -2.2,
       "sleeves": {
         "balanced": 0.2
       },
@@ -87,10 +87,10 @@
     {
       "symbol": "AGG",
       "qty": 39.0,
-      "market_value": 3738.54,
-      "actual_weight_pct": 12.52,
+      "market_value": 3751.8,
+      "actual_weight_pct": 12.51,
       "target_weight_pct": 13.33,
-      "drift_pct": -0.81,
+      "drift_pct": -0.83,
       "sleeves": {
         "balanced": 0.133333
       },
@@ -100,9 +100,9 @@
       "symbol": "BIL",
       "qty": 33.0,
       "market_value": 3020.32,
-      "actual_weight_pct": 10.12,
+      "actual_weight_pct": 10.07,
       "target_weight_pct": 10.0,
-      "drift_pct": 0.12,
+      "drift_pct": 0.07,
       "sleeves": {
         "rotation": 0.1
       },
@@ -111,7 +111,7 @@
     {
       "symbol": "XLE",
       "qty": 28.0,
-      "market_value": 1795.92,
+      "market_value": 1806.42,
       "actual_weight_pct": 6.02,
       "target_weight_pct": 5.83,
       "drift_pct": 0.19,
@@ -123,10 +123,10 @@
     {
       "symbol": "XLK",
       "qty": 9.0,
-      "market_value": 1678.14,
-      "actual_weight_pct": 5.62,
+      "market_value": 1692.27,
+      "actual_weight_pct": 5.64,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.21,
+      "drift_pct": -0.19,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -135,10 +135,10 @@
     {
       "symbol": "VLUE",
       "qty": 8.0,
-      "market_value": 1573.52,
-      "actual_weight_pct": 5.27,
+      "market_value": 1605.44,
+      "actual_weight_pct": 5.35,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.56,
+      "drift_pct": -0.48,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -164,10 +164,10 @@
     "last_rebalance_date": "2026-08-03"
   },
   "health": {
-    "last_run_utc": "2026-09-17T09:47:10.479427+00:00",
+    "last_run_utc": "2026-09-17T18:29:58.855887+00:00",
     "last_run_ok": true,
-    "last_run_detail": "Intraday snapshot (market closed) \u2014 equity, cash and positions refreshed from Alpaca; target weights and regime unchanged since the last rebalance.",
-    "price_source": "alpaca (intraday snapshot, no signal recompute)",
+    "last_run_detail": "Not a rebalance day. No-op.",
+    "price_source": "alpaca-iex",
     "expected_symbols": [
       "VLUE",
       "XLE",
