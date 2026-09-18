@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-09-17T21:17:43.284728+00:00",
+  "generated_at": "2026-09-18T09:20:44.097915+00:00",
   "deposit_basis": 29926.88,
-  "total_pnl": 69.22,
-  "total_pnl_pct": 0.23,
+  "total_pnl": 128.45,
+  "total_pnl_pct": 0.43,
   "account": {
-    "equity": 29996.1,
+    "equity": 30055.33,
     "cash": 3469.9,
-    "invested": 26526.2,
-    "invested_pct": 88.43,
+    "invested": 26585.43,
+    "invested_pct": 88.45,
     "position_count": 7
   },
   "risk": {
     "peak_equity": 30399.69,
-    "drawdown_pct": -1.33,
+    "drawdown_pct": -1.13,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 25.67,
-    "distance_to_kill_pct": 28.67,
+    "distance_to_halt_pct": 25.87,
+    "distance_to_kill_pct": 28.87,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
@@ -63,10 +63,10 @@
     {
       "symbol": "QQQ",
       "qty": 13.0,
-      "market_value": 9313.98,
-      "actual_weight_pct": 31.05,
+      "market_value": 9368.97,
+      "actual_weight_pct": 31.17,
       "target_weight_pct": 33.33,
-      "drift_pct": -2.28,
+      "drift_pct": -2.16,
       "sleeves": {
         "gated_qqq": 0.333333
       },
@@ -75,10 +75,10 @@
     {
       "symbol": "SPY",
       "qty": 7.0,
-      "market_value": 5335.96,
-      "actual_weight_pct": 17.79,
+      "market_value": 5341.0,
+      "actual_weight_pct": 17.77,
       "target_weight_pct": 20.0,
-      "drift_pct": -2.21,
+      "drift_pct": -2.23,
       "sleeves": {
         "balanced": 0.2
       },
@@ -87,10 +87,10 @@
     {
       "symbol": "AGG",
       "qty": 39.0,
-      "market_value": 3752.97,
-      "actual_weight_pct": 12.51,
+      "market_value": 3756.87,
+      "actual_weight_pct": 12.5,
       "target_weight_pct": 13.33,
-      "drift_pct": -0.82,
+      "drift_pct": -0.83,
       "sleeves": {
         "balanced": 0.133333
       },
@@ -99,10 +99,10 @@
     {
       "symbol": "BIL",
       "qty": 33.0,
-      "market_value": 3020.54,
-      "actual_weight_pct": 10.07,
+      "market_value": 3021.39,
+      "actual_weight_pct": 10.05,
       "target_weight_pct": 10.0,
-      "drift_pct": 0.07,
+      "drift_pct": 0.05,
       "sleeves": {
         "rotation": 0.1
       },
@@ -111,10 +111,10 @@
     {
       "symbol": "XLE",
       "qty": 28.0,
-      "market_value": 1809.08,
-      "actual_weight_pct": 6.03,
+      "market_value": 1792.0,
+      "actual_weight_pct": 5.96,
       "target_weight_pct": 5.83,
-      "drift_pct": 0.2,
+      "drift_pct": 0.13,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -123,10 +123,10 @@
     {
       "symbol": "XLK",
       "qty": 9.0,
-      "market_value": 1691.99,
-      "actual_weight_pct": 5.64,
+      "market_value": 1703.52,
+      "actual_weight_pct": 5.67,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.19,
+      "drift_pct": -0.16,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -136,9 +136,9 @@
       "symbol": "VLUE",
       "qty": 8.0,
       "market_value": 1601.68,
-      "actual_weight_pct": 5.34,
+      "actual_weight_pct": 5.33,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.49,
+      "drift_pct": -0.5,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -160,14 +160,14 @@
   "schedule": {
     "cadence": "last trading session of each month",
     "next_rebalance": "2026-09-30",
-    "days_to_next_rebalance": 13,
+    "days_to_next_rebalance": 12,
     "last_rebalance_date": "2026-08-03"
   },
   "health": {
-    "last_run_utc": "2026-09-17T21:17:43.284728+00:00",
+    "last_run_utc": "2026-09-18T09:20:44.097915+00:00",
     "last_run_ok": true,
-    "last_run_detail": "Not a rebalance day. No-op.",
-    "price_source": "alpaca-iex",
+    "last_run_detail": "Intraday snapshot (market closed) \u2014 equity, cash and positions refreshed from Alpaca; target weights and regime unchanged since the last rebalance.",
+    "price_source": "alpaca (intraday snapshot, no signal recompute)",
     "expected_symbols": [
       "VLUE",
       "XLE",
