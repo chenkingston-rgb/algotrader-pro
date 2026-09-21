@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-09-21T19:41:52.609810+00:00",
+  "generated_at": "2026-09-21T20:42:34.763459+00:00",
   "deposit_basis": 29926.88,
-  "total_pnl": 519.67,
-  "total_pnl_pct": 1.74,
+  "total_pnl": 502.26,
+  "total_pnl_pct": 1.68,
   "account": {
-    "equity": 30446.55,
+    "equity": 30429.14,
     "cash": 3475.23,
-    "invested": 26971.32,
-    "invested_pct": 88.59,
+    "invested": 26953.91,
+    "invested_pct": 88.58,
     "position_count": 7
   },
   "risk": {
     "peak_equity": 30446.55,
-    "drawdown_pct": 0.0,
+    "drawdown_pct": -0.06,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 27.0,
-    "distance_to_kill_pct": 30.0,
+    "distance_to_halt_pct": 26.94,
+    "distance_to_kill_pct": 29.94,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
@@ -63,10 +63,10 @@
     {
       "symbol": "QQQ",
       "qty": 13.0,
-      "market_value": 9653.22,
-      "actual_weight_pct": 31.71,
+      "market_value": 9629.75,
+      "actual_weight_pct": 31.65,
       "target_weight_pct": 33.33,
-      "drift_pct": -1.63,
+      "drift_pct": -1.68,
       "sleeves": {
         "gated_qqq": 0.333333
       },
@@ -75,10 +75,10 @@
     {
       "symbol": "SPY",
       "qty": 7.0,
-      "market_value": 5421.01,
-      "actual_weight_pct": 17.81,
+      "market_value": 5410.72,
+      "actual_weight_pct": 17.78,
       "target_weight_pct": 20.0,
-      "drift_pct": -2.19,
+      "drift_pct": -2.22,
       "sleeves": {
         "balanced": 0.2
       },
@@ -87,10 +87,10 @@
     {
       "symbol": "AGG",
       "qty": 39.0,
-      "market_value": 3752.39,
-      "actual_weight_pct": 12.32,
+      "market_value": 3771.3,
+      "actual_weight_pct": 12.39,
       "target_weight_pct": 13.33,
-      "drift_pct": -1.01,
+      "drift_pct": -0.94,
       "sleeves": {
         "balanced": 0.133333
       },
@@ -99,19 +99,19 @@
     {
       "symbol": "BIL",
       "qty": 33.0,
-      "market_value": 3021.48,
-      "actual_weight_pct": 9.92,
+      "market_value": 3021.54,
+      "actual_weight_pct": 9.93,
       "target_weight_pct": 10.0,
-      "drift_pct": -0.08,
+      "drift_pct": -0.07,
       "sleeves": {
         "rotation": 0.1
       },
       "in_target": true
     },
     {
-      "symbol": "XLK",
-      "qty": 9.0,
-      "market_value": 1754.19,
+      "symbol": "XLE",
+      "qty": 28.0,
+      "market_value": 1752.52,
       "actual_weight_pct": 5.76,
       "target_weight_pct": 5.83,
       "drift_pct": -0.07,
@@ -121,12 +121,12 @@
       "in_target": true
     },
     {
-      "symbol": "XLE",
-      "qty": 28.0,
-      "market_value": 1751.12,
-      "actual_weight_pct": 5.75,
+      "symbol": "XLK",
+      "qty": 9.0,
+      "market_value": 1752.48,
+      "actual_weight_pct": 5.76,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.08,
+      "drift_pct": -0.07,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -135,7 +135,7 @@
     {
       "symbol": "VLUE",
       "qty": 8.0,
-      "market_value": 1617.92,
+      "market_value": 1615.6,
       "actual_weight_pct": 5.31,
       "target_weight_pct": 5.83,
       "drift_pct": -0.52,
@@ -164,10 +164,10 @@
     "last_rebalance_date": "2026-08-03"
   },
   "health": {
-    "last_run_utc": "2026-09-21T19:41:52.609810+00:00",
+    "last_run_utc": "2026-09-21T20:42:34.763459+00:00",
     "last_run_ok": true,
-    "last_run_detail": "Not a rebalance day. No-op.",
-    "price_source": "alpaca-iex",
+    "last_run_detail": "Intraday snapshot (market closed) \u2014 equity, cash and positions refreshed from Alpaca; target weights and regime unchanged since the last rebalance.",
+    "price_source": "alpaca (intraday snapshot, no signal recompute)",
     "expected_symbols": [
       "VLUE",
       "XLE",
