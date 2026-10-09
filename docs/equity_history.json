@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T23:17:02+00:00",
+  "generated_at": "2026-10-09T11:37:25+00:00",
   "deposit_basis": 29926.88,
   "v3_start": "2026-08-02",
   "note": "Pre-2026-08-02 points come from the retired v9.x intraday engine on this same account (101 trades, profit factor 0.79, -$715). They are real money and are shown for continuity, separated by a divider \u2014 the two eras are different strategies, not one record.",
@@ -2297,6 +2297,16 @@
       "phase": "v3.0 ensemble",
       "pnl_vs_deposits": 655.19,
       "pnl_vs_deposits_pct": 2.19
+    },
+    {
+      "ts": "2026-10-09T11:37:25+00:00",
+      "date": "2026-10-09",
+      "equity": 30682.62,
+      "cash": 3506.14,
+      "positions": 7,
+      "phase": "v3.0 ensemble",
+      "pnl_vs_deposits": 755.74,
+      "pnl_vs_deposits_pct": 2.53
     }
   ],
   "daily": [
@@ -3163,6 +3173,16 @@
       "phase": "v3.0 ensemble",
       "pnl_vs_deposits": 655.19,
       "pnl_vs_deposits_pct": 2.19
+    },
+    {
+      "ts": "2026-10-09T11:37:25+00:00",
+      "date": "2026-10-09",
+      "equity": 30682.62,
+      "cash": 3506.14,
+      "positions": 7,
+      "phase": "v3.0 ensemble",
+      "pnl_vs_deposits": 755.74,
+      "pnl_vs_deposits_pct": 2.53
     }
   ]
 }
