@@ -129,9 +129,16 @@ async function load() {
   if(!inSync) alerts.push(`Book differs from target — holding [${[...held].join(", ")||"nothing"}], target [${[...target].join(", ")}].`);
   if(risk.kill_switch_active) alerts.push("KILL SWITCH ACTIVE — all trading halted, human review required.");
   if(risk.halt_active) alerts.push("DRAWDOWN HALT ACTIVE — awaiting acknowledgement.");
+  // A monthly strategy that has not traded in >45 days is broken, however
+  // green the run logs look. Aug and Sep both failed silently this way.
+  if(sch.rebalance_overdue) alerts.push(
+    `REBALANCE OVERDUE — last traded ${esc(sch.last_rebalance_date||"never")}`
+    + (sch.days_since_last_rebalance!=null ? ` (${sch.days_since_last_rebalance} days ago)` : "")
+    + ". The strategy has stopped trading; runs may still report success.");
   if(hp.alert_webhook_configured===false) alerts.push("ALERT_WEBHOOK not configured — failures reach the log only.");
   if(hp.heartbeat_configured===false) alerts.push("HEARTBEAT_URL not configured — no dead-man's switch.");
-  const healthy = !stale && hp.last_run_ok!==false && inSync && !risk.kill_switch_active;
+  const healthy = !stale && hp.last_run_ok!==false && inSync && !risk.kill_switch_active
+                  && !sch.rebalance_overdue;
 
   let h = `<div class="row" style="justify-content:space-between;margin-bottom:18px">
     <div><h1>AlgoTrader v3 — Ensemble</h1>
