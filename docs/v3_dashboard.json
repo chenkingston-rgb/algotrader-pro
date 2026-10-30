@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-10-29T21:29:37.244708+00:00",
+  "generated_at": "2026-10-30T11:08:22.871485+00:00",
   "deposit_basis": 29926.88,
-  "total_pnl": 53.55,
-  "total_pnl_pct": 0.18,
+  "total_pnl": -61.51,
+  "total_pnl_pct": -0.21,
   "account": {
-    "equity": 29980.43,
+    "equity": 29865.37,
     "cash": 3506.14,
-    "invested": 26474.29,
-    "invested_pct": 88.31,
+    "invested": 26359.23,
+    "invested_pct": 88.26,
     "position_count": 7
   },
   "risk": {
     "peak_equity": 30744.85,
-    "drawdown_pct": -2.49,
+    "drawdown_pct": -2.86,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 24.51,
-    "distance_to_kill_pct": 27.51,
+    "distance_to_halt_pct": 24.14,
+    "distance_to_kill_pct": 27.14,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
@@ -63,10 +63,10 @@
     {
       "symbol": "QQQ",
       "qty": 13.0,
-      "market_value": 9167.85,
-      "actual_weight_pct": 30.58,
+      "market_value": 9076.47,
+      "actual_weight_pct": 30.39,
       "target_weight_pct": 33.33,
-      "drift_pct": -2.75,
+      "drift_pct": -2.94,
       "sleeves": {
         "gated_qqq": 0.333333
       },
@@ -75,10 +75,10 @@
     {
       "symbol": "SPY",
       "qty": 7.0,
-      "market_value": 5351.08,
-      "actual_weight_pct": 17.85,
+      "market_value": 5334.28,
+      "actual_weight_pct": 17.86,
       "target_weight_pct": 20.0,
-      "drift_pct": -2.15,
+      "drift_pct": -2.14,
       "sleeves": {
         "balanced": 0.2
       },
@@ -88,9 +88,9 @@
       "symbol": "AGG",
       "qty": 39.0,
       "market_value": 3749.85,
-      "actual_weight_pct": 12.51,
+      "actual_weight_pct": 12.56,
       "target_weight_pct": 13.33,
-      "drift_pct": -0.82,
+      "drift_pct": -0.77,
       "sleeves": {
         "balanced": 0.133333
       },
@@ -99,10 +99,10 @@
     {
       "symbol": "BIL",
       "qty": 33.0,
-      "market_value": 3025.11,
-      "actual_weight_pct": 10.09,
+      "market_value": 3026.18,
+      "actual_weight_pct": 10.13,
       "target_weight_pct": 10.0,
-      "drift_pct": 0.09,
+      "drift_pct": 0.13,
       "sleeves": {
         "rotation": 0.1
       },
@@ -111,10 +111,10 @@
     {
       "symbol": "XLE",
       "qty": 28.0,
-      "market_value": 1933.4,
-      "actual_weight_pct": 6.45,
+      "market_value": 1950.2,
+      "actual_weight_pct": 6.53,
       "target_weight_pct": 5.83,
-      "drift_pct": 0.62,
+      "drift_pct": 0.7,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -123,10 +123,10 @@
     {
       "symbol": "XLK",
       "qty": 9.0,
-      "market_value": 1665.0,
-      "actual_weight_pct": 5.55,
+      "market_value": 1640.25,
+      "actual_weight_pct": 5.49,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.28,
+      "drift_pct": -0.34,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -136,9 +136,9 @@
       "symbol": "VLUE",
       "qty": 8.0,
       "market_value": 1582.0,
-      "actual_weight_pct": 5.28,
+      "actual_weight_pct": 5.3,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.55,
+      "drift_pct": -0.53,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -158,15 +158,15 @@
     }
   ],
   "schedule": {
-    "days_since_last_rebalance": 87,
+    "days_since_last_rebalance": 88,
     "rebalance_overdue": true,
     "cadence": "last trading session of each month",
     "next_rebalance": "2026-10-30",
-    "days_to_next_rebalance": 1,
+    "days_to_next_rebalance": 0,
     "last_rebalance_date": "2026-08-03"
   },
   "health": {
-    "last_run_utc": "2026-10-29T21:29:37.244708+00:00",
+    "last_run_utc": "2026-10-30T11:08:22.871485+00:00",
     "last_run_ok": true,
     "last_run_detail": "Intraday snapshot (market closed) \u2014 equity, cash and positions refreshed from Alpaca; target weights and regime unchanged since the last rebalance.",
     "price_source": "alpaca (intraday snapshot, no signal recompute)",
