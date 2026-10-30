@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-10-30T18:50:38.985310+00:00",
+  "generated_at": "2026-10-30T19:42:38.150572+00:00",
   "deposit_basis": 29926.88,
-  "total_pnl": -387.65,
-  "total_pnl_pct": -1.3,
+  "total_pnl": -295.32,
+  "total_pnl_pct": -0.99,
   "account": {
-    "equity": 29539.23,
+    "equity": 29631.56,
     "cash": 85.84,
-    "invested": 29453.39,
+    "invested": 29545.79,
     "invested_pct": 99.71,
     "position_count": 8
   },
   "risk": {
     "peak_equity": 30744.85,
-    "drawdown_pct": -3.92,
+    "drawdown_pct": -3.62,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 23.08,
-    "distance_to_kill_pct": 26.08,
+    "distance_to_halt_pct": 23.38,
+    "distance_to_kill_pct": 26.38,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
@@ -63,10 +63,10 @@
     {
       "symbol": "QQQ",
       "qty": 14.0,
-      "market_value": 9579.36,
-      "actual_weight_pct": 32.43,
+      "market_value": 9634.31,
+      "actual_weight_pct": 32.51,
       "target_weight_pct": 33.33,
-      "drift_pct": -0.9,
+      "drift_pct": -0.82,
       "sleeves": {
         "gated_qqq": 0.333333
       },
@@ -75,10 +75,10 @@
     {
       "symbol": "SPY",
       "qty": 7.0,
-      "market_value": 5256.37,
-      "actual_weight_pct": 17.79,
+      "market_value": 5274.85,
+      "actual_weight_pct": 17.8,
       "target_weight_pct": 20.0,
-      "drift_pct": -2.21,
+      "drift_pct": -2.2,
       "sleeves": {
         "balanced": 0.2
       },
@@ -88,9 +88,9 @@
       "symbol": "BIL",
       "qty": 46.0,
       "market_value": 4218.43,
-      "actual_weight_pct": 14.28,
+      "actual_weight_pct": 14.24,
       "target_weight_pct": 10.0,
-      "drift_pct": 4.28,
+      "drift_pct": 4.24,
       "sleeves": {
         "rotation": 0.1
       },
@@ -99,10 +99,10 @@
     {
       "symbol": "AGG",
       "qty": 40.0,
-      "market_value": 3854.4,
-      "actual_weight_pct": 13.05,
+      "market_value": 3854.6,
+      "actual_weight_pct": 13.01,
       "target_weight_pct": 13.33,
-      "drift_pct": -0.28,
+      "drift_pct": -0.32,
       "sleeves": {
         "balanced": 0.133333
       },
@@ -111,8 +111,8 @@
     {
       "symbol": "XLE",
       "qty": 25.0,
-      "market_value": 1741.5,
-      "actual_weight_pct": 5.9,
+      "market_value": 1745.38,
+      "actual_weight_pct": 5.89,
       "target_weight_pct": 5.83,
       "drift_pct": 0.06,
       "sleeves": {
@@ -123,10 +123,10 @@
     {
       "symbol": "XLV",
       "qty": 9.0,
-      "market_value": 1665.45,
-      "actual_weight_pct": 5.64,
+      "market_value": 1663.56,
+      "actual_weight_pct": 5.61,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.2,
+      "drift_pct": -0.22,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -135,10 +135,10 @@
     {
       "symbol": "XLK",
       "qty": 9.0,
-      "market_value": 1595.16,
-      "actual_weight_pct": 5.4,
+      "market_value": 1607.22,
+      "actual_weight_pct": 5.42,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.43,
+      "drift_pct": -0.41,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -147,7 +147,7 @@
     {
       "symbol": "VLUE",
       "qty": 8.0,
-      "market_value": 1542.72,
+      "market_value": 1547.44,
       "actual_weight_pct": 5.22,
       "target_weight_pct": 5.83,
       "drift_pct": -0.61,
@@ -166,9 +166,9 @@
     "last_rebalance_date": "2026-10-30"
   },
   "health": {
-    "last_run_utc": "2026-10-30T18:50:38.985310+00:00",
+    "last_run_utc": "2026-10-30T19:42:38.150572+00:00",
     "last_run_ok": true,
-    "last_run_detail": "Rebalanced [v3.0-ensemble]: regime=ON | A(rotation)={'XLE': 0.175, 'VLUE': 0.175, 'XLV': 0.175, 'XLK': 0.175, 'BIL': 0.3} | B(gated_qqq)={'QQQ': 1.0} | C(balanced)={'SPY': 0.6, 'AGG': 0.4} | combined={'AGG': 0.1333, 'BIL': 0.1, 'QQQ': 0.3333, 'SPY': 0.2, 'VLUE': 0.0583, 'XLE': 0.0583, 'XLK': 0.0583, 'XLV': 0.0583} | sells=['XLE', 'BIL'] buys=['VLUE', 'XLV', 'XLK', 'QQQ', 'SPY', 'AGG', 'BIL']",
+    "last_run_detail": "Rebalance DEFERRED \u2014 Only 17 min of session remains (close 16:00 -04:00); need >= 45 min to complete both legs. Refusing to start a rebalance that cannot finish. It will be caught up automatically on the next session.",
     "price_source": "alpaca-iex",
     "expected_symbols": [
       "XLE",
