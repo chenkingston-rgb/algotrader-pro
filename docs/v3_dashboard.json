@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-10-30T19:42:38.150572+00:00",
+  "generated_at": "2026-10-30T20:07:51.725040+00:00",
   "deposit_basis": 29926.88,
-  "total_pnl": -295.32,
-  "total_pnl_pct": -0.99,
+  "total_pnl": -216.91,
+  "total_pnl_pct": -0.72,
   "account": {
-    "equity": 29631.56,
+    "equity": 29709.97,
     "cash": 85.84,
-    "invested": 29545.79,
+    "invested": 29624.13,
     "invested_pct": 99.71,
     "position_count": 8
   },
   "risk": {
     "peak_equity": 30744.85,
-    "drawdown_pct": -3.62,
+    "drawdown_pct": -3.37,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 23.38,
-    "distance_to_kill_pct": 26.38,
+    "distance_to_halt_pct": 23.63,
+    "distance_to_kill_pct": 26.63,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
@@ -63,10 +63,10 @@
     {
       "symbol": "QQQ",
       "qty": 14.0,
-      "market_value": 9634.31,
-      "actual_weight_pct": 32.51,
+      "market_value": 9670.64,
+      "actual_weight_pct": 32.55,
       "target_weight_pct": 33.33,
-      "drift_pct": -0.82,
+      "drift_pct": -0.78,
       "sleeves": {
         "gated_qqq": 0.333333
       },
@@ -75,10 +75,10 @@
     {
       "symbol": "SPY",
       "qty": 7.0,
-      "market_value": 5274.85,
-      "actual_weight_pct": 17.8,
+      "market_value": 5292.71,
+      "actual_weight_pct": 17.81,
       "target_weight_pct": 20.0,
-      "drift_pct": -2.2,
+      "drift_pct": -2.19,
       "sleeves": {
         "balanced": 0.2
       },
@@ -87,10 +87,10 @@
     {
       "symbol": "BIL",
       "qty": 46.0,
-      "market_value": 4218.43,
-      "actual_weight_pct": 14.24,
+      "market_value": 4218.64,
+      "actual_weight_pct": 14.2,
       "target_weight_pct": 10.0,
-      "drift_pct": 4.24,
+      "drift_pct": 4.2,
       "sleeves": {
         "rotation": 0.1
       },
@@ -99,10 +99,10 @@
     {
       "symbol": "AGG",
       "qty": 40.0,
-      "market_value": 3854.6,
-      "actual_weight_pct": 13.01,
+      "market_value": 3860.24,
+      "actual_weight_pct": 12.99,
       "target_weight_pct": 13.33,
-      "drift_pct": -0.32,
+      "drift_pct": -0.34,
       "sleeves": {
         "balanced": 0.133333
       },
@@ -111,10 +111,10 @@
     {
       "symbol": "XLE",
       "qty": 25.0,
-      "market_value": 1745.38,
+      "market_value": 1748.81,
       "actual_weight_pct": 5.89,
       "target_weight_pct": 5.83,
-      "drift_pct": 0.06,
+      "drift_pct": 0.05,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -123,10 +123,10 @@
     {
       "symbol": "XLV",
       "qty": 9.0,
-      "market_value": 1663.56,
-      "actual_weight_pct": 5.61,
+      "market_value": 1660.68,
+      "actual_weight_pct": 5.59,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.22,
+      "drift_pct": -0.24,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -135,10 +135,10 @@
     {
       "symbol": "XLK",
       "qty": 9.0,
-      "market_value": 1607.22,
-      "actual_weight_pct": 5.42,
+      "market_value": 1617.3,
+      "actual_weight_pct": 5.44,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.41,
+      "drift_pct": -0.39,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -147,10 +147,10 @@
     {
       "symbol": "VLUE",
       "qty": 8.0,
-      "market_value": 1547.44,
-      "actual_weight_pct": 5.22,
+      "market_value": 1555.12,
+      "actual_weight_pct": 5.23,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.61,
+      "drift_pct": -0.6,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -166,9 +166,9 @@
     "last_rebalance_date": "2026-10-30"
   },
   "health": {
-    "last_run_utc": "2026-10-30T19:42:38.150572+00:00",
+    "last_run_utc": "2026-10-30T20:07:51.725040+00:00",
     "last_run_ok": true,
-    "last_run_detail": "Rebalance DEFERRED \u2014 Only 17 min of session remains (close 16:00 -04:00); need >= 45 min to complete both legs. Refusing to start a rebalance that cannot finish. It will be caught up automatically on the next session.",
+    "last_run_detail": "Rebalance DEFERRED \u2014 Market is CLOSED at 2026-10-30 16:07 -04:00 (next open 2026-11-02 09:30 -05:00). Refusing to submit orders \u2014 they would sit unfilled and roll into the next session on stale prices. The rebalance will be caught up automatically.",
     "price_source": "alpaca-iex",
     "expected_symbols": [
       "XLE",
