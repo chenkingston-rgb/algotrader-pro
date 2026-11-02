@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-11-02T22:27:51.527629+00:00",
+  "generated_at": "2026-11-02T22:53:31.813806+00:00",
   "deposit_basis": 29926.88,
-  "total_pnl": -521.65,
+  "total_pnl": -521.5,
   "total_pnl_pct": -1.74,
   "account": {
-    "equity": 29405.23,
+    "equity": 29405.38,
     "cash": 85.84,
-    "invested": 29319.39,
+    "invested": 29319.54,
     "invested_pct": 99.71,
     "position_count": 8
   },
@@ -63,8 +63,8 @@
     {
       "symbol": "QQQ",
       "qty": 14.0,
-      "market_value": 9546.6,
-      "actual_weight_pct": 32.47,
+      "market_value": 9545.2,
+      "actual_weight_pct": 32.46,
       "target_weight_pct": 33.33,
       "drift_pct": -0.87,
       "sleeves": {
@@ -75,7 +75,7 @@
     {
       "symbol": "SPY",
       "qty": 7.0,
-      "market_value": 5266.73,
+      "market_value": 5267.43,
       "actual_weight_pct": 17.91,
       "target_weight_pct": 20.0,
       "drift_pct": -2.09,
@@ -111,8 +111,8 @@
     {
       "symbol": "XLE",
       "qty": 25.0,
-      "market_value": 1686.25,
-      "actual_weight_pct": 5.73,
+      "market_value": 1686.56,
+      "actual_weight_pct": 5.74,
       "target_weight_pct": 5.83,
       "drift_pct": -0.1,
       "sleeves": {
@@ -123,10 +123,10 @@
     {
       "symbol": "XLV",
       "qty": 9.0,
-      "market_value": 1662.93,
+      "market_value": 1665.45,
       "actual_weight_pct": 5.66,
       "target_weight_pct": 5.83,
-      "drift_pct": -0.18,
+      "drift_pct": -0.17,
       "sleeves": {
         "rotation": 0.058333
       },
@@ -135,8 +135,8 @@
     {
       "symbol": "XLK",
       "qty": 9.0,
-      "market_value": 1566.18,
-      "actual_weight_pct": 5.33,
+      "market_value": 1564.2,
+      "actual_weight_pct": 5.32,
       "target_weight_pct": 5.83,
       "drift_pct": -0.51,
       "sleeves": {
@@ -166,7 +166,7 @@
     "last_rebalance_date": "2026-10-30"
   },
   "health": {
-    "last_run_utc": "2026-11-02T22:27:51.527629+00:00",
+    "last_run_utc": "2026-11-02T22:53:31.813806+00:00",
     "last_run_ok": true,
     "last_run_detail": "Not a rebalance day. No-op.",
     "price_source": "alpaca-iex",
