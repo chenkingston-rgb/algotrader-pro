@@ -1,54 +1,50 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-11-20T13:47:05.363832+00:00",
+  "generated_at": "2026-11-20T21:31:47.340362+00:00",
   "deposit_basis": 29926.88,
-  "total_pnl": -2025.79,
-  "total_pnl_pct": -6.77,
+  "total_pnl": -2491.37,
+  "total_pnl_pct": -8.32,
   "account": {
-    "equity": 27901.09,
+    "equity": 27435.51,
     "cash": 105.37,
-    "invested": 27795.71,
+    "invested": 27330.14,
     "invested_pct": 99.62,
     "position_count": 8
   },
   "risk": {
     "peak_equity": 30744.85,
-    "drawdown_pct": -9.25,
+    "drawdown_pct": -10.76,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 17.75,
-    "distance_to_kill_pct": 20.75,
+    "distance_to_halt_pct": 16.24,
+    "distance_to_kill_pct": 19.24,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
     "accepted_drawdown_budget_pct": -20.0
   },
   "regime": {
-    "on": true,
+    "on": false,
     "ticker": "SPY",
     "ma_window": 200,
-    "close": 730.33,
-    "ma": 730.0,
-    "gap_pct": 0.05,
-    "label": "RISK-ON",
-    "as_of": "2026-11-18"
+    "close": 715.84,
+    "ma": 730.17,
+    "gap_pct": -1.96,
+    "label": "RISK-OFF",
+    "as_of": "2026-11-19"
   },
   "sleeves": {
     "rotation": {
       "capital_share_pct": 33.33,
       "holdings": {
-        "XLV": 17.5,
-        "XLE": 17.5,
-        "VLUE": 17.5,
-        "XLP": 17.5,
-        "BIL": 30.0
+        "BIL": 100.0
       }
     },
     "gated_qqq": {
       "capital_share_pct": 33.33,
       "holdings": {
-        "QQQ": 100.0
+        "BIL": 100.0
       }
     },
     "balanced": {
@@ -63,22 +59,20 @@
     {
       "symbol": "QQQ",
       "qty": 14.0,
-      "market_value": 8861.72,
-      "actual_weight_pct": 31.76,
-      "target_weight_pct": 33.33,
-      "drift_pct": -1.57,
-      "sleeves": {
-        "gated_qqq": 0.333333
-      },
-      "in_target": true
+      "market_value": 8587.6,
+      "actual_weight_pct": 31.3,
+      "target_weight_pct": 0.0,
+      "drift_pct": 31.3,
+      "sleeves": {},
+      "in_target": false
     },
     {
       "symbol": "SPY",
       "qty": 7.0,
-      "market_value": 4961.39,
-      "actual_weight_pct": 17.78,
+      "market_value": 4853.24,
+      "actual_weight_pct": 17.69,
       "target_weight_pct": 20.0,
-      "drift_pct": -2.22,
+      "drift_pct": -2.31,
       "sleeves": {
         "balanced": 0.2
       },
@@ -87,22 +81,23 @@
     {
       "symbol": "BIL",
       "qty": 46.0,
-      "market_value": 4213.37,
-      "actual_weight_pct": 15.1,
-      "target_weight_pct": 10.0,
-      "drift_pct": 5.1,
+      "market_value": 4213.6,
+      "actual_weight_pct": 15.36,
+      "target_weight_pct": 66.67,
+      "drift_pct": -51.31,
       "sleeves": {
-        "rotation": 0.1
+        "rotation": 0.333333,
+        "gated_qqq": 0.333333
       },
       "in_target": true
     },
     {
       "symbol": "AGG",
       "qty": 40.0,
-      "market_value": 3831.6,
-      "actual_weight_pct": 13.73,
+      "market_value": 3844.0,
+      "actual_weight_pct": 14.01,
       "target_weight_pct": 13.33,
-      "drift_pct": 0.4,
+      "drift_pct": 0.68,
       "sleeves": {
         "balanced": 0.133333
       },
@@ -111,60 +106,42 @@
     {
       "symbol": "XLV",
       "qty": 9.0,
-      "market_value": 1602.94,
-      "actual_weight_pct": 5.75,
-      "target_weight_pct": 5.83,
-      "drift_pct": -0.08,
-      "sleeves": {
-        "rotation": 0.058333
-      },
-      "in_target": true
-    },
-    {
-      "symbol": "XLE",
-      "qty": 25.0,
-      "market_value": 1511.25,
-      "actual_weight_pct": 5.42,
-      "target_weight_pct": 5.83,
-      "drift_pct": -0.41,
-      "sleeves": {
-        "rotation": 0.058333
-      },
-      "in_target": true
-    },
-    {
-      "symbol": "VLUE",
-      "qty": 8.0,
-      "market_value": 1408.0,
-      "actual_weight_pct": 5.05,
-      "target_weight_pct": 5.83,
-      "drift_pct": -0.78,
-      "sleeves": {
-        "rotation": 0.058333
-      },
-      "in_target": true
-    },
-    {
-      "symbol": "XLK",
-      "qty": 9.0,
-      "market_value": 1405.44,
-      "actual_weight_pct": 5.04,
+      "market_value": 1599.93,
+      "actual_weight_pct": 5.83,
       "target_weight_pct": 0.0,
-      "drift_pct": 5.04,
+      "drift_pct": 5.83,
       "sleeves": {},
       "in_target": false
     },
     {
-      "symbol": "XLP",
-      "qty": 0,
-      "market_value": 0.0,
-      "actual_weight_pct": 0.0,
-      "target_weight_pct": 5.83,
-      "drift_pct": -5.83,
-      "sleeves": {
-        "rotation": 0.058333
-      },
-      "in_target": true
+      "symbol": "XLE",
+      "qty": 25.0,
+      "market_value": 1514.25,
+      "actual_weight_pct": 5.52,
+      "target_weight_pct": 0.0,
+      "drift_pct": 5.52,
+      "sleeves": {},
+      "in_target": false
+    },
+    {
+      "symbol": "VLUE",
+      "qty": 8.0,
+      "market_value": 1364.72,
+      "actual_weight_pct": 4.97,
+      "target_weight_pct": 0.0,
+      "drift_pct": 4.97,
+      "sleeves": {},
+      "in_target": false
+    },
+    {
+      "symbol": "XLK",
+      "qty": 9.0,
+      "market_value": 1352.8,
+      "actual_weight_pct": 4.93,
+      "target_weight_pct": 0.0,
+      "drift_pct": 4.93,
+      "sleeves": {},
+      "in_target": false
     }
   ],
   "schedule": {
@@ -176,10 +153,10 @@
     "last_rebalance_date": "2026-10-30"
   },
   "health": {
-    "last_run_utc": "2026-11-20T13:47:05.363832+00:00",
+    "last_run_utc": "2026-11-20T21:31:47.340362+00:00",
     "last_run_ok": true,
-    "last_run_detail": "Intraday snapshot (market closed) \u2014 equity, cash and positions refreshed from Alpaca; target weights and regime unchanged since the last rebalance.",
-    "price_source": "alpaca (intraday snapshot, no signal recompute)",
+    "last_run_detail": "Not a rebalance day. No-op.",
+    "price_source": "alpaca-iex",
     "expected_symbols": [
       "XLE",
       "VLUE",
