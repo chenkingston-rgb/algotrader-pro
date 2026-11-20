@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-11-20T22:20:56.999334+00:00",
+  "generated_at": "2026-11-20T22:52:36.593819+00:00",
   "deposit_basis": 29926.88,
-  "total_pnl": -2460.85,
-  "total_pnl_pct": -8.22,
+  "total_pnl": -2430.71,
+  "total_pnl_pct": -8.12,
   "account": {
-    "equity": 27466.03,
+    "equity": 27496.17,
     "cash": 105.37,
-    "invested": 27360.66,
+    "invested": 27390.8,
     "invested_pct": 99.62,
     "position_count": 8
   },
   "risk": {
     "peak_equity": 30744.85,
-    "drawdown_pct": -10.66,
+    "drawdown_pct": -10.57,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 16.34,
-    "distance_to_kill_pct": 19.34,
+    "distance_to_halt_pct": 16.43,
+    "distance_to_kill_pct": 19.43,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
@@ -59,20 +59,20 @@
     {
       "symbol": "QQQ",
       "qty": 14.0,
-      "market_value": 8609.16,
-      "actual_weight_pct": 31.34,
+      "market_value": 8632.4,
+      "actual_weight_pct": 31.39,
       "target_weight_pct": 0.0,
-      "drift_pct": 31.34,
+      "drift_pct": 31.39,
       "sleeves": {},
       "in_target": false
     },
     {
       "symbol": "SPY",
       "qty": 7.0,
-      "market_value": 4861.22,
-      "actual_weight_pct": 17.7,
+      "market_value": 4870.6,
+      "actual_weight_pct": 17.71,
       "target_weight_pct": 20.0,
-      "drift_pct": -2.3,
+      "drift_pct": -2.29,
       "sleeves": {
         "balanced": 0.2
       },
@@ -82,9 +82,9 @@
       "symbol": "BIL",
       "qty": 46.0,
       "market_value": 4213.37,
-      "actual_weight_pct": 15.34,
+      "actual_weight_pct": 15.32,
       "target_weight_pct": 66.67,
-      "drift_pct": -51.33,
+      "drift_pct": -51.35,
       "sleeves": {
         "rotation": 0.333333,
         "gated_qqq": 0.333333
@@ -94,10 +94,10 @@
     {
       "symbol": "AGG",
       "qty": 40.0,
-      "market_value": 3844.0,
-      "actual_weight_pct": 14.0,
+      "market_value": 3839.6,
+      "actual_weight_pct": 13.96,
       "target_weight_pct": 13.33,
-      "drift_pct": 0.66,
+      "drift_pct": 0.63,
       "sleeves": {
         "balanced": 0.133333
       },
@@ -106,20 +106,20 @@
     {
       "symbol": "XLV",
       "qty": 9.0,
-      "market_value": 1593.18,
-      "actual_weight_pct": 5.8,
+      "market_value": 1590.93,
+      "actual_weight_pct": 5.79,
       "target_weight_pct": 0.0,
-      "drift_pct": 5.8,
+      "drift_pct": 5.79,
       "sleeves": {},
       "in_target": false
     },
     {
       "symbol": "XLE",
       "qty": 25.0,
-      "market_value": 1519.25,
-      "actual_weight_pct": 5.53,
+      "market_value": 1515.0,
+      "actual_weight_pct": 5.51,
       "target_weight_pct": 0.0,
-      "drift_pct": 5.53,
+      "drift_pct": 5.51,
       "sleeves": {},
       "in_target": false
     },
@@ -127,19 +127,19 @@
       "symbol": "VLUE",
       "qty": 8.0,
       "market_value": 1364.72,
-      "actual_weight_pct": 4.97,
+      "actual_weight_pct": 4.96,
       "target_weight_pct": 0.0,
-      "drift_pct": 4.97,
+      "drift_pct": 4.96,
       "sleeves": {},
       "in_target": false
     },
     {
       "symbol": "XLK",
       "qty": 9.0,
-      "market_value": 1355.76,
-      "actual_weight_pct": 4.94,
+      "market_value": 1364.18,
+      "actual_weight_pct": 4.96,
       "target_weight_pct": 0.0,
-      "drift_pct": 4.94,
+      "drift_pct": 4.96,
       "sleeves": {},
       "in_target": false
     }
@@ -153,10 +153,10 @@
     "last_rebalance_date": "2026-10-30"
   },
   "health": {
-    "last_run_utc": "2026-11-20T22:20:56.999334+00:00",
+    "last_run_utc": "2026-11-20T22:52:36.593819+00:00",
     "last_run_ok": true,
-    "last_run_detail": "Not a rebalance day. No-op.",
-    "price_source": "alpaca-iex",
+    "last_run_detail": "Intraday snapshot (market closed) \u2014 equity, cash and positions refreshed from Alpaca; target weights and regime unchanged since the last rebalance.",
+    "price_source": "alpaca (intraday snapshot, no signal recompute)",
     "expected_symbols": [
       "XLE",
       "VLUE",
