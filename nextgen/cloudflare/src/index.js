@@ -358,6 +358,14 @@ async function handle(request, env) {
   if (request.method === "GET" && ["/dashboard", "/dashboard/"].includes(url.pathname)) {
     return dashboardPage();
   }
+  if (request.method === "GET" && url.pathname === "/dashboard/comparison") {
+    requireDashboardAuth(request, env);
+    const response = await fetch("https://raw.githubusercontent.com/chenkingston-rgb/algotrader-pro/paper-comparison-ledger-v1/indices.json", {headers: {"User-Agent":"trend3-shadow-reader"},cf:{cacheTtl:60}});
+    if (!response.ok) return json({error:"Paper comparison not available"},503);
+    const indices=await response.json();
+    if (indices.version!=="shadow-qqq-v1") return json({error:"Paper index version mismatch"},503);
+    return json(indices);
+  }
   if (request.method === "GET" && url.pathname === "/dashboard/status") {
     requireDashboardAuth(request, env);
     return getStatus(env);

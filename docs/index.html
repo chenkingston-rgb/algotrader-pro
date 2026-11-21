@@ -346,5 +346,14 @@ function exportCSV(){
 load().then(drawChart);
 setInterval(()=>load().then(drawChart), REFRESH_MS);
 </script>
+<div class="wrap"><section id="paperComparison" class="card" aria-label="Paper strategy comparison">Loading forward paper comparison…</section></div>
+<script src="./paper-compare.js"></script>
+<script>
+const paperPanel=startPaperComparison(document.querySelector('#paperComparison'),async()=>{
+  const response=await fetch('https://raw.githubusercontent.com/chenkingston-rgb/algotrader-pro/paper-comparison-ledger-v1/indices.json',{cache:'no-store',credentials:'omit'});
+  if(!response.ok)throw Error('Missing paper ledger');return response.json();
+});
+void paperPanel.refresh();setInterval(()=>paperPanel.refresh(),300000);
+</script>
 </body>
 </html>
