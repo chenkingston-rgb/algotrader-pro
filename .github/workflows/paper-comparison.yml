@@ -1,0 +1,41 @@
+name: Paper model comparison (read-only market data)
+on:
+  schedule:
+    - cron: "37 0,12 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["paper_compare/ledger.py", ".github/workflows/paper-comparison.yml"]
+permissions:
+  contents: write
+concurrency:
+  group: paper-comparison-ledger-v1
+  cancel-in-progress: false
+jobs:
+  mark:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Verify ledger math
+        run: python3 -m unittest discover -s paper_compare -v
+      - name: Load independent ledger (never initialize on a failed read)
+        run: |
+          git fetch --no-tags origin refs/heads/paper-comparison-ledger-v1
+          git worktree add --detach "$RUNNER_TEMP/paper-indices" FETCH_HEAD
+      - name: Read completed market bars and advance hypothetical portfolios
+        env:
+          DATA_KEY: ${{ secrets.ALPACA_PAPER_KEY }}
+          DATA_SECRET: ${{ secrets.ALPACA_PAPER_SECRET }}
+        run: python3 paper_compare/ledger.py "$RUNNER_TEMP/paper-indices/indices.json"
+      - name: Append only to the research data branch
+        run: |
+          cd "$RUNNER_TEMP/paper-indices"
+          git diff --quiet -- indices.json && exit 0
+          git config user.name "paper-comparison[bot]"
+          git config user.email "paper-comparison@users.noreply.github.com"
+          git add -- indices.json
+          git commit -m "Mark hypothetical research indices"
+          git push origin HEAD:refs/heads/paper-comparison-ledger-v1
+
