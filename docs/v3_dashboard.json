@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-11-24T01:53:59.508808+00:00",
+  "generated_at": "2026-11-24T02:34:29.231062+00:00",
   "deposit_basis": 29926.88,
-  "total_pnl": -1541.29,
-  "total_pnl_pct": -5.15,
+  "total_pnl": -1545.7,
+  "total_pnl_pct": -5.16,
   "account": {
-    "equity": 28385.59,
+    "equity": 28381.18,
     "cash": 105.37,
-    "invested": 28280.22,
+    "invested": 28275.81,
     "invested_pct": 99.63,
     "position_count": 8
   },
   "risk": {
     "peak_equity": 30744.85,
-    "drawdown_pct": -7.67,
+    "drawdown_pct": -7.69,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 19.33,
-    "distance_to_kill_pct": 22.33,
+    "distance_to_halt_pct": 19.31,
+    "distance_to_kill_pct": 22.31,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
@@ -59,7 +59,7 @@
     {
       "symbol": "QQQ",
       "qty": 14.0,
-      "market_value": 9130.1,
+      "market_value": 9128.0,
       "actual_weight_pct": 32.16,
       "target_weight_pct": 0.0,
       "drift_pct": 32.16,
@@ -69,10 +69,10 @@
     {
       "symbol": "SPY",
       "qty": 7.0,
-      "market_value": 5069.61,
-      "actual_weight_pct": 17.86,
+      "market_value": 5067.3,
+      "actual_weight_pct": 17.85,
       "target_weight_pct": 20.0,
-      "drift_pct": -2.14,
+      "drift_pct": -2.15,
       "sleeves": {
         "balanced": 0.2
       },
@@ -82,7 +82,7 @@
       "symbol": "BIL",
       "qty": 46.0,
       "market_value": 4213.6,
-      "actual_weight_pct": 14.84,
+      "actual_weight_pct": 14.85,
       "target_weight_pct": 66.67,
       "drift_pct": -51.82,
       "sleeves": {
@@ -153,7 +153,7 @@
     "last_rebalance_date": "2026-10-30"
   },
   "health": {
-    "last_run_utc": "2026-11-24T01:53:59.508808+00:00",
+    "last_run_utc": "2026-11-24T02:34:29.231062+00:00",
     "last_run_ok": true,
     "last_run_detail": "Not a rebalance day. No-op.",
     "price_source": "alpaca-iex",
