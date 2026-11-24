@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-11-24T02:34:29.231062+00:00",
+  "generated_at": "2026-11-24T03:07:04.192429+00:00",
   "deposit_basis": 29926.88,
-  "total_pnl": -1545.7,
-  "total_pnl_pct": -5.16,
+  "total_pnl": -1600.11,
+  "total_pnl_pct": -5.35,
   "account": {
-    "equity": 28381.18,
+    "equity": 28326.77,
     "cash": 105.37,
-    "invested": 28275.81,
+    "invested": 28221.4,
     "invested_pct": 99.63,
     "position_count": 8
   },
   "risk": {
     "peak_equity": 30744.85,
-    "drawdown_pct": -7.69,
+    "drawdown_pct": -7.86,
     "halt_threshold_pct": -27.0,
     "kill_threshold_pct": -30.0,
-    "distance_to_halt_pct": 19.31,
-    "distance_to_kill_pct": 22.31,
+    "distance_to_halt_pct": 19.14,
+    "distance_to_kill_pct": 22.14,
     "halt_active": false,
     "kill_switch_active": false,
     "backtested_max_drawdown_pct": -21.5,
@@ -59,20 +59,20 @@
     {
       "symbol": "QQQ",
       "qty": 14.0,
-      "market_value": 9128.0,
-      "actual_weight_pct": 32.16,
+      "market_value": 9086.14,
+      "actual_weight_pct": 32.08,
       "target_weight_pct": 0.0,
-      "drift_pct": 32.16,
+      "drift_pct": 32.08,
       "sleeves": {},
       "in_target": false
     },
     {
       "symbol": "SPY",
       "qty": 7.0,
-      "market_value": 5067.3,
-      "actual_weight_pct": 17.85,
+      "market_value": 5054.0,
+      "actual_weight_pct": 17.84,
       "target_weight_pct": 20.0,
-      "drift_pct": -2.15,
+      "drift_pct": -2.16,
       "sleeves": {
         "balanced": 0.2
       },
@@ -82,9 +82,9 @@
       "symbol": "BIL",
       "qty": 46.0,
       "market_value": 4213.6,
-      "actual_weight_pct": 14.85,
+      "actual_weight_pct": 14.87,
       "target_weight_pct": 66.67,
-      "drift_pct": -51.82,
+      "drift_pct": -51.8,
       "sleeves": {
         "rotation": 0.333333,
         "gated_qqq": 0.333333
@@ -95,9 +95,9 @@
       "symbol": "AGG",
       "qty": 40.0,
       "market_value": 3849.6,
-      "actual_weight_pct": 13.56,
+      "actual_weight_pct": 13.59,
       "target_weight_pct": 13.33,
-      "drift_pct": 0.23,
+      "drift_pct": 0.26,
       "sleeves": {
         "balanced": 0.133333
       },
@@ -107,19 +107,19 @@
       "symbol": "XLV",
       "qty": 9.0,
       "market_value": 1614.78,
-      "actual_weight_pct": 5.69,
+      "actual_weight_pct": 5.7,
       "target_weight_pct": 0.0,
-      "drift_pct": 5.69,
+      "drift_pct": 5.7,
       "sleeves": {},
       "in_target": false
     },
     {
       "symbol": "XLE",
       "qty": 25.0,
-      "market_value": 1496.75,
-      "actual_weight_pct": 5.27,
+      "market_value": 1497.5,
+      "actual_weight_pct": 5.29,
       "target_weight_pct": 0.0,
-      "drift_pct": 5.27,
+      "drift_pct": 5.29,
       "sleeves": {},
       "in_target": false
     },
@@ -127,9 +127,9 @@
       "symbol": "XLK",
       "qty": 9.0,
       "market_value": 1469.7,
-      "actual_weight_pct": 5.18,
+      "actual_weight_pct": 5.19,
       "target_weight_pct": 0.0,
-      "drift_pct": 5.18,
+      "drift_pct": 5.19,
       "sleeves": {},
       "in_target": false
     },
@@ -137,9 +137,9 @@
       "symbol": "VLUE",
       "qty": 8.0,
       "market_value": 1436.08,
-      "actual_weight_pct": 5.06,
+      "actual_weight_pct": 5.07,
       "target_weight_pct": 0.0,
-      "drift_pct": 5.06,
+      "drift_pct": 5.07,
       "sleeves": {},
       "in_target": false
     }
@@ -153,10 +153,10 @@
     "last_rebalance_date": "2026-10-30"
   },
   "health": {
-    "last_run_utc": "2026-11-24T02:34:29.231062+00:00",
+    "last_run_utc": "2026-11-24T03:07:04.192429+00:00",
     "last_run_ok": true,
-    "last_run_detail": "Not a rebalance day. No-op.",
-    "price_source": "alpaca-iex",
+    "last_run_detail": "Intraday snapshot (market closed) \u2014 equity, cash and positions refreshed from Alpaca; target weights and regime unchanged since the last rebalance.",
+    "price_source": "alpaca (intraday snapshot, no signal recompute)",
     "expected_symbols": [
       "XLE",
       "VLUE",
