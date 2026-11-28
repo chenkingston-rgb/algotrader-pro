@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "strategy_version": "v3.0-ensemble",
-  "generated_at": "2026-11-27T23:43:41.156775+00:00",
+  "generated_at": "2026-11-28T00:18:27.979999+00:00",
   "deposit_basis": 29926.88,
   "total_pnl": -1455.67,
   "total_pnl_pct": -4.86,
@@ -145,18 +145,18 @@
     }
   ],
   "schedule": {
-    "days_since_last_rebalance": 28,
+    "days_since_last_rebalance": 29,
     "rebalance_overdue": false,
     "cadence": "last trading session of each month",
     "next_rebalance": "2026-11-30",
-    "days_to_next_rebalance": 3,
+    "days_to_next_rebalance": 2,
     "last_rebalance_date": "2026-10-30"
   },
   "health": {
-    "last_run_utc": "2026-11-27T23:43:41.156775+00:00",
+    "last_run_utc": "2026-11-28T00:18:27.979999+00:00",
     "last_run_ok": true,
-    "last_run_detail": "Not a rebalance day. No-op.",
-    "price_source": "alpaca-iex",
+    "last_run_detail": "Intraday snapshot (market closed) \u2014 equity, cash and positions refreshed from Alpaca; target weights and regime unchanged since the last rebalance.",
+    "price_source": "alpaca (intraday snapshot, no signal recompute)",
     "expected_symbols": [
       "XLE",
       "VLUE",
